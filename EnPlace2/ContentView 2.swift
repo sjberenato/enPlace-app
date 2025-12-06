@@ -7,7 +7,8 @@ extension Color {
     // Primary brand colors
     static let enplaceTerracotta = Color(red: 0.82, green: 0.45, blue: 0.35)      // Warm terracotta
     static let enplaceSage = Color(red: 0.56, green: 0.64, blue: 0.52)            // Muted sage green
-    static let enplaceCream = Color(red: 0.98, green: 0.96, blue: 0.92)           // Warm cream
+    static let enplaceCream = Color(red: 0.976, green: 0.965, blue: 0.898)
+               // Warm cream
     
     // Supporting colors
     static let enplaceCharcoal = Color(red: 0.2, green: 0.2, blue: 0.18)          // Dark text
@@ -29,7 +30,7 @@ struct AppTheme {
 // MARK: - Recipe Models
 
 struct Recipe: Identifiable, Equatable, Codable {
-    let id = UUID()
+    let id: UUID
     let name: String
     let isForFamily: Bool
     let dietTags: [DietTag]
@@ -40,23 +41,56 @@ struct Recipe: Identifiable, Equatable, Codable {
     let steps: [String]
     let foodTags: [FoodPreference]
     let imageName: String
+    
+    // Custom decoder - generates UUID since it's not in JSON
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID()
+        self.name = try container.decode(String.self, forKey: .name)
+        self.isForFamily = try container.decode(Bool.self, forKey: .isForFamily)
+        self.dietTags = try container.decode([DietTag].self, forKey: .dietTags)
+        self.chefLevels = try container.decode([ChefLevel].self, forKey: .chefLevels)
+        self.cookTimeMinutes = try container.decode(Int.self, forKey: .cookTimeMinutes)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.ingredients = try container.decode([String].self, forKey: .ingredients)
+        self.steps = try container.decode([String].self, forKey: .steps)
+        self.foodTags = try container.decode([FoodPreference].self, forKey: .foodTags)
+        self.imageName = try container.decode(String.self, forKey: .imageName)
+    }
 }
 
 enum DietTag: String, CaseIterable, Identifiable, Codable {
-    case none = "No preference"
-    case vegetarian = "Vegetarian"
-    case vegan = "Vegan"
-    case glutenFree = "Gluten-free"
-
+    case none
+    case vegetarian
+    case vegan
+    case glutenFree
+    
     var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .none: return "No preference"
+        case .vegetarian: return "Vegetarian"
+        case .vegan: return "Vegan"
+        case .glutenFree: return "Gluten-free"
+        }
+    }
 }
 
 enum ChefLevel: String, CaseIterable, Identifiable, Codable {
-    case lineCook = "Line cook"
-    case sousChef = "Sous chef"
-    case executiveChef = "Executive chef"
-
+    case lineCook
+    case sousChef
+    case executiveChef
+    
     var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .lineCook: return "Line cook"
+        case .sousChef: return "Sous chef"
+        case .executiveChef: return "Executive chef"
+        }
+    }
 }
 
 enum HouseholdType: String, CaseIterable, Identifiable, Codable {
@@ -76,14 +110,25 @@ enum TimePreference: String, CaseIterable, Identifiable, Codable {
 }
 
 enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
-    case beef = "Beef"
-    case chicken = "Chicken"
-    case fish = "Fish"
-    case pork = "Pork"
-    case vegetarian = "Vegetarian"
-    case vegan = "Vegan"
+    case beef
+    case chicken
+    case fish
+    case pork
+    case vegetarian
+    case vegan
     
     var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .beef: return "Beef"
+        case .chicken: return "Chicken"
+        case .fish: return "Fish"
+        case .pork: return "Pork"
+        case .vegetarian: return "Vegetarian"
+        case .vegan: return "Vegan"
+        }
+    }
     
     var icon: String {
         switch self {
@@ -174,527 +219,21 @@ private struct PersistenceManager {
 final class RecipeSwipeViewModel: ObservableObject {
     @Published private(set) var recipes: [Recipe]
     @Published private(set) var likedRecipes: [Recipe] = []
+    @Published private(set) var matchedRecipes: [Recipe] = []  // Recipes both chefs liked
     @Published private(set) var currentIndex: Int = 0
 
     private let allRecipes: [Recipe]
 
     init() {
-                self.allRecipes = [
-            Recipe(
-                name: "Baked Italian Sausage and Peppers",
-                isForFamily: true,
-                dietTags: [.none],
-                chefLevels: [.lineCook, .sousChef],
-                cookTimeMinutes: 35,
-                description: "Sheet pan sausage with bell peppers and onions, tossed in olive oil and Italian herbs.",
-                ingredients: [
-                    "4 Italian sausages",
-                    "2 bell peppers, sliced",
-                    "1 yellow onion, sliced",
-                    "2 tbsp olive oil",
-                    "1 tsp Italian seasoning",
-                    "Salt & pepper"
-                ],
-                steps: [
-                    "Preheat oven to 400°F (200°C).",
-                    "Slice peppers and onion and toss with olive oil, seasoning, salt, and pepper.",
-                    "Add sausages to a sheet pan with the vegetables.",
-                    "Bake for 25–30 minutes, flipping sausages halfway through.",
-                    "Serve with crusty bread or over rice."
-                ],
-                foodTags: [.pork],
-                imageName: "sausage-peppers"
-            ),
-            Recipe(
-                name: "Chicken Tikka Masala",
-                isForFamily: false,
-                dietTags: [.none],
-                chefLevels: [.sousChef, .executiveChef],
-                cookTimeMinutes: 45,
-                description: "Creamy tomato-based curry with marinated chicken, served over basmati rice.",
-                ingredients: [
-                    "1 lb chicken thighs, cubed",
-                    "1 cup plain yogurt",
-                    "2 tbsp garam masala",
-                    "1 tsp turmeric",
-                    "1 tsp cumin",
-                    "1 onion, diced",
-                    "2 cloves garlic, minced",
-                    "1 tbsp grated ginger",
-                    "1 can (14 oz) tomato sauce",
-                    "1 cup heavy cream"
-                ],
-                steps: [
-                    "Marinate chicken in yogurt and spices for at least 30 minutes.",
-                    "Sauté onion, garlic, and ginger in a pan until softened.",
-                    "Add marinated chicken and cook until browned.",
-                    "Pour in tomato sauce and simmer for 15–20 minutes.",
-                    "Stir in cream and simmer for another 5 minutes.",
-                    "Serve over rice with naan."
-                ],
-                foodTags: [.chicken],
-                imageName: "tikka-masala"
-            ),
-            Recipe(
-                name: "Sheet Pan Veggie Tacos",
-                isForFamily: true,
-                dietTags: [.vegetarian, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 25,
-                description: "Roasted peppers, onions, and black beans served in warm tortillas.",
-                ingredients: [
-                    "2 bell peppers, sliced",
-                    "1 red onion, sliced",
-                    "1 can black beans, drained and rinsed",
-                    "2 tbsp olive oil",
-                    "1 tsp chili powder",
-                    "1 tsp cumin",
-                    "Corn tortillas"
-                ],
-                steps: [
-                    "Preheat oven to 425°F (220°C).",
-                    "Toss peppers, onion, and beans with olive oil and spices.",
-                    "Spread on a sheet pan and roast for 15–20 minutes.",
-                    "Warm tortillas and fill with roasted veggies.",
-                    "Top with salsa, cheese, or avocado as desired."
-                ],
-                foodTags: [.vegetarian],
-                imageName: "veggie-tacos"
-            ),
-            Recipe(
-                name: "Lemon Garlic Salmon with Roasted Broccoli",
-                isForFamily: false,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.lineCook, .sousChef],
-                cookTimeMinutes: 30,
-                description: "Roasted salmon fillets with lemon, garlic, and broccoli florets.",
-                ingredients: [
-                    "2 salmon fillets",
-                    "2 cups broccoli florets",
-                    "2 tbsp olive oil",
-                    "2 cloves garlic, minced",
-                    "1 lemon, sliced",
-                    "Salt & pepper"
-                ],
-                steps: [
-                    "Preheat oven to 400°F (200°C).",
-                    "Toss broccoli with olive oil, salt, and pepper.",
-                    "Place salmon on a sheet pan, top with garlic and lemon slices.",
-                    "Add broccoli around salmon.",
-                    "Bake for 15–18 minutes until salmon flakes easily."
-                ],
-                foodTags: [.fish],
-                imageName: "lemon-salmon"
-            ),
-            Recipe(
-                name: "One-Pot Creamy Tuscan Chicken Pasta",
-                isForFamily: true,
-                dietTags: [.none],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 35,
-                description: "Creamy pasta with chicken, spinach, and sun-dried tomatoes in one pot.",
-                ingredients: [
-                    "1 lb chicken breast, sliced",
-                    "8 oz short pasta",
-                    "2 cups chicken broth",
-                    "1 cup heavy cream",
-                    "1/2 cup sun-dried tomatoes, chopped",
-                    "2 cups baby spinach",
-                    "2 cloves garlic, minced"
-                ],
-                steps: [
-                    "Sauté chicken until lightly browned.",
-                    "Add garlic and cook briefly.",
-                    "Add pasta, broth, cream, and sun-dried tomatoes.",
-                    "Simmer until pasta is cooked.",
-                    "Stir in spinach until wilted."
-                ],
-                foodTags: [.chicken],
-                imageName: "tuscan-pasta"
-            ),
-            Recipe(
-                name: "Black Bean & Sweet Potato Chili",
-                isForFamily: true,
-                dietTags: [.vegetarian, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 40,
-                description: "Hearty vegetarian chili with black beans and sweet potatoes.",
-                ingredients: [
-                    "1 large sweet potato, cubed",
-                    "1 can black beans, drained",
-                    "1 can diced tomatoes",
-                    "1 onion, diced",
-                    "2 cloves garlic, minced",
-                    "2 tbsp chili powder",
-                    "1 tsp cumin",
-                    "2 cups vegetable broth"
-                ],
-                steps: [
-                    "Sauté onion and garlic until softened.",
-                    "Add sweet potato and spices, cook a few minutes.",
-                    "Add beans, tomatoes, and broth.",
-                    "Simmer 25–30 minutes until sweet potato is tender."
-                ],
-                foodTags: [.vegetarian],
-                imageName: "sweet-potato-chili"
-            ),
-            Recipe(
-                name: "Beef & Broccoli Stir Fry",
-                isForFamily: false,
-                dietTags: [.none],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 25,
-                description: "Quick stir fry with sliced beef, broccoli, and a savory sauce.",
-                ingredients: [
-                    "3/4 lb flank steak, sliced thin",
-                    "2 cups broccoli florets",
-                    "2 tbsp soy sauce",
-                    "1 tbsp oyster sauce",
-                    "1 tbsp cornstarch",
-                    "2 cloves garlic, minced",
-                    "1 tbsp vegetable oil"
-                ],
-                steps: [
-                    "Marinate beef in soy sauce and cornstarch.",
-                    "Stir-fry beef until browned, remove from pan.",
-                    "Stir-fry broccoli and garlic.",
-                    "Return beef and add oyster sauce, toss to coat."
-                ],
-                foodTags: [.beef],
-                imageName: "beef-broccoli"
-            ),
-            Recipe(
-                name: "Crispy Pork Carnitas Tacos",
-                isForFamily: true,
-                dietTags: [.none],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 50,
-                description: "Slow-simmered pork crisped under the broiler and served in tortillas.",
-                ingredients: [
-                    "2 lbs pork shoulder, cubed",
-                    "1 onion, quartered",
-                    "2 cloves garlic",
-                    "1 orange, juiced",
-                    "1 tsp cumin",
-                    "1 tsp oregano",
-                    "Corn tortillas"
-                ],
-                steps: [
-                    "Simmer pork with onion, garlic, orange juice, and spices until tender.",
-                    "Shred pork and spread on a sheet pan.",
-                    "Broil until edges are crispy.",
-                    "Serve in warm tortillas with toppings."
-                ],
-                foodTags: [.pork],
-                imageName: "carnitas"
-            ),
-            Recipe(
-                name: "Margherita Flatbread Pizza",
-                isForFamily: false,
-                dietTags: [.vegetarian],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 20,
-                description: "Flatbread topped with tomato sauce, fresh mozzarella, and basil.",
-                ingredients: [
-                    "2 flatbreads",
-                    "1/2 cup tomato sauce",
-                    "4 oz fresh mozzarella, sliced",
-                    "Fresh basil leaves",
-                    "Olive oil"
-                ],
-                steps: [
-                    "Preheat oven to 425°F (220°C).",
-                    "Spread sauce on flatbreads.",
-                    "Top with mozzarella slices.",
-                    "Bake 8–10 minutes until cheese melts.",
-                    "Garnish with basil and drizzle with olive oil."
-                ],
-                foodTags: [.vegetarian],
-                imageName: "margherita-pizza"
-            ),
-            Recipe(
-                name: "Peanut Noodle Veggie Bowls",
-                isForFamily: false,
-                dietTags: [.vegan],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 30,
-                description: "Rice noodles with a peanut sauce and crunchy veggies.",
-                ingredients: [
-                    "8 oz rice noodles",
-                    "1 red bell pepper, sliced",
-                    "1 cup shredded carrots",
-                    "1 cucumber, sliced",
-                    "1/3 cup peanut butter",
-                    "2 tbsp soy sauce",
-                    "1 tbsp lime juice",
-                    "1 tbsp maple syrup",
-                    "Water to thin"
-                ],
-                steps: [
-                    "Cook rice noodles according to package.",
-                    "Whisk peanut butter, soy sauce, lime, and syrup with water.",
-                    "Toss noodles with sauce and veggies.",
-                    "Serve with extra lime wedges."
-                ],
-                foodTags: [.vegan],
-                imageName: "peanut-noodles"
-            ),
-            Recipe(
-                name: "Shrimp Fried Rice",
-                isForFamily: true,
-                dietTags: [.none],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 30,
-                description: "Fried rice with shrimp, peas, carrots, and eggs.",
-                ingredients: [
-                    "3 cups cooked rice (day-old preferred)",
-                    "8 oz shrimp, peeled",
-                    "1/2 cup frozen peas and carrots",
-                    "2 eggs, beaten",
-                    "2 tbsp soy sauce",
-                    "2 tbsp vegetable oil",
-                    "2 green onions, sliced"
-                ],
-                steps: [
-                    "Scramble eggs in a hot pan, set aside.",
-                    "Stir-fry shrimp until pink, remove.",
-                    "Stir-fry rice with peas and carrots.",
-                    "Add soy sauce, eggs, shrimp, and green onions and toss."
-                ],
-                foodTags: [.fish],
-                imageName: "shrimp-fried-rice"
-            ),
-            Recipe(
-                name: "BBQ Chicken Sheet Pan Dinner",
-                isForFamily: true,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 35,
-                description: "BBQ chicken thighs roasted with potatoes and green beans.",
-                ingredients: [
-                    "6 chicken thighs",
-                    "1/2 cup BBQ sauce",
-                    "1 lb baby potatoes, halved",
-                    "2 cups green beans, trimmed",
-                    "2 tbsp olive oil",
-                    "Salt & pepper"
-                ],
-                steps: [
-                    "Preheat oven to 400°F (200°C).",
-                    "Toss potatoes and green beans with olive oil, salt, and pepper.",
-                    "Spread on sheet pan with chicken thighs.",
-                    "Brush chicken with BBQ sauce.",
-                    "Roast 30–35 minutes until chicken is cooked through."
-                ],
-                foodTags: [.chicken],
-                imageName: "bbq-chicken"
-            ),
-            Recipe(
-                name: "Veggie Frittata",
-                isForFamily: false,
-                dietTags: [.vegetarian, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 25,
-                description: "Egg-based frittata with spinach, peppers, and cheese.",
-                ingredients: [
-                    "6 eggs",
-                    "1/2 cup shredded cheese",
-                    "1 cup spinach",
-                    "1/2 red bell pepper, diced",
-                    "1/4 cup milk",
-                    "Salt & pepper"
-                ],
-                steps: [
-                    "Preheat oven to 375°F (190°C).",
-                    "Whisk eggs, milk, salt, and pepper.",
-                    "Add veggies and cheese.",
-                    "Pour into greased oven-safe skillet.",
-                    "Bake 15–18 minutes until set."
-                ],
-                foodTags: [.vegetarian],
-                imageName: "frittata"
-            ),
-            Recipe(
-                name: "Lentil Bolognese over Pasta",
-                isForFamily: true,
-                dietTags: [.vegan],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 40,
-                description: "Hearty tomato sauce with lentils served over pasta.",
-                ingredients: [
-                    "1 cup dry lentils",
-                    "1 jar marinara sauce",
-                    "1 onion, diced",
-                    "2 cloves garlic, minced",
-                    "2 tbsp olive oil",
-                    "8 oz pasta"
-                ],
-                steps: [
-                    "Cook lentils until tender.",
-                    "Sauté onion and garlic, then add marinara and lentils.",
-                    "Simmer 10–15 minutes.",
-                    "Cook pasta and serve topped with lentil sauce."
-                ],
-                foodTags: [.vegan],
-                imageName: "lentil-bolognese"
-            ),
-            Recipe(
-                name: "Teriyaki Tofu Rice Bowls",
-                isForFamily: false,
-                dietTags: [.vegan, .glutenFree],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 30,
-                description: "Crispy tofu with teriyaki sauce over rice and steamed veggies.",
-                ingredients: [
-                    "1 block extra-firm tofu, cubed",
-                    "2 tbsp cornstarch",
-                    "2 tbsp soy or tamari sauce",
-                    "2 tbsp teriyaki sauce",
-                    "2 cups cooked rice",
-                    "2 cups steamed broccoli"
-                ],
-                steps: [
-                    "Press tofu, then toss with cornstarch.",
-                    "Pan-fry until crispy.",
-                    "Add teriyaki sauce and coat.",
-                    "Serve over rice with steamed broccoli."
-                ],
-                foodTags: [.vegan],
-                imageName: "teriyaki-tofu"
-            ),
-            Recipe(
-                name: "Greek Chicken Bowls",
-                isForFamily: false,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.lineCook, .sousChef],
-                cookTimeMinutes: 30,
-                description: "Bowls with marinated chicken, cucumbers, tomatoes, and feta over rice.",
-                ingredients: [
-                    "1 lb chicken breast, cubed",
-                    "1/4 cup olive oil",
-                    "Juice of 1 lemon",
-                    "1 tsp oregano",
-                    "2 cups cooked rice",
-                    "1 cucumber, chopped",
-                    "1 cup cherry tomatoes, halved",
-                    "1/2 cup feta cheese"
-                ],
-                steps: [
-                    "Marinate chicken in olive oil, lemon, and oregano.",
-                    "Cook chicken in a skillet until done.",
-                    "Assemble bowls with rice, chicken, veggies, and feta."
-                ],
-                foodTags: [.chicken],
-                imageName: "greek-chicken"
-            ),
-            Recipe(
-                name: "Slow Cooker Beef Stew",
-                isForFamily: true,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 480,
-                description: "Comforting beef stew with potatoes, carrots, and onions.",
-                ingredients: [
-                    "2 lbs stew beef, cubed",
-                    "4 carrots, sliced",
-                    "4 potatoes, cubed",
-                    "1 onion, chopped",
-                    "3 cups beef broth",
-                    "2 tbsp tomato paste",
-                    "1 tsp thyme",
-                    "Salt & pepper"
-                ],
-                steps: [
-                    "Add all ingredients to a slow cooker.",
-                    "Cook on low 8 hours or high 4–5 hours.",
-                    "Adjust seasoning before serving."
-                ],
-                foodTags: [.beef],
-                imageName: "beef-stew"
-            ),
-            Recipe(
-                name: "Fish Taco Bowls",
-                isForFamily: false,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 25,
-                description: "Seasoned fish over rice with slaw and lime crema.",
-                ingredients: [
-                    "3/4 lb white fish fillets",
-                    "1 tsp chili powder",
-                    "1 tsp cumin",
-                    "2 cups cooked rice",
-                    "1 cup shredded cabbage",
-                    "1/4 cup sour cream",
-                    "Juice of 1 lime"
-                ],
-                steps: [
-                    "Season fish with chili powder and cumin.",
-                    "Bake or pan-cook until flaky.",
-                    "Mix cabbage with a bit of lime and salt.",
-                    "Stir lime juice into sour cream for crema.",
-                    "Serve fish over rice with slaw and crema."
-                ],
-                foodTags: [.fish],
-                imageName: "fish-tacos"
-            ),
-            Recipe(
-                name: "Chickpea Coconut Curry",
-                isForFamily: true,
-                dietTags: [.vegan, .glutenFree],
-                chefLevels: [.lineCook],
-                cookTimeMinutes: 30,
-                description: "Creamy curry with chickpeas and spinach in coconut milk.",
-                ingredients: [
-                    "1 can chickpeas, drained",
-                    "1 can coconut milk",
-                    "1 onion, diced",
-                    "2 tbsp curry powder",
-                    "2 cups baby spinach",
-                    "1 tbsp oil"
-                ],
-                steps: [
-                    "Sauté onion in oil until soft.",
-                    "Stir in curry powder.",
-                    "Add chickpeas and coconut milk, simmer 10–15 minutes.",
-                    "Stir in spinach until wilted."
-                ],
-                foodTags: [.vegan],
-                imageName: "chickpea-curry"
-            ),
-            Recipe(
-                name: "Beef Meatballs with Zoodles",
-                isForFamily: false,
-                dietTags: [.none, .glutenFree],
-                chefLevels: [.sousChef],
-                cookTimeMinutes: 35,
-                description: "Oven-baked beef meatballs served over zucchini noodles and marinara.",
-                ingredients: [
-                    "1 lb ground beef",
-                    "1 egg",
-                    "1/4 cup breadcrumbs (or GF crumbs)",
-                    "1 tsp Italian seasoning",
-                    "2 zucchinis, spiralized",
-                    "1 jar marinara sauce"
-                ],
-                steps: [
-                    "Preheat oven to 400°F (200°C).",
-                    "Mix beef, egg, crumbs, seasoning, and form meatballs.",
-                    "Bake 15–20 minutes until cooked through.",
-                    "Warm marinara and sauté zoodles briefly.",
-                    "Serve meatballs over zoodles with sauce."
-                ],
-                foodTags: [.beef],
-                imageName: "meatballs-zoodles"
-            )
-        ]
-        
-        
-
+        // Load recipes from JSON file
+        self.allRecipes = RecipeService.loadRecipes()
         self.recipes = allRecipes
         
         let likedNames = PersistenceManager.loadLikedRecipeNames()
         self.likedRecipes = allRecipes.filter { likedNames.contains($0.name) }
+        
+        // TODO: Load matched recipes when multi-user is implemented
+        // For now, matchedRecipes stays empty
     }
 
     var currentRecipe: Recipe? {
@@ -797,10 +336,17 @@ struct ContentView: View {
     @StateObject private var viewModel = RecipeSwipeViewModel()
     @State private var preferences = PersistenceManager.loadPreferences() ?? UserPreferences()
     @State private var hasCompletedOnboarding = PersistenceManager.loadPreferences() != nil
+    @State private var showWelcome = true
 
     var body: some View {
         Group {
-            if hasCompletedOnboarding {
+            if showWelcome {
+                WelcomeView {
+                    withAnimation(.easeInOut(duration: 0.4)) {
+                        showWelcome = false
+                    }
+                }
+            } else if hasCompletedOnboarding {
                 MainTabView(viewModel: viewModel, preferences: $preferences)
             } else {
                 OnboardingView(preferences: $preferences) {
@@ -813,6 +359,69 @@ struct ContentView: View {
         .onAppear {
             if hasCompletedOnboarding {
                 viewModel.applyFilters(preferences)
+            }
+        }
+    }
+}
+
+// MARK: - Welcome View
+
+struct WelcomeView: View {
+    var onContinue: () -> Void
+    
+    @State private var logoScale: CGFloat = 0.8
+    @State private var logoOpacity: Double = 0
+    @State private var buttonOpacity: Double = 0
+    
+    var body: some View {
+        ZStack {
+            // Background
+            AppTheme.background
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                Spacer()
+                
+                // Logo - full width
+                Image("welcome-logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .scaleEffect(logoScale)
+                    .opacity(logoOpacity)
+                
+                // Let's Cook button - right under the logo
+                Button {
+                    onContinue()
+                } label: {
+                    Text("Let's Cook")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(AppTheme.primary)
+                                .shadow(color: AppTheme.primary.opacity(0.4), radius: 12, y: 6)
+                        )
+                }
+                .padding(.horizontal, 40)
+                .padding(.top, 30)
+                .opacity(buttonOpacity)
+                
+                Spacer()
+            }
+        }
+        .onAppear {
+            // Animate logo entrance
+            withAnimation(.easeOut(duration: 0.6)) {
+                logoScale = 1.0
+                logoOpacity = 1.0
+            }
+            // Animate button with delay
+            withAnimation(.easeOut(duration: 0.5).delay(0.3)) {
+                buttonOpacity = 1.0
             }
         }
     }
@@ -939,7 +548,7 @@ struct DiscoverView: View {
     Button {
         triggerSwipe(.right)
     } label: {
-        Image(systemName: "heart.fill")
+        Image(systemName: "hand.thumbsup.fill")
             .font(.system(size: 24, weight: .bold))
             .foregroundStyle(.white)
             .frame(width: 64, height: 64)
@@ -979,7 +588,7 @@ struct DiscoverView: View {
     private var preferencesSummary: some View {
         let foodText = preferences.foodPreferences.isEmpty
             ? "Any food"
-            : preferences.foodPreferences.map { $0.rawValue }.joined(separator: ", ")
+            : preferences.foodPreferences.map { $0.displayName }.joined(separator: ", ")
         
         let glutenText = preferences.isGlutenFree ? " • GF" : ""
 
@@ -988,7 +597,7 @@ struct DiscoverView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            Text("\(preferences.householdType.label) • \(foodText)\(glutenText) • \(preferences.chefLevel.rawValue) • \(preferences.time.rawValue)")
+            Text("\(preferences.householdType.label) • \(foodText)\(glutenText) • \(preferences.chefLevel.displayName) • \(preferences.time.rawValue)")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.leading)
@@ -1053,7 +662,7 @@ struct RecipeCard: View {
                 // Category badge
                 HStack {
                     ForEach(recipe.foodTags.prefix(1), id: \.self) { tag in
-                        Text(tag.rawValue.uppercased())
+                        Text(tag.displayName.uppercased())
                             .font(.caption2)
                             .fontWeight(.bold)
                             .tracking(0.5)
@@ -1112,7 +721,7 @@ struct RecipeCard: View {
                     
                     // Difficulty
                     ForEach(recipe.chefLevels.prefix(1)) { level in
-                        Text(level.rawValue)
+                        Text(level.displayName)
                             .font(.caption)
                             .fontWeight(.medium)
                             .padding(.horizontal, 10)
@@ -1176,22 +785,262 @@ struct RecipeBoxView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                if viewModel.likedRecipes.isEmpty {
-                    Text("Meals you both love will show up here.\nFor now, this shows what you've liked.")
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.vertical, 40)
-                } else {
-                    ForEach(viewModel.likedRecipes) { recipe in
-                        NavigationLink(recipe.name) {
-                            RecipeDetailView(recipe: recipe)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Matches Tile
+                    NavigationLink {
+                        RecipeListView(
+                            title: "Matches",
+                            recipes: viewModel.matchedRecipes,
+                            isMatchList: true,
+                            emptyIcon: "heart.circle",
+                            emptyTitle: "No matches yet!",
+                            emptyMessage: "When Chef B likes the same recipes, they'll appear here."
+                        )
+                    } label: {
+                        RecipeCollectionTile(
+                            title: "Matches",
+                            icon: "heart.fill",
+                            recipes: viewModel.matchedRecipes,
+                            accentColor: AppTheme.primary,
+                            emptyMessage: "Waiting for Chef B..."
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    
+                    // My Likes Tile
+                    NavigationLink {
+                        RecipeListView(
+                            title: "My Likes",
+                            recipes: viewModel.likedRecipes,
+                            isMatchList: false,
+                            emptyIcon: "hand.thumbsup.circle",
+                            emptyTitle: "No likes yet!",
+                            emptyMessage: "Swipe right on recipes you'd love to cook."
+                        )
+                    } label: {
+                        RecipeCollectionTile(
+                            title: "My Likes",
+                            icon: "hand.thumbsup.fill",
+                            recipes: viewModel.likedRecipes,
+                            accentColor: AppTheme.secondary,
+                            emptyMessage: "Start swiping to add recipes!"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding()
+            }
+            .background(AppTheme.background)
+            .navigationTitle("Recipe Box")
+        }
+    }
+}
+
+// MARK: - Recipe Collection Tile
+
+struct RecipeCollectionTile: View {
+    let title: String
+    let icon: String
+    let recipes: [Recipe]
+    let accentColor: Color
+    let emptyMessage: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Header
+            HStack {
+                Label(title, systemImage: icon)
+                    .font(.headline)
+                    .foregroundStyle(accentColor)
+                
+                Spacer()
+                
+                HStack(spacing: 4) {
+                    Text("\(recipes.count)")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(AppTheme.textSecondary)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+            }
+            
+            // Thumbnail Grid
+            if recipes.isEmpty {
+                // Empty state
+                HStack {
+                    Spacer()
+                    VStack(spacing: 8) {
+                        Image(systemName: icon)
+                            .font(.system(size: 32))
+                            .foregroundStyle(accentColor.opacity(0.3))
+                        Text(emptyMessage)
+                            .font(.caption)
+                            .foregroundStyle(AppTheme.textSecondary)
+                    }
+                    Spacer()
+                }
+                .frame(height: 80)
+            } else {
+                // Thumbnail grid (show up to 4)
+                HStack(spacing: 8) {
+                    ForEach(recipes.prefix(4)) { recipe in
+                        recipeThumbnail(for: recipe)
+                    }
+                    
+                    // Fill remaining slots with empty placeholders
+                    if recipes.count < 4 {
+                        ForEach(0..<(4 - recipes.count), id: \.self) { _ in
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(accentColor.opacity(0.1))
+                                .aspectRatio(1, contentMode: .fit)
                         }
                     }
                 }
             }
-            .navigationTitle("Recipe Box")
         }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(AppTheme.cardBackground)
+                .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
+        )
+    }
+    
+    @ViewBuilder
+    private func recipeThumbnail(for recipe: Recipe) -> some View {
+        Group {
+            if let uiImage = UIImage(named: recipe.imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                LinearGradient(
+                    colors: [accentColor, accentColor.opacity(0.7)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        }
+        .aspectRatio(1, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+// MARK: - Recipe List View (shown when tile is tapped)
+
+struct RecipeListView: View {
+    let title: String
+    let recipes: [Recipe]
+    let isMatchList: Bool
+    let emptyIcon: String
+    let emptyTitle: String
+    let emptyMessage: String
+    
+    var body: some View {
+        List {
+            if recipes.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: emptyIcon)
+                        .font(.system(size: 50))
+                        .foregroundStyle(isMatchList ? AppTheme.primary.opacity(0.5) : AppTheme.secondary.opacity(0.5))
+                    Text(emptyTitle)
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text(emptyMessage)
+                        .font(.subheadline)
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(recipes) { recipe in
+                    NavigationLink {
+                        RecipeDetailView(recipe: recipe)
+                    } label: {
+                        RecipeRowView(recipe: recipe, isMatch: isMatchList)
+                    }
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle(title)
+    }
+}
+
+// MARK: - Recipe Row (for Recipe Box list)
+
+struct RecipeRowView: View {
+    let recipe: Recipe
+    var isMatch: Bool = false
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Thumbnail image with match indicator
+            ZStack(alignment: .topTrailing) {
+                Group {
+                    if let uiImage = UIImage(named: recipe.imageName) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        // Fallback gradient
+                        LinearGradient(
+                            colors: [AppTheme.primary, AppTheme.primary.opacity(0.7)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    }
+                }
+                .frame(width: 60, height: 60)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+                // Match heart badge
+                if isMatch {
+                    Image(systemName: "heart.fill")
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                        .padding(4)
+                        .background(Circle().fill(AppTheme.primary))
+                        .offset(x: 6, y: -6)
+                }
+            }
+            
+            // Recipe info
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(recipe.name)
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.textPrimary)
+                        .lineLimit(2)
+                    
+                    if isMatch {
+                        Spacer()
+                        Text("It's a match!")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(AppTheme.primary))
+                    }
+                }
+                
+                HStack(spacing: 8) {
+                    Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
+                    Label(recipe.isForFamily ? "Family" : "Couple", 
+                          systemImage: recipe.isForFamily ? "person.3.fill" : "person.2.fill")
+                }
+                .font(.caption)
+                .foregroundStyle(AppTheme.textSecondary)
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
 
@@ -1202,69 +1051,104 @@ struct RecipeDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text(recipe.name)
-                    .font(.title)
-                    .bold()
+            VStack(alignment: .leading, spacing: 0) {
+                // Hero image
+                ZStack(alignment: .bottomLeading) {
+                    Group {
+                        if let uiImage = UIImage(named: recipe.imageName) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            LinearGradient(
+                                colors: [AppTheme.primary, AppTheme.primary.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        }
+                    }
+                    .frame(height: 250)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                    
+                    // Gradient overlay
+                    LinearGradient(
+                        colors: [.clear, .black.opacity(0.5)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 100)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                }
+                .frame(height: 250)
+                
+                // Content
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(recipe.name)
+                        .font(.title)
+                        .bold()
 
-                Text(recipe.description)
-                    .font(.subheadline)
+                    Text(recipe.description)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    HStack {
+                        Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
+                        if recipe.isForFamily {
+                            Label("Family", systemImage: "person.3")
+                        } else {
+                            Label("Couple", systemImage: "person.2")
+                        }
+                    }
+                    .font(.caption)
                     .foregroundStyle(.secondary)
 
-                HStack {
-                    Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
-                    if recipe.isForFamily {
-                        Label("Family", systemImage: "person.3")
-                    } else {
-                        Label("Couple", systemImage: "person.2")
+                    Divider()
+
+                    Text("Ingredients")
+                        .font(.headline)
+
+                    ForEach(recipe.ingredients, id: \.self) { ingredient in
+                        HStack(alignment: .top) {
+                            Text("•")
+                            Text(ingredient)
+                        }
+                    }
+
+                    Divider()
+
+                    Text("Steps")
+                        .font(.headline)
+
+                    ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
+                        HStack(alignment: .top) {
+                            Text("\(index + 1).")
+                                .bold()
+                            Text(step)
+                        }
+                    }
+
+                    Divider()
+
+                    Button {
+                        // Placeholder for future Instacart integration
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Send Ingredients to Instacart (Coming Soon)")
+                                .font(.subheadline)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.green.opacity(0.2))
+                        .cornerRadius(12)
                     }
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-                Divider()
-
-                Text("Ingredients")
-                    .font(.headline)
-
-                ForEach(recipe.ingredients, id: \.self) { ingredient in
-                    HStack(alignment: .top) {
-                        Text("•")
-                        Text(ingredient)
-                    }
-                }
-
-                Divider()
-
-                Text("Steps")
-                    .font(.headline)
-
-                ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
-                    HStack(alignment: .top) {
-                        Text("\(index + 1).")
-                            .bold()
-                        Text(step)
-                    }
-                }
-
-                Divider()
-
-                Button {
-                    // Placeholder for future Instacart integration
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text("Send Ingredients to Instacart (Coming Soon)")
-                            .font(.subheadline)
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Color.green.opacity(0.2))
-                    .cornerRadius(12)
-                }
+                .padding()
             }
-            .padding()
         }
+        .ignoresSafeArea(edges: .top)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -1287,7 +1171,7 @@ struct PreferencesView: View {
 
                 Section("Food preferences") {
                     ForEach(FoodPreference.allCases) { food in
-                        Toggle(food.rawValue, isOn: binding(for: food))
+                        Toggle(food.displayName, isOn: binding(for: food))
                     }
                 }
                 
@@ -1298,7 +1182,7 @@ struct PreferencesView: View {
                 Section("Chef level") {
                     Picker("Chef level", selection: $preferences.chefLevel) {
                         ForEach(ChefLevel.allCases) { level in
-                            Text(level.rawValue).tag(level)
+                            Text(level.displayName).tag(level)
                         }
                     }
                 }
@@ -1460,7 +1344,7 @@ struct OnboardingFoodPreferencesStep: View {
                     .scaledToFit()
                     .frame(width: 24, height: 24)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(food.rawValue)
+                    Text(food.displayName)
                         .font(.subheadline)
                         .fontWeight(.medium)
                     Text(food.subtitle)
@@ -1520,7 +1404,7 @@ struct OnboardingChefLevelStep: View {
             
             Picker("Chef level", selection: $chefLevel) {
                 ForEach(ChefLevel.allCases) { level in
-                    Text(level.rawValue).tag(level)
+                    Text(level.displayName).tag(level)
                 }
             }
             .pickerStyle(.inline)

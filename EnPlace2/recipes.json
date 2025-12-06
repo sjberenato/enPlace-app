@@ -1,0 +1,942 @@
+{
+  "recipes": [
+    {
+      "name": "Baked Italian Sausage and Peppers",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["lineCook", "sousChef"],
+      "cookTimeMinutes": 35,
+      "description": "Sheet pan sausage with bell peppers and onions, tossed in olive oil and Italian herbs.",
+      "ingredients": [
+        "4 Italian sausages",
+        "2 bell peppers, sliced",
+        "1 yellow onion, sliced",
+        "2 tbsp olive oil",
+        "1 tsp Italian seasoning",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 400°F (200°C).",
+        "Slice peppers and onion and toss with olive oil, seasoning, salt, and pepper.",
+        "Add sausages to a sheet pan with the vegetables.",
+        "Bake for 25–30 minutes, flipping sausages halfway through.",
+        "Serve with crusty bread or over rice."
+      ],
+      "foodTags": ["pork"],
+      "imageName": "sausage-peppers"
+    },
+    {
+      "name": "Chicken Tikka Masala",
+      "isForFamily": false,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef", "executiveChef"],
+      "cookTimeMinutes": 45,
+      "description": "Creamy tomato-based curry with marinated chicken, served over basmati rice.",
+      "ingredients": [
+        "1 lb chicken thighs, cubed",
+        "1 cup plain yogurt",
+        "2 tbsp garam masala",
+        "1 tsp turmeric",
+        "1 tsp cumin",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp grated ginger",
+        "1 can (14 oz) tomato sauce",
+        "1 cup heavy cream"
+      ],
+      "steps": [
+        "Marinate chicken in yogurt and spices for at least 30 minutes.",
+        "Sauté onion, garlic, and ginger in a pan until softened.",
+        "Add marinated chicken and cook until browned.",
+        "Pour in tomato sauce and simmer for 15–20 minutes.",
+        "Stir in cream and simmer for another 5 minutes.",
+        "Serve over rice with naan."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "tikka-masala"
+    },
+    {
+      "name": "Sheet Pan Veggie Tacos",
+      "isForFamily": true,
+      "dietTags": ["vegetarian", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 25,
+      "description": "Roasted peppers, onions, and black beans served in warm tortillas.",
+      "ingredients": [
+        "2 bell peppers, sliced",
+        "1 red onion, sliced",
+        "1 can black beans, drained and rinsed",
+        "2 tbsp olive oil",
+        "1 tsp chili powder",
+        "1 tsp cumin",
+        "Corn tortillas"
+      ],
+      "steps": [
+        "Preheat oven to 425°F (220°C).",
+        "Toss peppers, onion, and beans with olive oil and spices.",
+        "Spread on a sheet pan and roast for 15–20 minutes.",
+        "Warm tortillas and fill with roasted veggies.",
+        "Top with salsa, cheese, or avocado as desired."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "veggie-tacos"
+    },
+    {
+      "name": "Lemon Garlic Salmon with Roasted Broccoli",
+      "isForFamily": false,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook", "sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Roasted salmon fillets with lemon, garlic, and broccoli florets.",
+      "ingredients": [
+        "2 salmon fillets",
+        "2 cups broccoli florets",
+        "2 tbsp olive oil",
+        "2 cloves garlic, minced",
+        "1 lemon, sliced",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 400°F (200°C).",
+        "Toss broccoli with olive oil, salt, and pepper.",
+        "Place salmon on a sheet pan, top with garlic and lemon slices.",
+        "Add broccoli around salmon.",
+        "Bake for 15–18 minutes until salmon flakes easily."
+      ],
+      "foodTags": ["fish"],
+      "imageName": "lemon-salmon"
+    },
+    {
+      "name": "One-Pot Creamy Tuscan Chicken Pasta",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 35,
+      "description": "Creamy pasta with chicken, spinach, and sun-dried tomatoes in one pot.",
+      "ingredients": [
+        "1 lb chicken breast, sliced",
+        "8 oz short pasta",
+        "2 cups chicken broth",
+        "1 cup heavy cream",
+        "1/2 cup sun-dried tomatoes, chopped",
+        "2 cups baby spinach",
+        "2 cloves garlic, minced"
+      ],
+      "steps": [
+        "Sauté chicken until lightly browned.",
+        "Add garlic and cook briefly.",
+        "Add pasta, broth, cream, and sun-dried tomatoes.",
+        "Simmer until pasta is cooked.",
+        "Stir in spinach until wilted."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "tuscan-pasta"
+    },
+    {
+      "name": "Black Bean & Sweet Potato Chili",
+      "isForFamily": true,
+      "dietTags": ["vegetarian", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 40,
+      "description": "Hearty vegetarian chili with black beans and sweet potatoes.",
+      "ingredients": [
+        "1 large sweet potato, cubed",
+        "1 can black beans, drained",
+        "1 can diced tomatoes",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "2 tbsp chili powder",
+        "1 tsp cumin",
+        "2 cups vegetable broth"
+      ],
+      "steps": [
+        "Sauté onion and garlic until softened.",
+        "Add sweet potato and spices, cook a few minutes.",
+        "Add beans, tomatoes, and broth.",
+        "Simmer 25–30 minutes until sweet potato is tender."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "sweet-potato-chili"
+    },
+    {
+      "name": "Beef & Broccoli Stir Fry",
+      "isForFamily": false,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 25,
+      "description": "Quick stir fry with sliced beef, broccoli, and a savory sauce.",
+      "ingredients": [
+        "3/4 lb flank steak, sliced thin",
+        "2 cups broccoli florets",
+        "2 tbsp soy sauce",
+        "1 tbsp oyster sauce",
+        "1 tbsp cornstarch",
+        "2 cloves garlic, minced",
+        "1 tbsp vegetable oil"
+      ],
+      "steps": [
+        "Marinate beef in soy sauce and cornstarch.",
+        "Stir-fry beef until browned, remove from pan.",
+        "Stir-fry broccoli and garlic.",
+        "Return beef and add oyster sauce, toss to coat."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "beef-broccoli"
+    },
+    {
+      "name": "Crispy Pork Carnitas Tacos",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 50,
+      "description": "Slow-simmered pork crisped under the broiler and served in tortillas.",
+      "ingredients": [
+        "2 lbs pork shoulder, cubed",
+        "1 onion, quartered",
+        "2 cloves garlic",
+        "1 orange, juiced",
+        "1 tsp cumin",
+        "1 tsp oregano",
+        "Corn tortillas"
+      ],
+      "steps": [
+        "Simmer pork with onion, garlic, orange juice, and spices until tender.",
+        "Shred pork and spread on a sheet pan.",
+        "Broil until edges are crispy.",
+        "Serve in warm tortillas with toppings."
+      ],
+      "foodTags": ["pork"],
+      "imageName": "carnitas"
+    },
+    {
+      "name": "Margherita Flatbread Pizza",
+      "isForFamily": false,
+      "dietTags": ["vegetarian"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 20,
+      "description": "Flatbread topped with tomato sauce, fresh mozzarella, and basil.",
+      "ingredients": [
+        "2 flatbreads",
+        "1/2 cup tomato sauce",
+        "4 oz fresh mozzarella, sliced",
+        "Fresh basil leaves",
+        "Olive oil"
+      ],
+      "steps": [
+        "Preheat oven to 425°F (220°C).",
+        "Spread sauce on flatbreads.",
+        "Top with mozzarella slices.",
+        "Bake 8–10 minutes until cheese melts.",
+        "Garnish with basil and drizzle with olive oil."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "margherita-pizza"
+    },
+    {
+      "name": "Peanut Noodle Veggie Bowls",
+      "isForFamily": false,
+      "dietTags": ["vegan"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Rice noodles with a peanut sauce and crunchy veggies.",
+      "ingredients": [
+        "8 oz rice noodles",
+        "1 red bell pepper, sliced",
+        "1 cup shredded carrots",
+        "1 cucumber, sliced",
+        "1/3 cup peanut butter",
+        "2 tbsp soy sauce",
+        "1 tbsp lime juice",
+        "1 tbsp maple syrup",
+        "Water to thin"
+      ],
+      "steps": [
+        "Cook rice noodles according to package.",
+        "Whisk peanut butter, soy sauce, lime, and syrup with water.",
+        "Toss noodles with sauce and veggies.",
+        "Serve with extra lime wedges."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "peanut-noodles"
+    },
+    {
+      "name": "Shrimp Fried Rice",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Fried rice with shrimp, peas, carrots, and eggs.",
+      "ingredients": [
+        "3 cups cooked rice (day-old preferred)",
+        "8 oz shrimp, peeled",
+        "1/2 cup frozen peas and carrots",
+        "2 eggs, beaten",
+        "2 tbsp soy sauce",
+        "2 tbsp vegetable oil",
+        "2 green onions, sliced"
+      ],
+      "steps": [
+        "Scramble eggs in a hot pan, set aside.",
+        "Stir-fry shrimp until pink, remove.",
+        "Stir-fry rice with peas and carrots.",
+        "Add soy sauce, eggs, shrimp, and green onions and toss."
+      ],
+      "foodTags": ["fish"],
+      "imageName": "shrimp-fried-rice"
+    },
+    {
+      "name": "BBQ Chicken Sheet Pan Dinner",
+      "isForFamily": true,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 35,
+      "description": "BBQ chicken thighs roasted with potatoes and green beans.",
+      "ingredients": [
+        "6 chicken thighs",
+        "1/2 cup BBQ sauce",
+        "1 lb baby potatoes, halved",
+        "2 cups green beans, trimmed",
+        "2 tbsp olive oil",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 400°F (200°C).",
+        "Toss potatoes and green beans with olive oil, salt, and pepper.",
+        "Spread on sheet pan with chicken thighs.",
+        "Brush chicken with BBQ sauce.",
+        "Roast 30–35 minutes until chicken is cooked through."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "bbq-chicken"
+    },
+    {
+      "name": "Veggie Frittata",
+      "isForFamily": false,
+      "dietTags": ["vegetarian", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 25,
+      "description": "Egg-based frittata with spinach, peppers, and cheese.",
+      "ingredients": [
+        "6 eggs",
+        "1/2 cup shredded cheese",
+        "1 cup spinach",
+        "1/2 red bell pepper, diced",
+        "1/4 cup milk",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 375°F (190°C).",
+        "Whisk eggs, milk, salt, and pepper.",
+        "Add veggies and cheese.",
+        "Pour into greased oven-safe skillet.",
+        "Bake 15–18 minutes until set."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "frittata"
+    },
+    {
+      "name": "Lentil Bolognese over Pasta",
+      "isForFamily": true,
+      "dietTags": ["vegan"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 40,
+      "description": "Hearty tomato sauce with lentils served over pasta.",
+      "ingredients": [
+        "1 cup dry lentils",
+        "1 jar marinara sauce",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "2 tbsp olive oil",
+        "8 oz pasta"
+      ],
+      "steps": [
+        "Cook lentils until tender.",
+        "Sauté onion and garlic, then add marinara and lentils.",
+        "Simmer 10–15 minutes.",
+        "Cook pasta and serve topped with lentil sauce."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "lentil-bolognese"
+    },
+    {
+      "name": "Teriyaki Tofu Rice Bowls",
+      "isForFamily": false,
+      "dietTags": ["vegan", "glutenFree"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Crispy tofu with teriyaki sauce over rice and steamed veggies.",
+      "ingredients": [
+        "1 block extra-firm tofu, cubed",
+        "2 tbsp cornstarch",
+        "2 tbsp soy or tamari sauce",
+        "2 tbsp teriyaki sauce",
+        "2 cups cooked rice",
+        "2 cups steamed broccoli"
+      ],
+      "steps": [
+        "Press tofu, then toss with cornstarch.",
+        "Pan-fry until crispy.",
+        "Add teriyaki sauce and coat.",
+        "Serve over rice with steamed broccoli."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "teriyaki-tofu"
+    },
+    {
+      "name": "Greek Chicken Bowls",
+      "isForFamily": false,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook", "sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Bowls with marinated chicken, cucumbers, tomatoes, and feta over rice.",
+      "ingredients": [
+        "1 lb chicken breast, cubed",
+        "1/4 cup olive oil",
+        "Juice of 1 lemon",
+        "1 tsp oregano",
+        "2 cups cooked rice",
+        "1 cucumber, chopped",
+        "1 cup cherry tomatoes, halved",
+        "1/2 cup feta cheese"
+      ],
+      "steps": [
+        "Marinate chicken in olive oil, lemon, and oregano.",
+        "Cook chicken in a skillet until done.",
+        "Assemble bowls with rice, chicken, veggies, and feta."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "greek-chicken"
+    },
+    {
+      "name": "Slow Cooker Beef Stew",
+      "isForFamily": true,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 480,
+      "description": "Comforting beef stew with potatoes, carrots, and onions.",
+      "ingredients": [
+        "2 lbs stew beef, cubed",
+        "4 carrots, sliced",
+        "4 potatoes, cubed",
+        "1 onion, chopped",
+        "3 cups beef broth",
+        "2 tbsp tomato paste",
+        "1 tsp thyme",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Add all ingredients to a slow cooker.",
+        "Cook on low 8 hours or high 4–5 hours.",
+        "Adjust seasoning before serving."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "beef-stew"
+    },
+    {
+      "name": "Fish Taco Bowls",
+      "isForFamily": false,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 25,
+      "description": "Seasoned fish over rice with slaw and lime crema.",
+      "ingredients": [
+        "3/4 lb white fish fillets",
+        "1 tsp chili powder",
+        "1 tsp cumin",
+        "2 cups cooked rice",
+        "1 cup shredded cabbage",
+        "1/4 cup sour cream",
+        "Juice of 1 lime"
+      ],
+      "steps": [
+        "Season fish with chili powder and cumin.",
+        "Bake or pan-cook until flaky.",
+        "Mix cabbage with a bit of lime and salt.",
+        "Stir lime juice into sour cream for crema.",
+        "Serve fish over rice with slaw and crema."
+      ],
+      "foodTags": ["fish"],
+      "imageName": "fish-tacos"
+    },
+    {
+      "name": "Chickpea Coconut Curry",
+      "isForFamily": true,
+      "dietTags": ["vegan", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 30,
+      "description": "Creamy curry with chickpeas and spinach in coconut milk.",
+      "ingredients": [
+        "1 can chickpeas, drained",
+        "1 can coconut milk",
+        "1 onion, diced",
+        "2 tbsp curry powder",
+        "2 cups baby spinach",
+        "1 tbsp oil"
+      ],
+      "steps": [
+        "Sauté onion in oil until soft.",
+        "Stir in curry powder.",
+        "Add chickpeas and coconut milk, simmer 10–15 minutes.",
+        "Stir in spinach until wilted."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "chickpea-curry"
+    },
+    {
+      "name": "Beef Meatballs with Zoodles",
+      "isForFamily": false,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 35,
+      "description": "Oven-baked beef meatballs served over zucchini noodles and marinara.",
+      "ingredients": [
+        "1 lb ground beef",
+        "1 egg",
+        "1/4 cup breadcrumbs (or GF crumbs)",
+        "1 tsp Italian seasoning",
+        "2 zucchinis, spiralized",
+        "1 jar marinara sauce"
+      ],
+      "steps": [
+        "Preheat oven to 400°F (200°C).",
+        "Mix beef, egg, crumbs, seasoning, and form meatballs.",
+        "Bake 15–20 minutes until cooked through.",
+        "Warm marinara and sauté zoodles briefly.",
+        "Serve meatballs over zoodles with sauce."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "meatballs-zoodles"
+    },
+    {
+      "name": "Honey Garlic Glazed Salmon",
+      "isForFamily": false,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 25,
+      "description": "Pan-seared salmon with a sticky honey garlic glaze, served with steamed asparagus.",
+      "ingredients": [
+        "2 salmon fillets",
+        "3 tbsp honey",
+        "2 tbsp soy sauce",
+        "3 cloves garlic, minced",
+        "1 tbsp butter",
+        "1 bunch asparagus",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Season salmon with salt and pepper.",
+        "Sear salmon in a hot pan skin-side up for 4 minutes, then flip.",
+        "Mix honey, soy sauce, and garlic.",
+        "Add butter and honey mixture to pan, baste salmon.",
+        "Steam asparagus until tender-crisp.",
+        "Serve salmon over asparagus, drizzled with glaze."
+      ],
+      "foodTags": ["fish"],
+      "imageName": "honey-garlic-salmon"
+    },
+    {
+      "name": "Classic Beef Tacos",
+      "isForFamily": true,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 30,
+      "description": "Seasoned ground beef in crispy taco shells with all the fixings.",
+      "ingredients": [
+        "1 lb ground beef",
+        "1 packet taco seasoning (or 2 tbsp homemade)",
+        "8 taco shells",
+        "1 cup shredded cheese",
+        "1 cup shredded lettuce",
+        "1 tomato, diced",
+        "Sour cream",
+        "Salsa"
+      ],
+      "steps": [
+        "Brown ground beef in a skillet, drain excess fat.",
+        "Add taco seasoning and 1/4 cup water, simmer 5 minutes.",
+        "Warm taco shells according to package.",
+        "Fill shells with beef and top with cheese, lettuce, tomato.",
+        "Serve with sour cream and salsa."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "beef-tacos"
+    },
+    {
+      "name": "Mushroom Risotto",
+      "isForFamily": false,
+      "dietTags": ["vegetarian", "glutenFree"],
+      "chefLevels": ["executiveChef"],
+      "cookTimeMinutes": 45,
+      "description": "Creamy Italian risotto with sautéed mushrooms and parmesan cheese.",
+      "ingredients": [
+        "1 cup Arborio rice",
+        "8 oz mixed mushrooms, sliced",
+        "4 cups vegetable broth, warm",
+        "1/2 cup white wine",
+        "1/2 cup grated parmesan",
+        "1 shallot, minced",
+        "2 tbsp butter",
+        "2 tbsp olive oil",
+        "Fresh thyme"
+      ],
+      "steps": [
+        "Sauté mushrooms in butter until golden, set aside.",
+        "Sauté shallot in olive oil, add rice and toast 2 minutes.",
+        "Add wine and stir until absorbed.",
+        "Add broth one ladle at a time, stirring constantly.",
+        "Continue until rice is creamy and al dente (about 20 min).",
+        "Stir in mushrooms, parmesan, and butter.",
+        "Garnish with fresh thyme."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "mushroom-risotto"
+    },
+    {
+      "name": "Baked Ziti with Sausage",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 50,
+      "description": "Hearty baked pasta with Italian sausage, ricotta, and melted mozzarella.",
+      "ingredients": [
+        "1 lb ziti pasta",
+        "1 lb Italian sausage",
+        "1 jar marinara sauce (24 oz)",
+        "1 cup ricotta cheese",
+        "2 cups shredded mozzarella",
+        "1/2 cup grated parmesan",
+        "Fresh basil"
+      ],
+      "steps": [
+        "Preheat oven to 375°F (190°C).",
+        "Cook pasta until just al dente, drain.",
+        "Brown sausage, breaking into pieces.",
+        "Mix pasta, sausage, marinara, and ricotta.",
+        "Pour into baking dish, top with mozzarella and parmesan.",
+        "Bake 25–30 minutes until bubbly and golden.",
+        "Garnish with fresh basil."
+      ],
+      "foodTags": ["pork"],
+      "imageName": "baked-ziti"
+    },
+    {
+      "name": "Thai Basil Chicken",
+      "isForFamily": false,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 20,
+      "description": "Spicy stir-fried ground chicken with Thai basil and a fried egg over rice.",
+      "ingredients": [
+        "1 lb ground chicken",
+        "4 cloves garlic, minced",
+        "2 Thai chilies, sliced (or 1 tsp chili flakes)",
+        "2 tbsp soy sauce",
+        "1 tbsp fish sauce",
+        "1 tbsp oyster sauce",
+        "1 tsp sugar",
+        "1 cup fresh Thai basil leaves",
+        "2 eggs",
+        "Jasmine rice"
+      ],
+      "steps": [
+        "Cook jasmine rice according to package.",
+        "Stir-fry garlic and chilies in hot oil for 30 seconds.",
+        "Add ground chicken, cook until browned.",
+        "Add soy sauce, fish sauce, oyster sauce, and sugar.",
+        "Toss in Thai basil until just wilted.",
+        "Fry eggs sunny-side up.",
+        "Serve chicken over rice topped with fried egg."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "thai-basil-chicken"
+    },
+    {
+      "name": "Stuffed Bell Peppers",
+      "isForFamily": true,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 45,
+      "description": "Bell peppers stuffed with seasoned beef, rice, and topped with melted cheese.",
+      "ingredients": [
+        "4 large bell peppers",
+        "1 lb ground beef",
+        "1 cup cooked rice",
+        "1 can diced tomatoes",
+        "1 cup shredded cheddar cheese",
+        "1 tsp Italian seasoning",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 375°F (190°C).",
+        "Cut tops off peppers and remove seeds.",
+        "Brown beef, drain, and mix with rice, tomatoes, and seasoning.",
+        "Stuff peppers with beef mixture.",
+        "Place in baking dish, cover with foil.",
+        "Bake 30 minutes, remove foil, top with cheese.",
+        "Bake 10 more minutes until cheese is melted."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "stuffed-peppers"
+    },
+    {
+      "name": "Coconut Shrimp with Mango Salsa",
+      "isForFamily": false,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Crispy coconut-crusted shrimp served with fresh mango salsa.",
+      "ingredients": [
+        "1 lb large shrimp, peeled and deveined",
+        "1 cup shredded coconut",
+        "1/2 cup panko breadcrumbs",
+        "1/2 cup flour",
+        "2 eggs, beaten",
+        "1 ripe mango, diced",
+        "1/4 red onion, diced",
+        "1 jalapeño, minced",
+        "Juice of 1 lime",
+        "Fresh cilantro"
+      ],
+      "steps": [
+        "Preheat oven to 425°F (220°C).",
+        "Mix coconut and panko in a bowl.",
+        "Dredge shrimp in flour, dip in egg, coat in coconut mixture.",
+        "Place on baking sheet, bake 12–15 minutes until golden.",
+        "Mix mango, onion, jalapeño, lime juice, and cilantro for salsa.",
+        "Serve shrimp with mango salsa."
+      ],
+      "foodTags": ["fish"],
+      "imageName": "coconut-shrimp"
+    },
+    {
+      "name": "Vegan Buddha Bowl",
+      "isForFamily": false,
+      "dietTags": ["vegan", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 25,
+      "description": "Nourishing bowl with quinoa, roasted chickpeas, avocado, and tahini drizzle.",
+      "ingredients": [
+        "1 cup quinoa",
+        "1 can chickpeas, drained",
+        "1 avocado, sliced",
+        "1 cup shredded purple cabbage",
+        "1 cup shredded carrots",
+        "2 tbsp tahini",
+        "1 tbsp lemon juice",
+        "1 tsp cumin",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Cook quinoa according to package.",
+        "Toss chickpeas with cumin, salt, and oil.",
+        "Roast chickpeas at 400°F for 20 minutes until crispy.",
+        "Whisk tahini with lemon juice and water to thin.",
+        "Assemble bowls with quinoa, chickpeas, avocado, cabbage, carrots.",
+        "Drizzle with tahini dressing."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "buddha-bowl"
+    },
+    {
+      "name": "Pulled Pork Sandwiches",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 480,
+      "description": "Slow cooker pulled pork with tangy coleslaw on soft brioche buns.",
+      "ingredients": [
+        "3 lb pork shoulder",
+        "1 cup BBQ sauce",
+        "1/2 cup apple cider vinegar",
+        "1 tbsp brown sugar",
+        "1 tsp smoked paprika",
+        "4 cups coleslaw mix",
+        "1/4 cup mayonnaise",
+        "Brioche buns"
+      ],
+      "steps": [
+        "Rub pork with paprika, salt, and pepper.",
+        "Place in slow cooker with vinegar and brown sugar.",
+        "Cook on low 8 hours until fork-tender.",
+        "Shred pork and mix with BBQ sauce.",
+        "Toss coleslaw mix with mayo and a splash of vinegar.",
+        "Pile pork on buns and top with coleslaw."
+      ],
+      "foodTags": ["pork"],
+      "imageName": "pulled-pork"
+    },
+    {
+      "name": "Eggplant Parmesan",
+      "isForFamily": false,
+      "dietTags": ["vegetarian"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 50,
+      "description": "Breaded eggplant slices baked with marinara and melted mozzarella.",
+      "ingredients": [
+        "1 large eggplant, sliced 1/2 inch thick",
+        "1 cup breadcrumbs",
+        "1/2 cup grated parmesan",
+        "2 eggs, beaten",
+        "2 cups marinara sauce",
+        "1 1/2 cups shredded mozzarella",
+        "Fresh basil"
+      ],
+      "steps": [
+        "Preheat oven to 400°F (200°C).",
+        "Salt eggplant slices and let sit 20 minutes, pat dry.",
+        "Mix breadcrumbs and parmesan.",
+        "Dip eggplant in egg, then breadcrumb mixture.",
+        "Bake on sheet pan 20 minutes, flipping halfway.",
+        "Layer in baking dish with marinara and mozzarella.",
+        "Bake 15 minutes until cheese is bubbly."
+      ],
+      "foodTags": ["vegetarian"],
+      "imageName": "eggplant-parm"
+    },
+    {
+      "name": "One-Pan Lemon Herb Chicken & Potatoes",
+      "isForFamily": true,
+      "dietTags": ["none", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 40,
+      "description": "Juicy chicken thighs roasted with golden potatoes and fresh herbs.",
+      "ingredients": [
+        "6 chicken thighs",
+        "1 lb baby potatoes, halved",
+        "4 cloves garlic, minced",
+        "2 tbsp olive oil",
+        "Juice of 1 lemon",
+        "1 tbsp fresh rosemary",
+        "1 tbsp fresh thyme",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 425°F (220°C).",
+        "Toss potatoes with oil, garlic, herbs, salt, and pepper.",
+        "Spread on sheet pan, nestle chicken thighs on top.",
+        "Season chicken and drizzle with lemon juice.",
+        "Roast 35–40 minutes until chicken reaches 165°F.",
+        "Let rest 5 minutes before serving."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "lemon-herb-chicken"
+    },
+    {
+      "name": "Vegetable Pad Thai",
+      "isForFamily": false,
+      "dietTags": ["vegan"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 30,
+      "description": "Classic Thai noodles with tofu, bean sprouts, and tangy tamarind sauce.",
+      "ingredients": [
+        "8 oz rice noodles",
+        "1 block firm tofu, cubed",
+        "2 cups bean sprouts",
+        "3 green onions, sliced",
+        "1/4 cup crushed peanuts",
+        "3 tbsp tamarind paste",
+        "2 tbsp soy sauce",
+        "1 tbsp maple syrup",
+        "1 tbsp rice vinegar",
+        "Lime wedges"
+      ],
+      "steps": [
+        "Soak rice noodles in warm water until softened.",
+        "Press and cube tofu, pan-fry until golden.",
+        "Mix tamarind, soy sauce, maple syrup, and vinegar for sauce.",
+        "Stir-fry noodles with sauce until coated.",
+        "Add tofu, bean sprouts, and green onions.",
+        "Serve with crushed peanuts and lime wedges."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "veggie-pad-thai"
+    },
+    {
+      "name": "Beef Stroganoff",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["sousChef"],
+      "cookTimeMinutes": 35,
+      "description": "Tender beef strips in a creamy mushroom sauce over egg noodles.",
+      "ingredients": [
+        "1 lb beef sirloin, sliced thin",
+        "8 oz egg noodles",
+        "8 oz mushrooms, sliced",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "1 cup beef broth",
+        "1 cup sour cream",
+        "2 tbsp flour",
+        "2 tbsp butter",
+        "Fresh parsley"
+      ],
+      "steps": [
+        "Cook egg noodles according to package.",
+        "Sear beef strips in hot pan, set aside.",
+        "Sauté onion and mushrooms in butter until golden.",
+        "Add garlic and flour, stir 1 minute.",
+        "Pour in beef broth, simmer until thickened.",
+        "Remove from heat, stir in sour cream and beef.",
+        "Serve over egg noodles, garnish with parsley."
+      ],
+      "foodTags": ["beef"],
+      "imageName": "beef-stroganoff"
+    },
+    {
+      "name": "Mediterranean Quinoa Salad",
+      "isForFamily": false,
+      "dietTags": ["vegan", "glutenFree"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 20,
+      "description": "Fresh and light quinoa salad with cucumber, tomatoes, olives, and lemon dressing.",
+      "ingredients": [
+        "1 cup quinoa",
+        "1 cucumber, diced",
+        "1 cup cherry tomatoes, halved",
+        "1/2 cup kalamata olives, halved",
+        "1/4 red onion, diced",
+        "1/4 cup olive oil",
+        "Juice of 1 lemon",
+        "1 tsp dried oregano",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Cook quinoa according to package, let cool.",
+        "Chop all vegetables.",
+        "Whisk olive oil, lemon juice, oregano, salt, and pepper.",
+        "Toss quinoa with vegetables and dressing.",
+        "Serve chilled or at room temperature."
+      ],
+      "foodTags": ["vegan"],
+      "imageName": "quinoa-salad"
+    },
+    {
+      "name": "Crispy Baked Chicken Tenders",
+      "isForFamily": true,
+      "dietTags": ["none"],
+      "chefLevels": ["lineCook"],
+      "cookTimeMinutes": 30,
+      "description": "Kid-friendly crispy chicken tenders baked to golden perfection.",
+      "ingredients": [
+        "1.5 lbs chicken tenders",
+        "1 cup panko breadcrumbs",
+        "1/2 cup flour",
+        "2 eggs, beaten",
+        "1 tsp garlic powder",
+        "1 tsp paprika",
+        "Honey mustard for dipping",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat oven to 425°F (220°C).",
+        "Mix panko with garlic powder, paprika, salt, and pepper.",
+        "Dredge chicken in flour, dip in egg, coat in panko.",
+        "Place on greased baking sheet.",
+        "Bake 18–20 minutes, flipping halfway, until golden.",
+        "Serve with honey mustard dipping sauce."
+      ],
+      "foodTags": ["chicken"],
+      "imageName": "chicken-tenders"
+    }
+  ]
+}
