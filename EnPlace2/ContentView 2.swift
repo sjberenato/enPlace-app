@@ -232,8 +232,8 @@ final class RecipeSwipeViewModel: ObservableObject {
         let likedNames = PersistenceManager.loadLikedRecipeNames()
         self.likedRecipes = allRecipes.filter { likedNames.contains($0.name) }
         
-        // TODO: Load matched recipes when multi-user is implemented
-        // For now, matchedRecipes stays empty
+        // Load matches from Firebase if available
+        updateMatchesFromFirebase(matchedNames: FirebaseService.shared.matchedRecipeNames)
     }
 
     var currentRecipe: Recipe? {
@@ -246,6 +246,11 @@ final class RecipeSwipeViewModel: ObservableObject {
             if !likedRecipes.contains(recipe) {
                 likedRecipes.append(recipe)
                 PersistenceManager.saveLikedRecipes(likedRecipes)
+                
+                // Sync to Firebase
+                Task {
+                    try? await FirebaseService.shared.likeRecipe(recipeName: recipe.name)
+                }
             }
         }
         goToNextRecipe()
@@ -259,6 +264,16 @@ final class RecipeSwipeViewModel: ObservableObject {
         if currentIndex < recipes.count - 1 {
             currentIndex += 1
         }
+    }
+    
+    /// Update matched recipes from Firebase
+    func updateMatchesFromFirebase(matchedNames: [String]) {
+        matchedRecipes = allRecipes.filter { matchedNames.contains($0.name) }
+    }
+    
+    /// Update liked recipes from Firebase (for syncing)
+    func updateLikesFromFirebase(likedNames: [String]) {
+        likedRecipes = allRecipes.filter { likedNames.contains($0.name) }
     }
 
     func applyFilters(_ preferences: UserPreferences) {
@@ -334,31 +349,52 @@ final class RecipeSwipeViewModel: ObservableObject {
 
 struct ContentView: View {
     @StateObject private var viewModel = RecipeSwipeViewModel()
+    @StateObject private var firebaseService = FirebaseService.shared
     @State private var preferences = PersistenceManager.loadPreferences() ?? UserPreferences()
     @State private var hasCompletedOnboarding = PersistenceManager.loadPreferences() != nil
     @State private var showWelcome = true
+    @State private var hasAcknowledgedInviteCode = false
 
     var body: some View {
         Group {
             if showWelcome {
+                // Step 1: Welcome screen
                 WelcomeView {
                     withAnimation(.easeInOut(duration: 0.4)) {
                         showWelcome = false
                     }
                 }
-            } else if hasCompletedOnboarding {
-                MainTabView(viewModel: viewModel, preferences: $preferences)
-            } else {
+            } else if !firebaseService.isAuthenticated {
+                // Step 2: Sign in / Sign up
+                AuthContainerView()
+            } else if firebaseService.currentHousehold == nil || !hasAcknowledgedInviteCode {
+                // Step 3: Create or join a household (stays here until user acknowledges invite code)
+                HouseholdSetupView(onContinue: {
+                    withAnimation {
+                        hasAcknowledgedInviteCode = true
+                    }
+                })
+            } else if !hasCompletedOnboarding {
+                // Step 4: Preferences onboarding
                 OnboardingView(preferences: $preferences) {
                     hasCompletedOnboarding = true
                     PersistenceManager.savePreferences(preferences)
                     viewModel.applyFilters(preferences)
                 }
+            } else {
+                // Step 5: Main app
+                MainTabView(viewModel: viewModel, preferences: $preferences)
             }
         }
         .onAppear {
             if hasCompletedOnboarding {
                 viewModel.applyFilters(preferences)
+            }
+        }
+        // Sync matched recipes from Firebase to ViewModel
+        .onChange(of: firebaseService.currentHousehold?.matches) { newMatches in
+            if let matches = newMatches {
+                viewModel.updateMatchesFromFirebase(matchedNames: matches)
             }
         }
     }
