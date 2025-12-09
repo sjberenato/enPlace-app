@@ -23,7 +23,7 @@ struct EnPlaceUser: Codable {
 
 // MARK: - Household Model
 
-struct Household: Codable {
+struct Household: Codable, Equatable {
     let id: String
     let inviteCode: String
     var chefAId: String

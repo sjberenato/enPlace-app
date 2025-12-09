@@ -273,7 +273,15 @@ final class RecipeSwipeViewModel: ObservableObject {
     
     /// Update liked recipes from Firebase (for syncing)
     func updateLikesFromFirebase(likedNames: [String]) {
-        likedRecipes = allRecipes.filter { likedNames.contains($0.name) }
+        let firebaseLikes = allRecipes.filter { likedNames.contains($0.name) }
+        // Merge with existing local likes (don't lose any)
+        for recipe in firebaseLikes {
+            if !likedRecipes.contains(recipe) {
+                likedRecipes.append(recipe)
+            }
+        }
+        // Save merged likes to local storage
+        PersistenceManager.saveLikedRecipes(likedRecipes)
     }
 
     func applyFilters(_ preferences: UserPreferences) {
@@ -367,34 +375,47 @@ struct ContentView: View {
             } else if !firebaseService.isAuthenticated {
                 // Step 2: Sign in / Sign up
                 AuthContainerView()
-            } else if firebaseService.currentHousehold == nil || !hasAcknowledgedInviteCode {
-                // Step 3: Create or join a household (stays here until user acknowledges invite code)
+            } else if firebaseService.currentHousehold == nil {
+                // Step 3a: No household yet - create or join one
+                HouseholdSetupView(onContinue: {
+                    withAnimation {
+                        hasAcknowledgedInviteCode = true
+                    }
+                })
+            } else if !hasCompletedOnboarding && !hasAcknowledgedInviteCode && firebaseService.currentUser?.isChefA == true {
+                // Step 3b: Chef A just created household - show invite code
+                // (Chef B skips this step and goes directly to onboarding)
                 HouseholdSetupView(onContinue: {
                     withAnimation {
                         hasAcknowledgedInviteCode = true
                     }
                 })
             } else if !hasCompletedOnboarding {
-                // Step 4: Preferences onboarding
+                // Step 4: Preferences onboarding (new users)
                 OnboardingView(preferences: $preferences) {
                     hasCompletedOnboarding = true
                     PersistenceManager.savePreferences(preferences)
                     viewModel.applyFilters(preferences)
                 }
             } else {
-                // Step 5: Main app
+                // Step 5: Main app (returning users skip straight here)
                 MainTabView(viewModel: viewModel, preferences: $preferences)
             }
         }
+        .environmentObject(firebaseService)
         .onAppear {
             if hasCompletedOnboarding {
                 viewModel.applyFilters(preferences)
             }
         }
-        // Sync matched recipes from Firebase to ViewModel
-        .onChange(of: firebaseService.currentHousehold?.matches) { newMatches in
-            if let matches = newMatches {
-                viewModel.updateMatchesFromFirebase(matchedNames: matches)
+        // Sync data from Firebase whenever household changes
+        .onChange(of: firebaseService.currentHousehold) { newHousehold in
+            if let household = newHousehold {
+                // Sync matches
+                viewModel.updateMatchesFromFirebase(matchedNames: household.matches)
+                // Sync likes
+                viewModel.updateLikesFromFirebase(likedNames: firebaseService.myLikes)
+                print("🔄 Synced from Firebase - Matches: \(household.matches.count), Likes: \(firebaseService.myLikes.count)")
             }
         }
     }
@@ -481,9 +502,9 @@ struct MainTabView: View {
                     Label("Recipe Box", systemImage: "books.vertical")
                 }
 
-            PreferencesView(preferences: $preferences)
+            MyKitchenView(preferences: $preferences)
                 .tabItem {
-                    Label("Preferences", systemImage: "slider.horizontal.3")
+                    Label("My Kitchen", systemImage: "fork.knife")
                 }
         }
         .onChange(of: preferences) { newValue in
@@ -1188,14 +1209,74 @@ struct RecipeDetailView: View {
     }
 }
 
-// MARK: - Preferences Screen
+// MARK: - My Kitchen Screen
 
-struct PreferencesView: View {
+struct MyKitchenView: View {
     @Binding var preferences: UserPreferences
+    @EnvironmentObject var firebaseService: FirebaseService
+    @State private var showingSignOutAlert = false
 
     var body: some View {
         NavigationStack {
             Form {
+                // MARK: - Kitchen Info Section
+                Section {
+                    if let household = firebaseService.currentHousehold {
+                        HStack {
+                            Image(systemName: "house.fill")
+                                .foregroundColor(AppTheme.primary)
+                                .font(.title2)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Kitchen Code")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(household.inviteCode)
+                                    .font(.headline)
+                                    .fontDesign(.monospaced)
+                            }
+                            Spacer()
+                            Button {
+                                UIPasteboard.general.string = household.inviteCode
+                            } label: {
+                                Image(systemName: "doc.on.doc")
+                                    .foregroundColor(AppTheme.primary)
+                            }
+                        }
+                        
+                        HStack {
+                            Image(systemName: "person.2.fill")
+                                .foregroundColor(AppTheme.primary)
+                                .font(.title2)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Chefs in Kitchen")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                let memberCount = household.chefBId != nil ? 2 : 1
+                                Text("\(memberCount) chef\(memberCount == 1 ? "" : "s")")
+                                    .font(.headline)
+                            }
+                        }
+                    }
+                    
+                    if let user = firebaseService.currentUser {
+                        HStack {
+                            Image(systemName: "envelope.fill")
+                                .foregroundColor(AppTheme.primary)
+                                .font(.title2)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Account")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(user.email)
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("My Kitchen")
+                }
+                
+                // MARK: - Cooking Preferences
                 Section("Who are you cooking for?") {
                     Picker("Cooking for", selection: $preferences.householdType) {
                         ForEach(HouseholdType.allCases) { type in
@@ -1230,8 +1311,28 @@ struct PreferencesView: View {
                         }
                     }
                 }
+                
+                // MARK: - Account Actions
+                Section {
+                    Button(role: .destructive) {
+                        showingSignOutAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                            Text("Sign Out")
+                        }
+                    }
+                }
             }
-            .navigationTitle("Preferences")
+            .navigationTitle("My Kitchen")
+            .alert("Sign Out", isPresented: $showingSignOutAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Sign Out", role: .destructive) {
+                    try? firebaseService.signOut()
+                }
+            } message: {
+                Text("Are you sure you want to sign out?")
+            }
         }
     }
 
