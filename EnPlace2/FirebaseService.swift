@@ -31,7 +31,36 @@ struct Household: Codable, Equatable {
     var chefALikes: [String]  // Recipe names
     var chefBLikes: [String]  // Recipe names
     var matches: [String]     // Recipe names both chefs liked
+    var mealPlan: [String: [String]]  // Day -> Recipe names
     let createdAt: Date
+    
+    // Custom decoder to handle existing households without mealPlan field
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        inviteCode = try container.decode(String.self, forKey: .inviteCode)
+        chefAId = try container.decode(String.self, forKey: .chefAId)
+        chefBId = try container.decodeIfPresent(String.self, forKey: .chefBId)
+        chefALikes = try container.decode([String].self, forKey: .chefALikes)
+        chefBLikes = try container.decode([String].self, forKey: .chefBLikes)
+        matches = try container.decode([String].self, forKey: .matches)
+        // Default to empty dict if mealPlan doesn't exist in Firebase
+        mealPlan = try container.decodeIfPresent([String: [String]].self, forKey: .mealPlan) ?? [:]
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+    }
+    
+    // Standard initializer for creating new households
+    init(id: String, inviteCode: String, chefAId: String, chefBId: String?, chefALikes: [String], chefBLikes: [String], matches: [String], mealPlan: [String: [String]], createdAt: Date) {
+        self.id = id
+        self.inviteCode = inviteCode
+        self.chefAId = chefAId
+        self.chefBId = chefBId
+        self.chefALikes = chefALikes
+        self.chefBLikes = chefBLikes
+        self.matches = matches
+        self.mealPlan = mealPlan
+        self.createdAt = createdAt
+    }
 }
 
 // MARK: - Firebase Service
@@ -180,6 +209,7 @@ class FirebaseService: ObservableObject {
             chefALikes: [],
             chefBLikes: [],
             matches: [],
+            mealPlan: [:],
             createdAt: Date()
         )
         
@@ -283,21 +313,27 @@ class FirebaseService: ObservableObject {
     /// Record a like (swipe right) for a recipe
     func likeRecipe(recipeName: String) async throws {
         guard let user = currentUser,
-              let householdId = user.householdId,
-              var household = currentHousehold else { return }
+              let householdId = user.householdId else { return }
+        
+        // Fetch the LATEST household data from Firebase to avoid stale data issues
+        let doc = try await db.collection("households").document(householdId).getDocument()
+        guard let data = doc.data() else { return }
+        var household = try Firestore.Decoder().decode(Household.self, from: data)
         
         // Add to appropriate likes array
         if user.isChefA {
             if !household.chefALikes.contains(recipeName) {
                 household.chefALikes.append(recipeName)
+                print("👍 Chef A liked: \(recipeName)")
             }
         } else {
             if !household.chefBLikes.contains(recipeName) {
                 household.chefBLikes.append(recipeName)
+                print("👍 Chef B liked: \(recipeName)")
             }
         }
         
-        // Check for new match
+        // Check for new match (using fresh data!)
         if household.chefALikes.contains(recipeName) && household.chefBLikes.contains(recipeName) {
             if !household.matches.contains(recipeName) {
                 household.matches.append(recipeName)
@@ -306,8 +342,8 @@ class FirebaseService: ObservableObject {
         }
         
         // Save to Firestore
-        let data = try Firestore.Encoder().encode(household)
-        try await db.collection("households").document(householdId).setData(data)
+        let updatedData = try Firestore.Encoder().encode(household)
+        try await db.collection("households").document(householdId).setData(updatedData)
     }
     
     /// Get matched recipe names
@@ -329,5 +365,64 @@ class FirebaseService: ObservableObject {
     /// Get invite code for current household
     var inviteCode: String? {
         currentHousehold?.inviteCode
+    }
+    
+    // MARK: - Meal Plan Management
+    
+    /// Get current meal plan
+    var mealPlan: [String: [String]] {
+        currentHousehold?.mealPlan ?? [:]
+    }
+    
+    /// Add a recipe to a specific day
+    func addRecipeToMealPlan(day: String, recipeName: String) async throws {
+        guard let householdId = currentUser?.householdId,
+              var household = currentHousehold else { return }
+        
+        // Initialize day array if needed
+        if household.mealPlan[day] == nil {
+            household.mealPlan[day] = []
+        }
+        
+        // Add recipe if not already there
+        if !household.mealPlan[day]!.contains(recipeName) {
+            household.mealPlan[day]!.append(recipeName)
+        }
+        
+        // Save to Firestore
+        let data = try Firestore.Encoder().encode(household)
+        try await db.collection("households").document(householdId).setData(data)
+        print("📅 Added \(recipeName) to \(day)")
+    }
+    
+    /// Remove a recipe from a specific day
+    func removeRecipeFromMealPlan(day: String, recipeName: String) async throws {
+        guard let householdId = currentUser?.householdId,
+              var household = currentHousehold else { return }
+        
+        // Remove recipe from day
+        household.mealPlan[day]?.removeAll { $0 == recipeName }
+        
+        // Clean up empty days
+        if household.mealPlan[day]?.isEmpty == true {
+            household.mealPlan.removeValue(forKey: day)
+        }
+        
+        // Save to Firestore
+        let data = try Firestore.Encoder().encode(household)
+        try await db.collection("households").document(householdId).setData(data)
+        print("📅 Removed \(recipeName) from \(day)")
+    }
+    
+    /// Clear all meals for a specific day
+    func clearMealsForDay(day: String) async throws {
+        guard let householdId = currentUser?.householdId,
+              var household = currentHousehold else { return }
+        
+        household.mealPlan.removeValue(forKey: day)
+        
+        let data = try Firestore.Encoder().encode(household)
+        try await db.collection("households").document(householdId).setData(data)
+        print("📅 Cleared meals for \(day)")
     }
 }

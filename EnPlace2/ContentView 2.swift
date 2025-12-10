@@ -64,7 +64,7 @@ enum DietTag: String, CaseIterable, Identifiable, Codable {
     case vegetarian
     case vegan
     case glutenFree
-    
+
     var id: String { rawValue }
     
     var displayName: String {
@@ -81,7 +81,7 @@ enum ChefLevel: String, CaseIterable, Identifiable, Codable {
     case lineCook
     case sousChef
     case executiveChef
-    
+
     var id: String { rawValue }
     
     var displayName: String {
@@ -222,7 +222,13 @@ final class RecipeSwipeViewModel: ObservableObject {
     @Published private(set) var matchedRecipes: [Recipe] = []  // Recipes both chefs liked
     @Published private(set) var currentIndex: Int = 0
 
-    private let allRecipes: [Recipe]
+    // UI Filters (optional, not from preferences)
+    @Published var filterCookingFor: String? = nil  // nil = any, "couple", or "family"
+    @Published var filterTimeMax: Int? = nil  // nil = any, or 30
+    @Published var filterChefMax: Int? = nil  // nil = any, or 1, 2, 3
+
+    let allRecipes: [Recipe]
+    private var basePreferences: UserPreferences?
 
     init() {
         // Load recipes from JSON file
@@ -285,15 +291,15 @@ final class RecipeSwipeViewModel: ObservableObject {
     }
 
     func applyFilters(_ preferences: UserPreferences) {
+        self.basePreferences = preferences
+        reapplyAllFilters()
+    }
+    
+    func reapplyAllFilters() {
         var filtered = allRecipes
 
-        // Household
-        filtered = filtered.filter { recipe in
-            preferences.householdType == .family ? recipe.isForFamily : !recipe.isForFamily
-        }
-
-        // Food preferences
-        if !preferences.foodPreferences.isEmpty {
+        // Food preferences (from onboarding)
+        if let preferences = basePreferences, !preferences.foodPreferences.isEmpty {
             filtered = filtered.filter { recipe in
                 for pref in preferences.foodPreferences {
                     switch pref {
@@ -315,36 +321,40 @@ final class RecipeSwipeViewModel: ObservableObject {
             }
         }
 
-        // Gluten-free restriction
-        if preferences.isGlutenFree {
+        // Gluten-free restriction (from onboarding)
+        if let preferences = basePreferences, preferences.isGlutenFree {
             filtered = filtered.filter { recipe in
                 recipe.dietTags.contains(.glutenFree)
             }
         }
 
-        // Chef level
-        func rank(_ level: ChefLevel) -> Int {
-            switch level {
-            case .lineCook: return 0
-            case .sousChef: return 1
-            case .executiveChef: return 2
+        // UI Filters (from Discover view)
+        
+        // Cooking For filter (couple or family)
+        if let cookingFor = filterCookingFor {
+            if cookingFor == "family" {
+                filtered = filtered.filter { $0.isForFamily }
+            } else if cookingFor == "couple" {
+                filtered = filtered.filter { !$0.isForFamily }
             }
         }
-        let userRank = rank(preferences.chefLevel)
-        filtered = filtered.filter { recipe in
-            let maxRank = recipe.chefLevels.map(rank).max() ?? 0
-            return maxRank <= userRank
+        
+        // Time filter
+        if let maxTime = filterTimeMax {
+            filtered = filtered.filter { $0.cookTimeMinutes <= maxTime }
         }
-
-        // Time
+        
+        // Chef level filter
+        if let maxChef = filterChefMax {
         filtered = filtered.filter { recipe in
-            switch preferences.time {
-            case .under20:
-                return recipe.cookTimeMinutes <= 20
-            case .between20And40:
-                return recipe.cookTimeMinutes <= 40
-            case .over40:
-                return true
+                let recipeLevel = recipe.chefLevels.first.map { level -> Int in
+                    switch level {
+                    case .lineCook: return 1
+                    case .sousChef: return 2
+                    case .executiveChef: return 3
+                    }
+                } ?? 1
+                return recipeLevel <= maxChef
             }
         }
 
@@ -502,6 +512,11 @@ struct MainTabView: View {
                     Label("Recipe Box", systemImage: "books.vertical")
                 }
 
+            MealPlanView(viewModel: viewModel)
+                .tabItem {
+                    Label("Meal Plan", systemImage: "calendar")
+                }
+
             MyKitchenView(preferences: $preferences)
                 .tabItem {
                     Label("My Kitchen", systemImage: "fork.knife")
@@ -526,11 +541,16 @@ struct DiscoverView: View {
         case left
         case right
     }
+    
+    private var hasActiveFilters: Bool {
+        viewModel.filterCookingFor != nil || viewModel.filterTimeMax != nil || viewModel.filterChefMax != nil
+    }
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                preferencesSummary
+            VStack(spacing: 12) {
+                // Filter bar
+                filterBar
 
                 if viewModel.currentRecipe != nil {
                     ZStack {
@@ -642,24 +662,101 @@ struct DiscoverView: View {
         return indices
     }
 
-    private var preferencesSummary: some View {
-        let foodText = preferences.foodPreferences.isEmpty
-            ? "Any food"
-            : preferences.foodPreferences.map { $0.displayName }.joined(separator: ", ")
-        
-        let glutenText = preferences.isGlutenFree ? " • GF" : ""
-
-        return VStack(alignment: .leading, spacing: 4) {
-            Text("Your kitchen profile")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            Text("\(preferences.householdType.label) • \(foodText)\(glutenText) • \(preferences.chefLevel.displayName) • \(preferences.time.rawValue)")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.leading)
+    private var filterBar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Filter chips row
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    // Cooking For filter
+                    Menu {
+                        Button("Any") {
+                            viewModel.filterCookingFor = nil
+                            viewModel.reapplyAllFilters()
+                        }
+                        Button {
+                            viewModel.filterCookingFor = "couple"
+                            viewModel.reapplyAllFilters()
+                        } label: {
+                            Label("Couple", systemImage: "person.2.fill")
+                        }
+                        Button {
+                            viewModel.filterCookingFor = "family"
+                            viewModel.reapplyAllFilters()
+                        } label: {
+                            Label("Family", systemImage: "person.3.fill")
+                        }
+                    } label: {
+                        FilterChip(
+                            label: "Cooking For",
+                            icon: "person.2",
+                            isActive: viewModel.filterCookingFor != nil
+                        ) { }
+                    }
+                    
+                    // Time filter - toggle for quick meals
+                    FilterChip(
+                        label: "< 30 min",
+                        icon: "clock",
+                        isActive: viewModel.filterTimeMax != nil
+                    ) {
+                        if viewModel.filterTimeMax == nil {
+                            viewModel.filterTimeMax = 30
+                        } else {
+                            viewModel.filterTimeMax = nil
+                        }
+                        viewModel.reapplyAllFilters()
+                    }
+                    
+                    // Difficulty filter
+                    Menu {
+                        Button("Any") {
+                            viewModel.filterChefMax = nil
+                            viewModel.reapplyAllFilters()
+                        }
+                        Button {
+                            viewModel.filterChefMax = 1
+                            viewModel.reapplyAllFilters()
+                        } label: {
+                            Label("Easy", systemImage: "flame.fill")
+                        }
+                        Button {
+                            viewModel.filterChefMax = 2
+                            viewModel.reapplyAllFilters()
+                        } label: {
+                            Label("Medium", systemImage: "flame.fill")
+                        }
+                        Button {
+                            viewModel.filterChefMax = 3
+                            viewModel.reapplyAllFilters()
+                        } label: {
+                            Label("Pro", systemImage: "flame.fill")
+                        }
+                    } label: {
+                        FilterChip(
+                            label: "Difficulty",
+                            icon: "flame",
+                            isActive: viewModel.filterChefMax != nil
+                        ) { }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+            
+            // Clear button below filters (only shows when filters active)
+            if hasActiveFilters {
+                Button {
+                    viewModel.filterCookingFor = nil
+                    viewModel.filterTimeMax = nil
+                    viewModel.filterChefMax = nil
+                    viewModel.reapplyAllFilters()
+                } label: {
+                    Text("Clear filters")
+                        .font(.caption)
+                        .foregroundColor(AppTheme.primary)
+                }
+                .padding(.leading, 16)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func handleDragEnd(_ value: DragGesture.Value) {
@@ -764,9 +861,14 @@ struct RecipeCard: View {
                     .foregroundStyle(AppTheme.textSecondary)
                     .lineLimit(2)
                 
-                // Bottom row
-                HStack {
-                    // Serving size
+                // Bottom row - info badges
+                HStack(spacing: 12) {
+                    // Cook time
+                    Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.textSecondary)
+                    
+                    // Family or Couple
                     Label(
                         recipe.isForFamily ? "Family" : "Couple",
                         systemImage: recipe.isForFamily ? "person.3.fill" : "person.2.fill"
@@ -776,17 +878,8 @@ struct RecipeCard: View {
                     
                     Spacer()
                     
-                    // Difficulty
-                    ForEach(recipe.chefLevels.prefix(1)) { level in
-                        Text(level.displayName)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(AppTheme.secondary.opacity(0.15))
-                            .foregroundStyle(AppTheme.secondary)
-                            .cornerRadius(6)
-                    }
+                    // Difficulty - 3 knives (filled based on level)
+                    ChefLevelKnives(chefLevels: recipe.chefLevels)
                 }
             }
             .padding(16)
@@ -832,6 +925,62 @@ struct RecipeCard: View {
                     .font(.system(size: 50))
                     .foregroundStyle(.white.opacity(0.3))
             )
+    }
+}
+
+// MARK: - Filter Chip
+
+struct FilterChip: View {
+    let label: String
+    let icon: String
+    let isActive: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption)
+                Text(label)
+                    .font(.caption)
+                    .fontWeight(.medium)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(isActive ? AppTheme.primary : AppTheme.cardBackground)
+            .foregroundColor(isActive ? .white : AppTheme.textSecondary)
+            .cornerRadius(20)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(isActive ? AppTheme.primary : AppTheme.textSecondary.opacity(0.3), lineWidth: 1)
+            )
+        }
+    }
+}
+
+// MARK: - Chef Level Knives
+
+struct ChefLevelKnives: View {
+    let chefLevels: [ChefLevel]
+    
+    // Convert chef levels to a 1-3 knife rating
+    private var knifeRating: Int {
+        guard let firstLevel = chefLevels.first else { return 1 }
+        switch firstLevel {
+        case .lineCook: return 1
+        case .sousChef: return 2
+        case .executiveChef: return 3
+        }
+    }
+    
+    var body: some View {
+        HStack(spacing: 2) {
+            ForEach(1...3, id: \.self) { index in
+                Image(systemName: index <= knifeRating ? "flame.fill" : "flame")
+                    .font(.caption)
+                    .foregroundStyle(index <= knifeRating ? AppTheme.secondary : AppTheme.textSecondary.opacity(0.3))
+            }
+        }
     }
 }
 
@@ -998,7 +1147,7 @@ struct RecipeListView: View {
     let emptyMessage: String
     
     var body: some View {
-        List {
+            List {
             if recipes.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: emptyIcon)
@@ -1015,10 +1164,10 @@ struct RecipeListView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 60)
                 .listRowBackground(Color.clear)
-            } else {
+                } else {
                 ForEach(recipes) { recipe in
                     NavigationLink {
-                        RecipeDetailView(recipe: recipe)
+                            RecipeDetailView(recipe: recipe)
                     } label: {
                         RecipeRowView(recipe: recipe, isMatch: isMatchList)
                     }
@@ -1092,6 +1241,11 @@ struct RecipeRowView: View {
                     Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
                     Label(recipe.isForFamily ? "Family" : "Couple", 
                           systemImage: recipe.isForFamily ? "person.3.fill" : "person.2.fill")
+                    
+                    Spacer()
+                    
+                    // Difficulty flames
+                    ChefLevelKnives(chefLevels: recipe.chefLevels)
                 }
                 .font(.caption)
                 .foregroundStyle(AppTheme.textSecondary)
@@ -1140,72 +1294,731 @@ struct RecipeDetailView: View {
                 .frame(height: 250)
                 
                 // Content
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(recipe.name)
-                        .font(.title)
-                        .bold()
+            VStack(alignment: .leading, spacing: 16) {
+                Text(recipe.name)
+                    .font(.title)
+                    .bold()
 
-                    Text(recipe.description)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-
-                    HStack {
-                        Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
-                        if recipe.isForFamily {
-                            Label("Family", systemImage: "person.3")
-                        } else {
-                            Label("Couple", systemImage: "person.2")
-                        }
-                    }
-                    .font(.caption)
+                Text(recipe.description)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                    Divider()
+                HStack(spacing: 12) {
+                    Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
+                    Label(recipe.isForFamily ? "Family" : "Couple",
+                          systemImage: recipe.isForFamily ? "person.3.fill" : "person.2.fill")
+                    
+                    Spacer()
+                    
+                    // Difficulty flames
+                    ChefLevelKnives(chefLevels: recipe.chefLevels)
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
-                    Text("Ingredients")
-                        .font(.headline)
+                Divider()
 
-                    ForEach(recipe.ingredients, id: \.self) { ingredient in
-                        HStack(alignment: .top) {
-                            Text("•")
-                            Text(ingredient)
-                        }
+                Text("Ingredients")
+                    .font(.headline)
+
+                ForEach(recipe.ingredients, id: \.self) { ingredient in
+                    HStack(alignment: .top) {
+                        Text("•")
+                        Text(ingredient)
                     }
+                }
 
-                    Divider()
+                Divider()
 
-                    Text("Steps")
-                        .font(.headline)
+                Text("Steps")
+                    .font(.headline)
 
-                    ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
-                        HStack(alignment: .top) {
-                            Text("\(index + 1).")
-                                .bold()
-                            Text(step)
-                        }
+                ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
+                    HStack(alignment: .top) {
+                        Text("\(index + 1).")
+                            .bold()
+                        Text(step)
                     }
+                }
 
-                    Divider()
+                Divider()
 
-                    Button {
-                        // Placeholder for future Instacart integration
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Text("Send Ingredients to Instacart (Coming Soon)")
-                                .font(.subheadline)
-                            Spacer()
+                Button {
+                    // Placeholder for future Instacart integration
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Send Ingredients to Instacart (Coming Soon)")
+                            .font(.subheadline)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.green.opacity(0.2))
+                    .cornerRadius(12)
+                }
+            }
+            .padding()
+        }
+        }
+        .ignoresSafeArea(edges: .top)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Meal Plan View
+
+struct MealPlanView: View {
+    @ObservedObject var viewModel: RecipeSwipeViewModel
+    @EnvironmentObject var firebaseService: FirebaseService
+    @State private var selectedDay: String? = nil
+    @State private var showingAddMeal = false
+    @State private var showingShoppingList = false
+    
+    private let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    
+    // Get all planned recipe names
+    private var plannedRecipeNames: [String] {
+        var names: [String] = []
+        for day in daysOfWeek {
+            names.append(contentsOf: firebaseService.mealPlan[day] ?? [])
+        }
+        return names
+    }
+    
+    // Get all planned recipes
+    private var plannedRecipes: [Recipe] {
+        viewModel.allRecipes.filter { plannedRecipeNames.contains($0.name) }
+    }
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Week header with shopping button
+                    HStack {
+                        Image(systemName: "calendar")
+                            .foregroundColor(AppTheme.primary)
+                        Text("This Week")
+                            .font(.headline)
+                            .foregroundColor(AppTheme.textPrimary)
+                        Spacer()
+                        
+                        // Shopping list button
+                        Button {
+                            showingShoppingList = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "cart.fill")
+                                Text("Shop")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(AppTheme.primary)
+                            .cornerRadius(16)
                         }
-                        .padding()
-                        .background(Color.green.opacity(0.2))
-                        .cornerRadius(12)
+                        .disabled(plannedRecipeNames.isEmpty)
+                        .opacity(plannedRecipeNames.isEmpty ? 0.5 : 1)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    
+                    // Days
+                    ForEach(daysOfWeek, id: \.self) { day in
+                        MealPlanDayCard(
+                            day: day,
+                            recipes: recipesForDay(day),
+                            allRecipes: viewModel.allRecipes,
+                            onAddTapped: {
+                                selectedDay = day
+                                showingAddMeal = true
+                            },
+                            onRemoveRecipe: { recipeName in
+                                Task {
+                                    try? await firebaseService.removeRecipeFromMealPlan(day: day, recipeName: recipeName)
+                                }
+                            }
+                        )
                     }
                 }
                 .padding()
             }
+            .background(AppTheme.background)
+            .navigationTitle("Meal Plan")
+            .sheet(isPresented: $showingAddMeal) {
+                if let day = selectedDay {
+                    AddMealSheet(
+                        day: day,
+                        matchedRecipes: viewModel.matchedRecipes,
+                        allRecipes: viewModel.allRecipes,
+                        currentMealPlan: firebaseService.mealPlan,
+                        onAddRecipe: { recipeName in
+                            Task {
+                                try? await firebaseService.addRecipeToMealPlan(day: day, recipeName: recipeName)
+                            }
+                            showingAddMeal = false
+                        }
+                    )
+                    .presentationDetents([.medium, .large])
+                }
+            }
+            .sheet(isPresented: $showingShoppingList) {
+                ShoppingListView(recipes: plannedRecipes)
+            }
         }
-        .ignoresSafeArea(edges: .top)
-        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func recipesForDay(_ day: String) -> [String] {
+        firebaseService.mealPlan[day] ?? []
+    }
+}
+
+// MARK: - Meal Plan Day Card
+
+struct MealPlanDayCard: View {
+    let day: String
+    let recipes: [String]
+    let allRecipes: [Recipe]
+    let onAddTapped: () -> Void
+    let onRemoveRecipe: (String) -> Void
+    
+    private var isToday: Bool {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        return formatter.string(from: Date()) == day
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Day header
+            HStack {
+                Text(day)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(isToday ? AppTheme.primary : AppTheme.textPrimary)
+                
+                if isToday {
+                    Text("Today")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(AppTheme.primary)
+                        .cornerRadius(8)
+                }
+                
+                Spacer()
+            }
+            
+            // Recipes for the day
+            if recipes.isEmpty {
+                // Empty state - Add button
+                Button(action: onAddTapped) {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(AppTheme.primary.opacity(0.6))
+                        Text("Add a meal")
+                            .font(.subheadline)
+                            .foregroundColor(AppTheme.textSecondary)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(AppTheme.primary.opacity(0.3), style: StrokeStyle(lineWidth: 1, dash: [6]))
+                    )
+                }
+            } else {
+                // Show planned recipes
+                ForEach(recipes, id: \.self) { recipeName in
+                    MealPlanRecipeRow(
+                        recipeName: recipeName,
+                        recipe: allRecipes.first { $0.name == recipeName },
+                        onRemove: { onRemoveRecipe(recipeName) }
+                    )
+                }
+                
+                // Add more button
+                Button(action: onAddTapped) {
+                    HStack {
+                        Image(systemName: "plus")
+                            .font(.caption)
+                        Text("Add another")
+                            .font(.caption)
+                    }
+                    .foregroundColor(AppTheme.primary)
+                    .padding(.top, 4)
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(AppTheme.cardBackground)
+                .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        )
+    }
+}
+
+// MARK: - Meal Plan Recipe Row
+
+struct MealPlanRecipeRow: View {
+    let recipeName: String
+    let recipe: Recipe?
+    let onRemove: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Recipe thumbnail
+            if let recipe = recipe, let uiImage = UIImage(named: recipe.imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .cornerRadius(8)
+                    .clipped()
+            } else {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(AppTheme.primary.opacity(0.1))
+                    .frame(width: 50, height: 50)
+                    .overlay(
+                        Image(systemName: "fork.knife")
+                            .foregroundColor(AppTheme.primary.opacity(0.5))
+                    )
+            }
+            
+            // Recipe info
+            VStack(alignment: .leading, spacing: 2) {
+                Text(recipeName)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(AppTheme.textPrimary)
+                    .lineLimit(1)
+                
+                if let recipe = recipe {
+                    Text("\(recipe.cookTimeMinutes) min")
+                        .font(.caption)
+                        .foregroundColor(AppTheme.textSecondary)
+                }
+            }
+            
+            Spacer()
+            
+            // Remove button
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(AppTheme.textSecondary.opacity(0.5))
+            }
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(AppTheme.background)
+        )
+    }
+}
+
+// MARK: - Add Meal Sheet
+
+struct AddMealSheet: View {
+    let day: String
+    let matchedRecipes: [Recipe]
+    let allRecipes: [Recipe]
+    let currentMealPlan: [String: [String]]
+    let onAddRecipe: (String) -> Void
+    
+    @Environment(\.dismiss) private var dismiss
+    @State private var showAllRecipes = false
+    
+    private var recipesToShow: [Recipe] {
+        showAllRecipes ? allRecipes : matchedRecipes
+    }
+    
+    // Get recipes already planned for this day
+    private var plannedRecipeNames: [String] {
+        currentMealPlan[day] ?? []
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Toggle between matches and all recipes
+                Picker("Recipe Source", selection: $showAllRecipes) {
+                    Text("Matches (\(matchedRecipes.count))").tag(false)
+                    Text("All Recipes (\(allRecipes.count))").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
+                if recipesToShow.isEmpty {
+                    // Empty state
+                    VStack(spacing: 16) {
+                        Spacer()
+                        Image(systemName: showAllRecipes ? "book.closed" : "heart.circle")
+                            .font(.system(size: 50))
+                            .foregroundColor(AppTheme.textSecondary.opacity(0.5))
+                        
+                        Text(showAllRecipes ? "No recipes available" : "No matches yet!")
+                            .font(.headline)
+                            .foregroundColor(AppTheme.textSecondary)
+                        
+                        if !showAllRecipes {
+                            Text("Match with your partner to plan meals together")
+                                .font(.subheadline)
+                                .foregroundColor(AppTheme.textSecondary.opacity(0.7))
+                                .multilineTextAlignment(.center)
+                        }
+                        Spacer()
+                    }
+                    .padding()
+                } else {
+                    // Recipe list
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(recipesToShow) { recipe in
+                                let isPlanned = plannedRecipeNames.contains(recipe.name)
+                                
+                                Button {
+                                    if !isPlanned {
+                                        onAddRecipe(recipe.name)
+                                    }
+                                } label: {
+                                    AddMealRecipeRow(recipe: recipe, isAlreadyPlanned: isPlanned)
+                                }
+                                .disabled(isPlanned)
+                            }
+                        }
+                        .padding()
+                    }
+                }
+            }
+            .background(AppTheme.background)
+            .navigationTitle("Add to \(day)")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Add Meal Recipe Row
+
+struct AddMealRecipeRow: View {
+    let recipe: Recipe
+    let isAlreadyPlanned: Bool
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Recipe thumbnail
+            if let uiImage = UIImage(named: recipe.imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(10)
+                    .clipped()
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(AppTheme.primary.opacity(0.1))
+                    .frame(width: 60, height: 60)
+                    .overlay(
+                        Image(systemName: "fork.knife")
+                            .foregroundColor(AppTheme.primary.opacity(0.5))
+                    )
+            }
+            
+            // Recipe info
+            VStack(alignment: .leading, spacing: 4) {
+                Text(recipe.name)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(isAlreadyPlanned ? AppTheme.textSecondary : AppTheme.textPrimary)
+                    .lineLimit(2)
+                
+                HStack(spacing: 8) {
+                    Label("\(recipe.cookTimeMinutes) min", systemImage: "clock")
+                    
+                    if !recipe.dietTags.filter({ $0 != .none }).isEmpty {
+                        Text(recipe.dietTags.filter { $0 != .none }.first?.displayName ?? "")
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(AppTheme.textSecondary)
+            }
+            
+            Spacer()
+            
+            // Status indicator
+            if isAlreadyPlanned {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(AppTheme.primary.opacity(0.5))
+            } else {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundColor(AppTheme.primary)
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(isAlreadyPlanned ? AppTheme.background : AppTheme.cardBackground)
+                .shadow(color: .black.opacity(isAlreadyPlanned ? 0 : 0.05), radius: 4, y: 2)
+        )
+        .opacity(isAlreadyPlanned ? 0.7 : 1)
+    }
+}
+
+// MARK: - Shopping List View
+
+struct ShoppingListView: View {
+    let recipes: [Recipe]
+    @Environment(\.dismiss) private var dismiss
+    @State private var checkedItems: Set<String> = []
+    @State private var showingShareSheet = false
+    
+    // All unique ingredients from all recipes
+    private var allIngredients: [String] {
+        var ingredients: [String] = []
+        for recipe in recipes {
+            ingredients.append(contentsOf: recipe.ingredients)
+        }
+        // Remove duplicates while preserving order
+        var seen = Set<String>()
+        return ingredients.filter { ingredient in
+            let normalized = ingredient.lowercased().trimmingCharacters(in: .whitespaces)
+            if seen.contains(normalized) {
+                return false
+            }
+            seen.insert(normalized)
+            return true
+        }
+    }
+    
+    // Categorize ingredients
+    private var categorizedIngredients: [(category: String, items: [String])] {
+        let proteins = ["chicken", "beef", "pork", "salmon", "fish", "shrimp", "tofu", "sausage", "steak", "ground"]
+        let produce = ["pepper", "onion", "garlic", "tomato", "spinach", "broccoli", "carrot", "cucumber", "lettuce", "avocado", "lemon", "lime", "basil", "cilantro", "ginger", "mushroom", "potato", "zucchini", "cabbage", "bean sprout", "green onion", "jalapeño", "mango", "orange", "asparagus", "eggplant", "thyme", "rosemary", "parsley"]
+        let dairy = ["cheese", "cream", "milk", "yogurt", "butter", "sour cream", "ricotta", "mozzarella", "parmesan", "feta", "egg"]
+        let pantry = ["oil", "sauce", "salt", "pepper", "seasoning", "spice", "flour", "sugar", "broth", "stock", "pasta", "rice", "noodle", "tortilla", "bread", "vinegar", "honey", "soy", "peanut butter", "tahini", "coconut", "curry", "cumin", "paprika", "oregano", "chili", "beans", "chickpea", "lentil", "quinoa", "panko", "breadcrumb", "cornstarch", "tamarind", "maple"]
+        
+        var proteinItems: [String] = []
+        var produceItems: [String] = []
+        var dairyItems: [String] = []
+        var pantryItems: [String] = []
+        var otherItems: [String] = []
+        
+        for ingredient in allIngredients {
+            let lower = ingredient.lowercased()
+            if proteins.contains(where: { lower.contains($0) }) {
+                proteinItems.append(ingredient)
+            } else if produce.contains(where: { lower.contains($0) }) {
+                produceItems.append(ingredient)
+            } else if dairy.contains(where: { lower.contains($0) }) {
+                dairyItems.append(ingredient)
+            } else if pantry.contains(where: { lower.contains($0) }) {
+                pantryItems.append(ingredient)
+            } else {
+                otherItems.append(ingredient)
+            }
+        }
+        
+        var result: [(String, [String])] = []
+        if !proteinItems.isEmpty { result.append(("🥩 Proteins", proteinItems)) }
+        if !produceItems.isEmpty { result.append(("🥬 Produce", produceItems)) }
+        if !dairyItems.isEmpty { result.append(("🧀 Dairy & Eggs", dairyItems)) }
+        if !pantryItems.isEmpty { result.append(("🫙 Pantry", pantryItems)) }
+        if !otherItems.isEmpty { result.append(("📦 Other", otherItems)) }
+        
+        return result
+    }
+    
+    // Generate plain text list for sharing
+    private var shoppingListText: String {
+        var text = "🛒 Shopping List for \(recipes.count) recipe\(recipes.count == 1 ? "" : "s")\n"
+        text += "Generated by EnPlace\n\n"
+        
+        for (category, items) in categorizedIngredients {
+            text += "\(category)\n"
+            for item in items {
+                let check = checkedItems.contains(item) ? "✓" : "○"
+                text += "  \(check) \(item)\n"
+            }
+            text += "\n"
+        }
+        
+        return text
+    }
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Summary header
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(recipes.count) recipe\(recipes.count == 1 ? "" : "s")")
+                                .font(.subheadline)
+                                .foregroundColor(AppTheme.textSecondary)
+                            Text("\(allIngredients.count) items")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(AppTheme.textPrimary)
+                        }
+                        
+                        Spacer()
+                        
+                        // Progress
+                        let progress = Double(checkedItems.count) / Double(max(allIngredients.count, 1))
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Text("\(checkedItems.count)/\(allIngredients.count)")
+                                .font(.subheadline)
+                                .foregroundColor(AppTheme.textSecondary)
+                            ProgressView(value: progress)
+                                .frame(width: 80)
+                                .tint(AppTheme.primary)
+                        }
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(AppTheme.cardBackground)
+                    )
+                    
+                    // Recipes included
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Recipes")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(AppTheme.textSecondary)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(recipes) { recipe in
+                                    Text(recipe.name)
+                                        .font(.caption)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 6)
+                                        .background(AppTheme.primary.opacity(0.1))
+                                        .foregroundColor(AppTheme.primary)
+                                        .cornerRadius(12)
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Categorized ingredients
+                    ForEach(categorizedIngredients, id: \.category) { category, items in
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(category)
+                                .font(.headline)
+                                .foregroundColor(AppTheme.textPrimary)
+                            
+                            ForEach(items, id: \.self) { ingredient in
+                                ShoppingListItemRow(
+                                    ingredient: ingredient,
+                                    isChecked: checkedItems.contains(ingredient),
+                                    onToggle: {
+                                        if checkedItems.contains(ingredient) {
+                                            checkedItems.remove(ingredient)
+                                        } else {
+                                            checkedItems.insert(ingredient)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    
+                    // Clear checked items button
+                    if !checkedItems.isEmpty {
+                        Button {
+                            checkedItems.removeAll()
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.counterclockwise")
+                                Text("Reset All")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(AppTheme.textSecondary)
+                        }
+                        .padding(.top, 8)
+                    }
+                }
+                .padding()
+            }
+            .background(AppTheme.background)
+            .navigationTitle("Shopping List")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            UIPasteboard.general.string = shoppingListText
+                        } label: {
+                            Label("Copy List", systemImage: "doc.on.doc")
+                        }
+                        
+                        Button {
+                            showingShareSheet = true
+                        } label: {
+                            Label("Share List", systemImage: "square.and.arrow.up")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: [shoppingListText])
+            }
+        }
+    }
+}
+
+// MARK: - Shopping List Item Row
+
+struct ShoppingListItemRow: View {
+    let ingredient: String
+    let isChecked: Bool
+    let onToggle: () -> Void
+    
+    var body: some View {
+        Button(action: onToggle) {
+            HStack(spacing: 12) {
+                // Checkbox
+                Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(isChecked ? AppTheme.primary : AppTheme.textSecondary.opacity(0.5))
+                    .font(.title3)
+                
+                // Ingredient text
+                Text(ingredient)
+                    .font(.subheadline)
+                    .foregroundColor(isChecked ? AppTheme.textSecondary : AppTheme.textPrimary)
+                    .strikethrough(isChecked, color: AppTheme.textSecondary)
+                
+                Spacer()
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(isChecked ? AppTheme.background : AppTheme.cardBackground)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -1276,16 +2089,7 @@ struct MyKitchenView: View {
                     Text("My Kitchen")
                 }
                 
-                // MARK: - Cooking Preferences
-                Section("Who are you cooking for?") {
-                    Picker("Cooking for", selection: $preferences.householdType) {
-                        ForEach(HouseholdType.allCases) { type in
-                            Text(type.label).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-
+                // MARK: - Food Preferences
                 Section("Food preferences") {
                     ForEach(FoodPreference.allCases) { food in
                         Toggle(food.displayName, isOn: binding(for: food))
@@ -1296,22 +2100,6 @@ struct MyKitchenView: View {
                     Toggle("Gluten-free only", isOn: $preferences.isGlutenFree)
                 }
 
-                Section("Chef level") {
-                    Picker("Chef level", selection: $preferences.chefLevel) {
-                        ForEach(ChefLevel.allCases) { level in
-                            Text(level.displayName).tag(level)
-                        }
-                    }
-                }
-
-                Section("Time to cook") {
-                    Picker("Time available", selection: $preferences.time) {
-                        ForEach(TimePreference.allCases) { time in
-                            Text(time.rawValue).tag(time)
-                        }
-                    }
-                }
-                
                 // MARK: - Account Actions
                 Section {
                     Button(role: .destructive) {
@@ -1353,59 +2141,25 @@ struct OnboardingView: View {
     @Binding var preferences: UserPreferences
     var onFinished: () -> Void
     
-    @State private var step: Int = 1
-    private let totalSteps: Int = 5
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                ProgressView(value: Double(step), total: Double(totalSteps))
-                    .padding(.top)
-                
-                Group {
-                    switch step {
-                    case 1:
-                        OnboardingHouseholdStep(householdType: $preferences.householdType)
-                    case 2:
+                // Single step - food preferences and dietary
                         OnboardingFoodPreferencesStep(
                             foodPreferences: $preferences.foodPreferences,
                             isGlutenFree: $preferences.isGlutenFree
                         )
-                    case 3:
-                        OnboardingChefLevelStep(chefLevel: $preferences.chefLevel)
-                    case 4:
-                        OnboardingTimeStep(timePreference: $preferences.time)
-                    default:
-                        OnboardingChefBStep(chefBEmail: $preferences.chefBEmail)
-                    }
                     
                     Spacer()
                     
-                    HStack {
-                        if step > 1 {
-                            Button("Back") {
-                                withAnimation { step -= 1 }
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Button(step == totalSteps ? "Get started" : "Next") {
-                            withAnimation {
-                                if step == totalSteps {
+                Button("Get Started") {
                                     onFinished()
-                                } else {
-                                    step += 1
-                                }
-                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(AppTheme.primary)
-                    }
                 }
                 .padding()
-                .navigationTitle("Your kitchen profile")
-            }
+            .navigationTitle("Food Preferences")
         }
     }
 }
