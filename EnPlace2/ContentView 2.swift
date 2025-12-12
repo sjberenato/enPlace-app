@@ -41,6 +41,7 @@ struct Recipe: Identifiable, Equatable, Codable {
     let steps: [String]
     let foodTags: [FoodPreference]
     let imageName: String
+    let cuisine: Cuisine
     
     // Custom decoder - generates UUID since it's not in JSON
     init(from decoder: Decoder) throws {
@@ -56,6 +57,7 @@ struct Recipe: Identifiable, Equatable, Codable {
         self.steps = try container.decode([String].self, forKey: .steps)
         self.foodTags = try container.decode([FoodPreference].self, forKey: .foodTags)
         self.imageName = try container.decode(String.self, forKey: .imageName)
+        self.cuisine = try container.decodeIfPresent(Cuisine.self, forKey: .cuisine) ?? .other
     }
 }
 
@@ -164,6 +166,42 @@ enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
     }
 }
 
+enum Cuisine: String, CaseIterable, Identifiable, Codable {
+    case italian
+    case mexican
+    case asian
+    case mediterranean
+    case american
+    case indian
+    case other
+    
+    var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .italian: return "Italian"
+        case .mexican: return "Mexican"
+        case .asian: return "Asian"
+        case .mediterranean: return "Mediterranean"
+        case .american: return "American"
+        case .indian: return "Indian"
+        case .other: return "Other"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .italian: return "🍝"
+        case .mexican: return "🌮"
+        case .asian: return "🥢"
+        case .mediterranean: return "🫒"
+        case .american: return "🍔"
+        case .indian: return "🍛"
+        case .other: return "🍽️"
+        }
+    }
+}
+
 // MARK: - User Preferences
 
 struct UserPreferences: Equatable, Codable {
@@ -175,9 +213,474 @@ struct UserPreferences: Equatable, Codable {
     var chefBEmail: String = ""
 }
 
+// MARK: - Smart Ingredient Parsing
+
+enum IngredientCategory: String, CaseIterable {
+    case protein = "🥩 Proteins"
+    case produce = "🥬 Produce"
+    case dairy = "🧀 Dairy & Eggs"
+    case spices = "🌶️ Spices & Seasonings"
+    case pantry = "🫙 Pantry"
+    case other = "📦 Other"
+    
+    var sortOrder: Int {
+        switch self {
+        case .protein: return 0
+        case .produce: return 1
+        case .dairy: return 2
+        case .spices: return 3
+        case .pantry: return 4
+        case .other: return 5
+        }
+    }
+}
+
+struct ParsedIngredient: Identifiable, Hashable {
+    let id = UUID()
+    let originalText: String
+    let quantity: Double?
+    let unit: String?
+    let name: String
+    let preparation: String?
+    let category: IngredientCategory
+    
+    var displayText: String {
+        var parts: [String] = []
+        if let qty = quantity {
+            parts.append(formatQuantity(qty))
+        }
+        if let unit = unit {
+            parts.append(unit)
+        }
+        parts.append(name)
+        return parts.joined(separator: " ")
+    }
+    
+    var displayTextWithPrep: String {
+        if let prep = preparation, !prep.isEmpty {
+            return "\(displayText), \(prep)"
+        }
+        return displayText
+    }
+    
+    private func formatQuantity(_ qty: Double) -> String {
+        // Handle common fractions nicely
+        let fractions: [(value: Double, display: String)] = [
+            (0.125, "⅛"), (0.25, "¼"), (0.333, "⅓"), (0.5, "½"),
+            (0.667, "⅔"), (0.75, "¾")
+        ]
+        
+        let whole = Int(qty)
+        let remainder = qty - Double(whole)
+        
+        // Check if remainder matches a fraction
+        for (value, display) in fractions {
+            if abs(remainder - value) < 0.05 {
+                if whole > 0 {
+                    return "\(whole)\(display)"
+                } else {
+                    return display
+                }
+            }
+        }
+        
+        // If it's a whole number, return as int
+        if abs(qty - Double(Int(qty))) < 0.01 {
+            return "\(Int(qty))"
+        }
+        
+        // Otherwise return with one decimal
+        return String(format: "%.1f", qty)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: ParsedIngredient, rhs: ParsedIngredient) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+struct IngredientParser {
+    
+    // Common unit variations mapped to standard form
+    static let unitNormalization: [String: String] = [
+        "tbsp": "tbsp", "tablespoon": "tbsp", "tablespoons": "tbsp", "tbs": "tbsp",
+        "tsp": "tsp", "teaspoon": "tsp", "teaspoons": "tsp",
+        "cup": "cup", "cups": "cup",
+        "oz": "oz", "ounce": "oz", "ounces": "oz",
+        "lb": "lb", "lbs": "lb", "pound": "lb", "pounds": "lb",
+        "clove": "cloves", "cloves": "cloves",
+        "can": "can", "cans": "can",
+        "bunch": "bunch", "bunches": "bunch",
+        "slice": "slices", "slices": "slices",
+        "piece": "pieces", "pieces": "pieces",
+        "head": "head", "heads": "head",
+        "sprig": "sprigs", "sprigs": "sprigs",
+        "inch": "inch", "inches": "inch",
+        "pinch": "pinch", "pinches": "pinch",
+        "dash": "dash", "dashes": "dash",
+        "pkg": "pkg", "package": "pkg", "packages": "pkg",
+        "jar": "jar", "jars": "jar",
+        "bottle": "bottle", "bottles": "bottle"
+    ]
+    
+    // Fraction strings to decimal
+    static let fractionMap: [String: Double] = [
+        "½": 0.5, "1/2": 0.5,
+        "¼": 0.25, "1/4": 0.25,
+        "¾": 0.75, "3/4": 0.75,
+        "⅓": 0.333, "1/3": 0.333,
+        "⅔": 0.667, "2/3": 0.667,
+        "⅛": 0.125, "1/8": 0.125,
+        "⅜": 0.375, "3/8": 0.375,
+        "⅝": 0.625, "5/8": 0.625,
+        "⅞": 0.875, "7/8": 0.875
+    ]
+    
+    // Preparation words to identify and extract
+    static let preparationWords = Set([
+        "minced", "diced", "sliced", "chopped", "cubed", "grated",
+        "shredded", "crushed", "julienned", "thinly sliced", "finely chopped",
+        "roughly chopped", "peeled", "deveined", "trimmed", "drained",
+        "rinsed", "halved", "quartered", "mashed", "melted", "softened",
+        "room temperature", "cold", "warm", "hot", "toasted", "packed"
+    ])
+    
+    static func parse(_ ingredient: String) -> ParsedIngredient {
+        var remaining = ingredient.trimmingCharacters(in: .whitespaces)
+        var quantity: Double? = nil
+        var unit: String? = nil
+        var preparation: String? = nil
+        
+        // 1. Extract quantity
+        (quantity, remaining) = extractQuantity(from: remaining)
+        
+        // 2. Extract unit
+        (unit, remaining) = extractUnit(from: remaining)
+        
+        // 3. Extract preparation (after comma or in parentheses)
+        (preparation, remaining) = extractPreparation(from: remaining)
+        
+        // 4. Clean up the ingredient name
+        let name = cleanIngredientName(remaining)
+        
+        // 5. Categorize
+        let category = categorize(name)
+        
+        return ParsedIngredient(
+            originalText: ingredient,
+            quantity: quantity,
+            unit: unit,
+            name: name,
+            preparation: preparation,
+            category: category
+        )
+    }
+    
+    private static func extractQuantity(from text: String) -> (Double?, String) {
+        var remaining = text
+        var total: Double = 0
+        var foundNumber = false
+        
+        // First, try to match a number at the start
+        // Pattern handles: "2", "1/2", "1 1/2", "1½", "½"
+        
+        // Check for unicode fraction at start
+        for (frac, value) in fractionMap where frac.count == 1 {
+            if remaining.hasPrefix(frac) {
+                total += value
+                foundNumber = true
+                remaining = String(remaining.dropFirst()).trimmingCharacters(in: .whitespaces)
+                return (total, remaining)
+            }
+        }
+        
+        // Try to match a whole number first
+        var numberStr = ""
+        var idx = remaining.startIndex
+        while idx < remaining.endIndex && (remaining[idx].isNumber || remaining[idx] == "-") {
+            // Handle ranges like "2-3" - take the first number
+            if remaining[idx] == "-" && !numberStr.isEmpty {
+                break
+            }
+            if remaining[idx].isNumber {
+                numberStr.append(remaining[idx])
+            }
+            idx = remaining.index(after: idx)
+        }
+        
+        if !numberStr.isEmpty, let wholeNum = Double(numberStr) {
+            total += wholeNum
+            foundNumber = true
+            remaining = String(remaining[idx...]).trimmingCharacters(in: .whitespaces)
+        }
+        
+        // Check for fraction after whole number
+        // Could be unicode fraction or "1/2" style
+        for (frac, value) in fractionMap {
+            if remaining.hasPrefix(frac) {
+                total += value
+                foundNumber = true
+                remaining = String(remaining.dropFirst(frac.count)).trimmingCharacters(in: .whitespaces)
+                break
+            }
+        }
+        
+        return (foundNumber ? total : nil, remaining)
+    }
+    
+    private static func extractUnit(from text: String) -> (String?, String) {
+        let words = text.split(separator: " ", maxSplits: 1)
+        guard let firstWord = words.first else { return (nil, text) }
+        
+        // Clean up the potential unit (remove parentheses, etc.)
+        var potentialUnit = String(firstWord).lowercased()
+        potentialUnit = potentialUnit.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        
+        // Check if it matches a known unit
+        if let normalized = unitNormalization[potentialUnit] {
+            let remaining = words.count > 1 ? String(words[1]) : ""
+            return (normalized, remaining.trimmingCharacters(in: .whitespaces))
+        }
+        
+        // Check for parenthetical unit like "(14 oz)"
+        if text.hasPrefix("(") {
+            if let closeIdx = text.firstIndex(of: ")") {
+                let inside = String(text[text.index(after: text.startIndex)..<closeIdx])
+                // Try to parse as quantity + unit
+                let (qty, unitText) = extractQuantity(from: inside)
+                if qty != nil {
+                    let unitWords = unitText.split(separator: " ")
+                    if let firstUnitWord = unitWords.first {
+                        let unitStr = String(firstUnitWord).lowercased()
+                        if let normalized = unitNormalization[unitStr] {
+                            let afterParen = String(text[text.index(after: closeIdx)...])
+                                .trimmingCharacters(in: .whitespaces)
+                            return (normalized, afterParen)
+                        }
+                    }
+                }
+            }
+        }
+        
+        return (nil, text)
+    }
+    
+    private static func extractPreparation(from text: String) -> (String?, String) {
+        var name = text
+        var preps: [String] = []
+        
+        // Check for comma-separated preparation
+        if let commaIndex = text.firstIndex(of: ",") {
+            let beforeComma = String(text[..<commaIndex]).trimmingCharacters(in: .whitespaces)
+            let afterComma = String(text[text.index(after: commaIndex)...]).trimmingCharacters(in: .whitespaces)
+            
+            // Check if after-comma contains preparation words
+            let afterLower = afterComma.lowercased()
+            for prep in preparationWords {
+                if afterLower.contains(prep) {
+                    preps.append(afterComma)
+                    name = beforeComma
+                    break
+                }
+            }
+        }
+        
+        // Check for parenthetical info that might be prep
+        if let openParen = name.firstIndex(of: "("),
+           let closeParen = name.firstIndex(of: ")") {
+            let inside = String(name[name.index(after: openParen)..<closeParen])
+            let insideLower = inside.lowercased()
+            
+            // If it's prep info, extract it
+            for prep in preparationWords {
+                if insideLower.contains(prep) {
+                    preps.append(inside)
+                    var newName = name
+                    newName.removeSubrange(openParen...closeParen)
+                    name = newName.trimmingCharacters(in: .whitespaces)
+                    break
+                }
+            }
+        }
+        
+        let finalPrep = preps.isEmpty ? nil : preps.joined(separator: ", ")
+        return (finalPrep, name)
+    }
+    
+    private static func cleanIngredientName(_ text: String) -> String {
+        var name = text
+            .trimmingCharacters(in: .whitespaces)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "()"))
+        
+        // Remove leading articles
+        let articles = ["a ", "an ", "the "]
+        for article in articles {
+            if name.lowercased().hasPrefix(article) {
+                name = String(name.dropFirst(article.count))
+            }
+        }
+        
+        // Capitalize first letter of each word
+        name = name.split(separator: " ")
+            .map { word in
+                let lower = word.lowercased()
+                // Keep small words lowercase unless they're the first word
+                if ["and", "or", "of", "with", "for", "&"].contains(lower) {
+                    return lower
+                }
+                return word.prefix(1).uppercased() + word.dropFirst().lowercased()
+            }
+            .joined(separator: " ")
+        
+        return name
+    }
+    
+    private static func categorize(_ name: String) -> IngredientCategory {
+        let lower = name.lowercased()
+        
+        // Category keywords - order matters for ambiguous items
+        let categoryKeywords: [(IngredientCategory, [String])] = [
+            (.protein, [
+                "chicken", "beef", "pork", "salmon", "fish", "shrimp", "tofu",
+                "sausage", "steak", "ground", "turkey", "lamb", "bacon", "ham",
+                "prosciutto", "pancetta", "tuna", "cod", "tilapia", "crab",
+                "lobster", "scallop", "mussel", "clam", "duck", "venison",
+                "brisket", "ribs", "flank", "sirloin", "tenderloin", "thigh",
+                "breast", "drumstick", "wing"
+            ]),
+            (.produce, [
+                "pepper", "onion", "garlic", "tomato", "spinach", "broccoli",
+                "carrot", "cucumber", "lettuce", "avocado", "lemon", "lime",
+                "mushroom", "potato", "zucchini", "cabbage", "asparagus",
+                "eggplant", "celery", "kale", "arugula", "scallion", "shallot",
+                "sweet potato", "squash", "corn", "pea", "bean sprout",
+                "green onion", "jalapeño", "mango", "orange", "apple", "banana",
+                "berry", "grape", "melon", "pineapple", "grapefruit", "peach",
+                "pear", "plum", "cherry", "radish", "beet", "turnip", "leek",
+                "fennel", "artichoke", "bok choy", "brussels", "cauliflower",
+                "snap pea", "snow pea", "edamame", "bell pepper", "serrano",
+                "habanero", "poblano", "chile", "chili pepper"
+            ]),
+            (.dairy, [
+                "cheese", "cream", "milk", "yogurt", "butter", "egg",
+                "sour cream", "ricotta", "mozzarella", "parmesan", "feta",
+                "cheddar", "gouda", "brie", "gruyere", "mascarpone",
+                "cream cheese", "cottage cheese", "half and half", "whipping"
+            ]),
+            (.spices, [
+                "cumin", "paprika", "oregano", "thyme", "rosemary", "basil",
+                "cilantro", "parsley", "ginger", "cinnamon", "nutmeg", "cayenne",
+                "chili powder", "garam masala", "turmeric", "curry powder",
+                "coriander", "cardamom", "cloves", "allspice", "bay leaf",
+                "dill", "tarragon", "sage", "mint", "chive", "marjoram",
+                "italian seasoning", "herbs de provence", "five spice",
+                "old bay", "cajun", "taco seasoning", "ranch seasoning",
+                "garlic powder", "onion powder", "smoked paprika", "sumac",
+                "za'atar", "ras el hanout", "berbere", "harissa", "sriracha",
+                "salt", "pepper", "seasoning", "spice", "extract", "vanilla"
+            ]),
+            (.pantry, [
+                "oil", "olive oil", "vegetable oil", "sesame oil", "coconut oil",
+                "sauce", "soy sauce", "fish sauce", "worcestershire", "hot sauce",
+                "flour", "sugar", "brown sugar", "powdered sugar", "honey", "maple",
+                "broth", "stock", "chicken broth", "beef broth", "vegetable broth",
+                "pasta", "spaghetti", "penne", "fettuccine", "linguine", "orzo",
+                "rice", "jasmine rice", "basmati", "brown rice", "wild rice",
+                "noodle", "ramen", "udon", "rice noodle", "egg noodle",
+                "tortilla", "bread", "pita", "naan", "baguette", "roll",
+                "vinegar", "balsamic", "red wine vinegar", "rice vinegar",
+                "peanut butter", "tahini", "coconut milk", "coconut cream",
+                "beans", "black beans", "kidney beans", "chickpea", "lentil",
+                "quinoa", "couscous", "barley", "farro", "bulgur",
+                "panko", "breadcrumb", "cornstarch", "baking powder", "baking soda",
+                "yeast", "gelatin", "cocoa", "chocolate", "chip",
+                "tomato paste", "tomato sauce", "crushed tomatoes", "diced tomatoes",
+                "ketchup", "mustard", "mayonnaise", "relish",
+                "wine", "sherry", "mirin", "sake", "marsala",
+                "capers", "olives", "sun-dried", "artichoke hearts",
+                "nuts", "almond", "walnut", "pecan", "cashew", "pistachio", "peanut",
+                "seeds", "sesame", "sunflower", "pumpkin seeds", "chia", "flax"
+            ])
+        ]
+        
+        for (category, keywords) in categoryKeywords {
+            if keywords.contains(where: { lower.contains($0) }) {
+                return category
+            }
+        }
+        
+        return .other
+    }
+}
+
+struct ShoppingListAggregator {
+    
+    /// Combines ingredients from multiple recipes, aggregating quantities for same ingredients
+    static func aggregate(recipes: [Recipe]) -> [(category: IngredientCategory, items: [ParsedIngredient])] {
+        // Parse all ingredients
+        let parsed = recipes.flatMap { $0.ingredients }.map { IngredientParser.parse($0) }
+        
+        // Group by normalized name + unit
+        var grouped: [String: [ParsedIngredient]] = [:]
+        for ingredient in parsed {
+            // Create a key that groups similar ingredients
+            let key = "\(ingredient.name.lowercased())|\(ingredient.unit ?? "whole")"
+            grouped[key, default: []].append(ingredient)
+        }
+        
+        // Combine quantities for same ingredients
+        var combined: [ParsedIngredient] = []
+        for (_, ingredients) in grouped {
+            if ingredients.count == 1 {
+                combined.append(ingredients[0])
+            } else {
+                // Sum quantities if all have quantities
+                let quantities = ingredients.compactMap { $0.quantity }
+                let totalQty: Double? = quantities.isEmpty ? nil : quantities.reduce(0, +)
+                
+                // Merge preparations (unique only)
+                let preps = Set(ingredients.compactMap { $0.preparation })
+                let mergedPrep = preps.isEmpty ? nil : preps.joined(separator: "; ")
+                
+                let first = ingredients[0]
+                combined.append(ParsedIngredient(
+                    originalText: first.originalText,
+                    quantity: totalQty,
+                    unit: first.unit,
+                    name: first.name,
+                    preparation: mergedPrep,
+                    category: first.category
+                ))
+            }
+        }
+        
+        // Group by category
+        var byCategory: [IngredientCategory: [ParsedIngredient]] = [:]
+        for ingredient in combined {
+            byCategory[ingredient.category, default: []].append(ingredient)
+        }
+        
+        // Sort each category alphabetically by name
+        for category in byCategory.keys {
+            byCategory[category]?.sort { $0.name.lowercased() < $1.name.lowercased() }
+        }
+        
+        // Return sorted by category order
+        return IngredientCategory.allCases
+            .compactMap { category in
+                guard let items = byCategory[category], !items.isEmpty else { return nil }
+                return (category: category, items: items)
+            }
+    }
+}
+
 private enum PersistenceKeys {
     static let userPreferences = "enplace_userPreferences"
     static let likedRecipeNames = "enplace_likedRecipeNames"
+    static let savedUserId = "enplace_savedUserId"
 }
 
 private struct PersistenceManager {
@@ -210,6 +713,20 @@ private struct PersistenceManager {
         }
         let decoder = JSONDecoder()
         return (try? decoder.decode([String].self, from: data)) ?? []
+    }
+    
+    static func saveUserId(_ userId: String) {
+        UserDefaults.standard.set(userId, forKey: PersistenceKeys.savedUserId)
+    }
+    
+    static func loadUserId() -> String? {
+        UserDefaults.standard.string(forKey: PersistenceKeys.savedUserId)
+    }
+    
+    static func clearAllData() {
+        UserDefaults.standard.removeObject(forKey: PersistenceKeys.userPreferences)
+        UserDefaults.standard.removeObject(forKey: PersistenceKeys.likedRecipeNames)
+        UserDefaults.standard.removeObject(forKey: PersistenceKeys.savedUserId)
     }
 }
 
@@ -288,6 +805,15 @@ final class RecipeSwipeViewModel: ObservableObject {
         }
         // Save merged likes to local storage
         PersistenceManager.saveLikedRecipes(likedRecipes)
+    }
+    
+    /// Clear all likes and matches (for new user)
+    func clearAllLikesAndMatches() {
+        likedRecipes = []
+        matchedRecipes = []
+        currentIndex = 0
+        PersistenceManager.saveLikedRecipes([])
+        print("🗑️ Cleared all local likes and matches")
     }
 
     func applyFilters(_ preferences: UserPreferences) {
@@ -369,9 +895,32 @@ struct ContentView: View {
     @StateObject private var viewModel = RecipeSwipeViewModel()
     @StateObject private var firebaseService = FirebaseService.shared
     @State private var preferences = PersistenceManager.loadPreferences() ?? UserPreferences()
-    @State private var hasCompletedOnboarding = PersistenceManager.loadPreferences() != nil
     @State private var showWelcome = true
     @State private var hasAcknowledgedInviteCode = false
+    @State private var hasManuallyCompletedOnboarding = false
+    
+    // Computed property: onboarding is complete ONLY if:
+    // 1. User manually completed it this session, OR
+    // 2. Saved preferences exist AND the saved user ID matches the current Firebase user
+    private var hasCompletedOnboarding: Bool {
+        if hasManuallyCompletedOnboarding {
+            return true
+        }
+        
+        // Check if we have saved preferences
+        guard PersistenceManager.loadPreferences() != nil else {
+            return false
+        }
+        
+        // Check if saved user ID matches current Firebase user
+        guard let currentUserId = firebaseService.currentUser?.id,
+              let savedUserId = PersistenceManager.loadUserId(),
+              currentUserId == savedUserId else {
+            return false
+        }
+        
+        return true
+    }
 
     var body: some View {
         Group {
@@ -403,7 +952,11 @@ struct ContentView: View {
             } else if !hasCompletedOnboarding {
                 // Step 4: Preferences onboarding (new users)
                 OnboardingView(preferences: $preferences) {
-                    hasCompletedOnboarding = true
+                    hasManuallyCompletedOnboarding = true
+                    // Save user ID along with preferences
+                    if let userId = firebaseService.currentUser?.id {
+                        PersistenceManager.saveUserId(userId)
+                    }
                     PersistenceManager.savePreferences(preferences)
                     viewModel.applyFilters(preferences)
                 }
@@ -415,6 +968,28 @@ struct ContentView: View {
         .environmentObject(firebaseService)
         .onAppear {
             if hasCompletedOnboarding {
+                viewModel.applyFilters(preferences)
+            }
+        }
+        // When user ID changes, check if it's a different user and clear old data
+        .onChange(of: firebaseService.currentUser?.id) { newUserId in
+            guard let newUserId = newUserId else { return }
+            
+            let savedUserId = PersistenceManager.loadUserId()
+            
+            // If there's saved data for a DIFFERENT user, clear everything
+            if let savedUserId = savedUserId, savedUserId != newUserId {
+                print("🔄 New user detected (was: \(savedUserId), now: \(newUserId)) - clearing old data")
+                PersistenceManager.clearAllData()
+                viewModel.clearAllLikesAndMatches()
+                preferences = UserPreferences()
+                hasManuallyCompletedOnboarding = false
+                hasAcknowledgedInviteCode = false
+            } else if hasCompletedOnboarding {
+                // Same user returning - load their preferences
+                if let savedPrefs = PersistenceManager.loadPreferences() {
+                    preferences = savedPrefs
+                }
                 viewModel.applyFilters(preferences)
             }
         }
@@ -1095,6 +1670,7 @@ struct RecipeCollectionTile: View {
                 HStack(spacing: 8) {
                     ForEach(recipes.prefix(4)) { recipe in
                         recipeThumbnail(for: recipe)
+                            .frame(maxWidth: .infinity)
                     }
                     
                     // Fill remaining slots with empty placeholders
@@ -1103,6 +1679,7 @@ struct RecipeCollectionTile: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(accentColor.opacity(0.1))
                                 .aspectRatio(1, contentMode: .fit)
+                                .frame(maxWidth: .infinity)
                         }
                     }
                 }
@@ -1131,7 +1708,9 @@ struct RecipeCollectionTile: View {
                 )
             }
         }
-        .aspectRatio(1, contentMode: .fit)
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fill)
+        .clipped()
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
@@ -1146,36 +1725,248 @@ struct RecipeListView: View {
     let emptyTitle: String
     let emptyMessage: String
     
+    // Filter state
+    @State private var filterCookingFor: String? = nil
+    @State private var filterTimeMax: Int? = nil
+    @State private var filterChefMax: Int? = nil
+    @State private var filterCuisine: Cuisine? = nil
+    @State private var searchText: String = ""
+    
+    private var hasActiveFilters: Bool {
+        filterCookingFor != nil || filterTimeMax != nil || filterChefMax != nil || filterCuisine != nil || !searchText.isEmpty
+    }
+    
+    private var filteredRecipes: [Recipe] {
+        var result = recipes
+        
+        // Search filter
+        if !searchText.isEmpty {
+            result = result.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+        
+        // Cooking For filter
+        if let cookingFor = filterCookingFor {
+            if cookingFor == "family" {
+                result = result.filter { $0.isForFamily }
+            } else if cookingFor == "couple" {
+                result = result.filter { !$0.isForFamily }
+            }
+        }
+        
+        // Time filter
+        if let maxTime = filterTimeMax {
+            result = result.filter { $0.cookTimeMinutes <= maxTime }
+        }
+        
+        // Chef level filter
+        if let maxChef = filterChefMax {
+            result = result.filter { recipe in
+                let recipeLevel = recipe.chefLevels.first.map { level -> Int in
+                    switch level {
+                    case .lineCook: return 1
+                    case .sousChef: return 2
+                    case .executiveChef: return 3
+                    }
+                } ?? 1
+                return recipeLevel <= maxChef
+            }
+        }
+        
+        // Cuisine filter
+        if let cuisine = filterCuisine {
+            result = result.filter { $0.cuisine == cuisine }
+        }
+        
+        return result
+    }
+    
     var body: some View {
-            List {
-            if recipes.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: emptyIcon)
-                        .font(.system(size: 50))
-                        .foregroundStyle(isMatchList ? AppTheme.primary.opacity(0.5) : AppTheme.secondary.opacity(0.5))
-                    Text(emptyTitle)
-                        .font(.headline)
-                        .foregroundStyle(AppTheme.textPrimary)
-                    Text(emptyMessage)
-                        .font(.subheadline)
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 60)
-                .listRowBackground(Color.clear)
-                } else {
-                ForEach(recipes) { recipe in
-                    NavigationLink {
-                            RecipeDetailView(recipe: recipe)
+        VStack(spacing: 0) {
+            // Search bar
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(AppTheme.textSecondary)
+                TextField("Search recipes...", text: $searchText)
+                    .textFieldStyle(.plain)
+                if !searchText.isEmpty {
+                    Button {
+                        searchText = ""
                     } label: {
-                        RecipeRowView(recipe: recipe, isMatch: isMatchList)
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(AppTheme.textSecondary)
                     }
                 }
             }
+            .padding(10)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(10)
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            
+            // Filter bar
+            filterBar
+            
+            // Recipe list
+            List {
+                if filteredRecipes.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: hasActiveFilters ? "line.3.horizontal.decrease.circle" : emptyIcon)
+                            .font(.system(size: 50))
+                            .foregroundStyle(isMatchList ? AppTheme.primary.opacity(0.5) : AppTheme.secondary.opacity(0.5))
+                        Text(hasActiveFilters ? "No recipes match filters" : emptyTitle)
+                            .font(.headline)
+                            .foregroundStyle(AppTheme.textPrimary)
+                        Text(hasActiveFilters ? "Try adjusting your filters" : emptyMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(AppTheme.textSecondary)
+                            .multilineTextAlignment(.center)
+                        
+                        if hasActiveFilters {
+                            Button("Clear Filters") {
+                                clearFilters()
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(AppTheme.primary)
+                            .padding(.top, 8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 60)
+                    .listRowBackground(Color.clear)
+                } else {
+                    ForEach(filteredRecipes) { recipe in
+                        NavigationLink {
+                            RecipeDetailView(recipe: recipe)
+                        } label: {
+                            RecipeRowView(recipe: recipe, isMatch: isMatchList)
+                        }
+                    }
+                }
+            }
+            .listStyle(.insetGrouped)
         }
-        .listStyle(.insetGrouped)
+        .background(AppTheme.background)
         .navigationTitle(title)
+    }
+    
+    private var filterBar: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading, spacing: 8) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        // Cuisine filter
+                        Menu {
+                            Button("Any") {
+                                filterCuisine = nil
+                            }
+                            ForEach(Cuisine.allCases) { cuisine in
+                                Button {
+                                    filterCuisine = cuisine
+                                } label: {
+                                    Text(cuisine.displayName)
+                                }
+                            }
+                        } label: {
+                            FilterChip(
+                                label: filterCuisine?.displayName ?? "Cuisine",
+                                icon: "globe",
+                                isActive: filterCuisine != nil
+                            ) { }
+                        }
+                        
+                        // Cooking For filter
+                        Menu {
+                            Button("Any") {
+                                filterCookingFor = nil
+                            }
+                            Button {
+                                filterCookingFor = "couple"
+                            } label: {
+                                Label("Couple", systemImage: "person.2.fill")
+                            }
+                            Button {
+                                filterCookingFor = "family"
+                            } label: {
+                                Label("Family", systemImage: "person.3.fill")
+                            }
+                        } label: {
+                            FilterChip(
+                                label: "Cooking For",
+                                icon: "person.2",
+                                isActive: filterCookingFor != nil
+                            ) { }
+                        }
+                        
+                        // Time filter
+                        FilterChip(
+                            label: "< 30 min",
+                            icon: "clock",
+                            isActive: filterTimeMax != nil
+                        ) {
+                            filterTimeMax = filterTimeMax == nil ? 30 : nil
+                        }
+                        
+                        // Difficulty filter
+                        Menu {
+                            Button("Any") {
+                                filterChefMax = nil
+                            }
+                            Button {
+                                filterChefMax = 1
+                            } label: {
+                                Label("Easy", systemImage: "flame")
+                            }
+                            Button {
+                                filterChefMax = 2
+                            } label: {
+                                Label("Medium", systemImage: "flame")
+                            }
+                            Button {
+                                filterChefMax = 3
+                            } label: {
+                                Label("Pro", systemImage: "flame")
+                            }
+                        } label: {
+                            FilterChip(
+                                label: "Difficulty",
+                                icon: "flame",
+                                isActive: filterChefMax != nil
+                            ) { }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+                .frame(width: geometry.size.width)
+                
+                // Clear filters button
+                if hasActiveFilters {
+                    Button {
+                        clearFilters()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.caption)
+                            Text("Clear filters")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundColor(AppTheme.primary)
+                    }
+                    .padding(.horizontal, 16)
+                }
+            }
+        }
+        .frame(height: hasActiveFilters ? 80 : 50)
+        .clipped()
+    }
+    
+    private func clearFilters() {
+        filterCookingFor = nil
+        filterTimeMax = nil
+        filterChefMax = nil
+        filterCuisine = nil
+        searchText = ""
     }
 }
 
@@ -1334,10 +2125,12 @@ struct RecipeDetailView: View {
                     .font(.headline)
 
                 ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
-                    HStack(alignment: .top) {
+                    HStack(alignment: .top, spacing: 8) {
                         Text("\(index + 1).")
                             .bold()
+                            .frame(width: 28, alignment: .leading)
                         Text(step)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
 
@@ -1358,7 +2151,8 @@ struct RecipeDetailView: View {
                 }
             }
             .padding()
-        }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
         .ignoresSafeArea(edges: .top)
         .navigationBarTitleDisplayMode(.inline)
@@ -1452,7 +2246,7 @@ struct MealPlanView: View {
                     AddMealSheet(
                         day: day,
                         matchedRecipes: viewModel.matchedRecipes,
-                        allRecipes: viewModel.allRecipes,
+                        likedRecipes: viewModel.likedRecipes,
                         currentMealPlan: firebaseService.mealPlan,
                         onAddRecipe: { recipeName in
                             Task {
@@ -1626,15 +2420,15 @@ struct MealPlanRecipeRow: View {
 struct AddMealSheet: View {
     let day: String
     let matchedRecipes: [Recipe]
-    let allRecipes: [Recipe]
+    let likedRecipes: [Recipe]
     let currentMealPlan: [String: [String]]
     let onAddRecipe: (String) -> Void
     
     @Environment(\.dismiss) private var dismiss
-    @State private var showAllRecipes = false
+    @State private var showLikedRecipes = false
     
     private var recipesToShow: [Recipe] {
-        showAllRecipes ? allRecipes : matchedRecipes
+        showLikedRecipes ? likedRecipes : matchedRecipes
     }
     
     // Get recipes already planned for this day
@@ -1645,10 +2439,10 @@ struct AddMealSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Toggle between matches and all recipes
-                Picker("Recipe Source", selection: $showAllRecipes) {
+                // Toggle between matches and my likes
+                Picker("Recipe Source", selection: $showLikedRecipes) {
                     Text("Matches (\(matchedRecipes.count))").tag(false)
-                    Text("All Recipes (\(allRecipes.count))").tag(true)
+                    Text("My Likes (\(likedRecipes.count))").tag(true)
                 }
                 .pickerStyle(.segmented)
                 .padding()
@@ -1657,20 +2451,20 @@ struct AddMealSheet: View {
                     // Empty state
                     VStack(spacing: 16) {
                         Spacer()
-                        Image(systemName: showAllRecipes ? "book.closed" : "heart.circle")
+                        Image(systemName: showLikedRecipes ? "hand.thumbsup.circle" : "heart.circle")
                             .font(.system(size: 50))
                             .foregroundColor(AppTheme.textSecondary.opacity(0.5))
                         
-                        Text(showAllRecipes ? "No recipes available" : "No matches yet!")
+                        Text(showLikedRecipes ? "No liked recipes yet!" : "No matches yet!")
                             .font(.headline)
                             .foregroundColor(AppTheme.textSecondary)
                         
-                        if !showAllRecipes {
-                            Text("Match with your partner to plan meals together")
-                                .font(.subheadline)
-                                .foregroundColor(AppTheme.textSecondary.opacity(0.7))
-                                .multilineTextAlignment(.center)
-                        }
+                        Text(showLikedRecipes 
+                             ? "Swipe right on recipes in Discover to add them here"
+                             : "Match with your partner to plan meals together")
+                            .font(.subheadline)
+                            .foregroundColor(AppTheme.textSecondary.opacity(0.7))
+                            .multilineTextAlignment(.center)
                         Spacer()
                     }
                     .padding()
@@ -1775,68 +2569,22 @@ struct AddMealRecipeRow: View {
     }
 }
 
-// MARK: - Shopping List View
+// MARK: - Shopping List View (Smart Parsing)
 
 struct ShoppingListView: View {
     let recipes: [Recipe]
     @Environment(\.dismiss) private var dismiss
-    @State private var checkedItems: Set<String> = []
+    @State private var checkedItems: Set<UUID> = []
     @State private var showingShareSheet = false
     
-    // All unique ingredients from all recipes
-    private var allIngredients: [String] {
-        var ingredients: [String] = []
-        for recipe in recipes {
-            ingredients.append(contentsOf: recipe.ingredients)
-        }
-        // Remove duplicates while preserving order
-        var seen = Set<String>()
-        return ingredients.filter { ingredient in
-            let normalized = ingredient.lowercased().trimmingCharacters(in: .whitespaces)
-            if seen.contains(normalized) {
-                return false
-            }
-            seen.insert(normalized)
-            return true
-        }
+    // Smart aggregated ingredients using the parser
+    private var aggregatedIngredients: [(category: IngredientCategory, items: [ParsedIngredient])] {
+        ShoppingListAggregator.aggregate(recipes: recipes)
     }
     
-    // Categorize ingredients
-    private var categorizedIngredients: [(category: String, items: [String])] {
-        let proteins = ["chicken", "beef", "pork", "salmon", "fish", "shrimp", "tofu", "sausage", "steak", "ground"]
-        let produce = ["pepper", "onion", "garlic", "tomato", "spinach", "broccoli", "carrot", "cucumber", "lettuce", "avocado", "lemon", "lime", "basil", "cilantro", "ginger", "mushroom", "potato", "zucchini", "cabbage", "bean sprout", "green onion", "jalapeño", "mango", "orange", "asparagus", "eggplant", "thyme", "rosemary", "parsley"]
-        let dairy = ["cheese", "cream", "milk", "yogurt", "butter", "sour cream", "ricotta", "mozzarella", "parmesan", "feta", "egg"]
-        let pantry = ["oil", "sauce", "salt", "pepper", "seasoning", "spice", "flour", "sugar", "broth", "stock", "pasta", "rice", "noodle", "tortilla", "bread", "vinegar", "honey", "soy", "peanut butter", "tahini", "coconut", "curry", "cumin", "paprika", "oregano", "chili", "beans", "chickpea", "lentil", "quinoa", "panko", "breadcrumb", "cornstarch", "tamarind", "maple"]
-        
-        var proteinItems: [String] = []
-        var produceItems: [String] = []
-        var dairyItems: [String] = []
-        var pantryItems: [String] = []
-        var otherItems: [String] = []
-        
-        for ingredient in allIngredients {
-            let lower = ingredient.lowercased()
-            if proteins.contains(where: { lower.contains($0) }) {
-                proteinItems.append(ingredient)
-            } else if produce.contains(where: { lower.contains($0) }) {
-                produceItems.append(ingredient)
-            } else if dairy.contains(where: { lower.contains($0) }) {
-                dairyItems.append(ingredient)
-            } else if pantry.contains(where: { lower.contains($0) }) {
-                pantryItems.append(ingredient)
-            } else {
-                otherItems.append(ingredient)
-            }
-        }
-        
-        var result: [(String, [String])] = []
-        if !proteinItems.isEmpty { result.append(("🥩 Proteins", proteinItems)) }
-        if !produceItems.isEmpty { result.append(("🥬 Produce", produceItems)) }
-        if !dairyItems.isEmpty { result.append(("🧀 Dairy & Eggs", dairyItems)) }
-        if !pantryItems.isEmpty { result.append(("🫙 Pantry", pantryItems)) }
-        if !otherItems.isEmpty { result.append(("📦 Other", otherItems)) }
-        
-        return result
+    // Total item count
+    private var totalItemCount: Int {
+        aggregatedIngredients.reduce(0) { $0 + $1.items.count }
     }
     
     // Generate plain text list for sharing
@@ -1844,11 +2592,11 @@ struct ShoppingListView: View {
         var text = "🛒 Shopping List for \(recipes.count) recipe\(recipes.count == 1 ? "" : "s")\n"
         text += "Generated by EnPlace\n\n"
         
-        for (category, items) in categorizedIngredients {
-            text += "\(category)\n"
+        for (category, items) in aggregatedIngredients {
+            text += "\(category.rawValue)\n"
             for item in items {
-                let check = checkedItems.contains(item) ? "✓" : "○"
-                text += "  \(check) \(item)\n"
+                let check = checkedItems.contains(item.id) ? "✓" : "○"
+                text += "  \(check) \(item.displayText)\n"
             }
             text += "\n"
         }
@@ -1866,7 +2614,7 @@ struct ShoppingListView: View {
                             Text("\(recipes.count) recipe\(recipes.count == 1 ? "" : "s")")
                                 .font(.subheadline)
                                 .foregroundColor(AppTheme.textSecondary)
-                            Text("\(allIngredients.count) items")
+                            Text("\(totalItemCount) items")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(AppTheme.textPrimary)
@@ -1875,9 +2623,9 @@ struct ShoppingListView: View {
                         Spacer()
                         
                         // Progress
-                        let progress = Double(checkedItems.count) / Double(max(allIngredients.count, 1))
+                        let progress = Double(checkedItems.count) / Double(max(totalItemCount, 1))
                         VStack(alignment: .trailing, spacing: 4) {
-                            Text("\(checkedItems.count)/\(allIngredients.count)")
+                            Text("\(checkedItems.count)/\(totalItemCount)")
                                 .font(.subheadline)
                                 .foregroundColor(AppTheme.textSecondary)
                             ProgressView(value: progress)
@@ -1913,22 +2661,22 @@ struct ShoppingListView: View {
                         }
                     }
                     
-                    // Categorized ingredients
-                    ForEach(categorizedIngredients, id: \.category) { category, items in
+                    // Categorized ingredients with smart aggregation
+                    ForEach(aggregatedIngredients, id: \.category) { category, items in
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(category)
+                            Text(category.rawValue)
                                 .font(.headline)
                                 .foregroundColor(AppTheme.textPrimary)
                             
-                            ForEach(items, id: \.self) { ingredient in
-                                ShoppingListItemRow(
+                            ForEach(items) { ingredient in
+                                SmartShoppingListItemRow(
                                     ingredient: ingredient,
-                                    isChecked: checkedItems.contains(ingredient),
+                                    isChecked: checkedItems.contains(ingredient.id),
                                     onToggle: {
-                                        if checkedItems.contains(ingredient) {
-                                            checkedItems.remove(ingredient)
+                                        if checkedItems.contains(ingredient.id) {
+                                            checkedItems.remove(ingredient.id)
                                         } else {
-                                            checkedItems.insert(ingredient)
+                                            checkedItems.insert(ingredient.id)
                                         }
                                     }
                                 )
@@ -1988,10 +2736,10 @@ struct ShoppingListView: View {
     }
 }
 
-// MARK: - Shopping List Item Row
+// MARK: - Smart Shopping List Item Row
 
-struct ShoppingListItemRow: View {
-    let ingredient: String
+struct SmartShoppingListItemRow: View {
+    let ingredient: ParsedIngredient
     let isChecked: Bool
     let onToggle: () -> Void
     
@@ -2003,15 +2751,26 @@ struct ShoppingListItemRow: View {
                     .foregroundColor(isChecked ? AppTheme.primary : AppTheme.textSecondary.opacity(0.5))
                     .font(.title3)
                 
-                // Ingredient text
-                Text(ingredient)
-                    .font(.subheadline)
-                    .foregroundColor(isChecked ? AppTheme.textSecondary : AppTheme.textPrimary)
-                    .strikethrough(isChecked, color: AppTheme.textSecondary)
+                // Ingredient text with quantity highlighting
+                HStack(spacing: 4) {
+                    // Quantity + Unit (if present)
+                    if ingredient.quantity != nil || ingredient.unit != nil {
+                        Text(quantityUnitText)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(isChecked ? AppTheme.textSecondary : AppTheme.primary)
+                    }
+                    
+                    // Ingredient name
+                    Text(ingredient.name)
+                        .font(.subheadline)
+                        .foregroundColor(isChecked ? AppTheme.textSecondary : AppTheme.textPrimary)
+                }
+                .strikethrough(isChecked, color: AppTheme.textSecondary)
                 
                 Spacer()
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
             .padding(.horizontal, 12)
             .background(
                 RoundedRectangle(cornerRadius: 10)
@@ -2019,6 +2778,43 @@ struct ShoppingListItemRow: View {
             )
         }
         .buttonStyle(.plain)
+    }
+    
+    private var quantityUnitText: String {
+        var parts: [String] = []
+        if let qty = ingredient.quantity {
+            parts.append(formatQuantity(qty))
+        }
+        if let unit = ingredient.unit {
+            parts.append(unit)
+        }
+        return parts.joined(separator: " ")
+    }
+    
+    private func formatQuantity(_ qty: Double) -> String {
+        let fractions: [(value: Double, display: String)] = [
+            (0.125, "⅛"), (0.25, "¼"), (0.333, "⅓"), (0.5, "½"),
+            (0.667, "⅔"), (0.75, "¾")
+        ]
+        
+        let whole = Int(qty)
+        let remainder = qty - Double(whole)
+        
+        for (value, display) in fractions {
+            if abs(remainder - value) < 0.05 {
+                if whole > 0 {
+                    return "\(whole)\(display)"
+                } else {
+                    return display
+                }
+            }
+        }
+        
+        if abs(qty - Double(Int(qty))) < 0.01 {
+            return "\(Int(qty))"
+        }
+        
+        return String(format: "%.1f", qty)
     }
 }
 

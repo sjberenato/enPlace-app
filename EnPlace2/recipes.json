@@ -3,8 +3,13 @@
     {
       "name": "Baked Italian Sausage and Peppers",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["lineCook", "sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "lineCook",
+        "sousChef"
+      ],
       "cookTimeMinutes": 35,
       "description": "Sheet pan sausage with bell peppers and onions, tossed in olive oil and Italian herbs.",
       "ingredients": [
@@ -16,22 +21,30 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 400°F (200°C) and position a rack in the center. Line a large rimmed sheet pan with parchment paper or foil for easy cleanup.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C) and position a rack in the center. Line a large rimmed sheet pan with parchment paper or foil for easy cleanup.",
         "Cut the bell peppers into 1/2-inch strips, removing seeds and membranes. Slice the onion into 1/2-inch wedges, keeping some layers connected so they hold together during roasting.",
         "In a large bowl, toss the peppers and onions with olive oil, Italian seasoning, salt, and pepper until evenly coated. The vegetables should glisten but not be swimming in oil.",
         "Spread the vegetables in a single layer on the prepared sheet pan, leaving room for the sausages. Nestle the Italian sausages among the vegetables, leaving space around each for even browning.",
         "Pierce each sausage 2-3 times with a fork to prevent bursting and allow fat to render. This also helps the flavors meld with the vegetables.",
-        "Roast for 25-30 minutes, flipping the sausages and stirring the vegetables halfway through. The sausages should be golden brown with an internal temperature of 165°F (74°C), and the peppers should have lightly charred edges.",
+        "Roast for 25-30 minutes, flipping the sausages and stirring the vegetables halfway through. The sausages should be golden brown with an internal temperature of 165\u00b0F (74\u00b0C), and the peppers should have lightly charred edges.",
         "Let rest for 2-3 minutes before serving. Serve family-style straight from the pan with crusty Italian bread, over creamy polenta, or stuffed into hoagie rolls with a drizzle of balsamic glaze."
       ],
-      "foodTags": ["pork"],
-      "imageName": "sausage-peppers"
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "sausage-peppers",
+      "cuisine": "italian"
     },
     {
       "name": "Chicken Tikka Masala",
       "isForFamily": false,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef", "executiveChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef",
+        "executiveChef"
+      ],
       "cookTimeMinutes": 45,
       "description": "Creamy tomato-based curry with marinated chicken, served over basmati rice.",
       "ingredients": [
@@ -57,14 +70,22 @@
         "Stir in the heavy cream and simmer uncovered for another 5 minutes, allowing the sauce to come together. Taste and adjust seasoning with salt as needed.",
         "Serve hot over fluffy basmati rice, garnished with fresh cilantro if desired. Warm naan bread on the side is essential for scooping up every drop of the creamy sauce."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "tikka-masala"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "tikka-masala",
+      "cuisine": "indian"
     },
     {
       "name": "Sheet Pan Veggie Tacos",
       "isForFamily": true,
-      "dietTags": ["vegetarian", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 25,
       "description": "Roasted peppers, onions, and black beans served in warm tortillas.",
       "ingredients": [
@@ -77,22 +98,31 @@
         "Corn tortillas"
       ],
       "steps": [
-        "Preheat your oven to 425°F (220°C) and line a large sheet pan with parchment paper. Position the rack in the upper third of the oven for maximum caramelization.",
+        "Preheat your oven to 425\u00b0F (220\u00b0C) and line a large sheet pan with parchment paper. Position the rack in the upper third of the oven for maximum caramelization.",
         "Cut the bell peppers into 1/2-inch strips and slice the red onion into thin half-moons. The pieces should be similar in size for even cooking.",
         "In a large bowl, combine the peppers, onion, and drained black beans. Drizzle with olive oil and sprinkle with chili powder, cumin, 1/2 teaspoon salt, and a pinch of pepper. Toss until everything is evenly coated.",
-        "Spread the vegetables in a single layer on the prepared sheet pan. Avoid overcrowding—the vegetables need space to roast, not steam. Use two pans if needed.",
+        "Spread the vegetables in a single layer on the prepared sheet pan. Avoid overcrowding\u2014the vegetables need space to roast, not steam. Use two pans if needed.",
         "Roast for 15-20 minutes, stirring once halfway through, until the peppers are tender and have charred spots and the onions are caramelized and sweet.",
         "While the vegetables roast, warm your corn tortillas. Wrap them in foil and place in the oven for the last 5 minutes, or char them directly over a gas flame for extra flavor.",
         "To serve, spoon the roasted vegetables into warm tortillas. Top with your favorites: fresh salsa, crumbled queso fresco, sliced avocado, a squeeze of lime, and chopped cilantro."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "veggie-tacos"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "veggie-tacos",
+      "cuisine": "mexican"
     },
     {
       "name": "Lemon Garlic Salmon with Roasted Broccoli",
       "isForFamily": false,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook", "sousChef"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook",
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Roasted salmon fillets with lemon, garlic, and broccoli florets.",
       "ingredients": [
@@ -104,22 +134,29 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 400°F (200°C). Line a large sheet pan with parchment paper for easy cleanup. Remove salmon from the refrigerator 15 minutes before cooking to take the chill off.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C). Line a large sheet pan with parchment paper for easy cleanup. Remove salmon from the refrigerator 15 minutes before cooking to take the chill off.",
         "Cut broccoli into uniform florets (about 1.5 inches). In a bowl, toss the broccoli with 1 tablespoon olive oil, salt, and pepper until evenly coated.",
-        "Pat the salmon fillets dry with paper towels—this is crucial for getting a nice sear. Season both sides generously with salt and pepper.",
+        "Pat the salmon fillets dry with paper towels\u2014this is crucial for getting a nice sear. Season both sides generously with salt and pepper.",
         "Rub the salmon with the remaining olive oil and spread the minced garlic evenly over the top of each fillet, pressing gently so it adheres.",
         "Arrange the broccoli on one side of the sheet pan in a single layer. Place the salmon fillets skin-side down on the other side. Lay lemon slices over the salmon.",
-        "Roast for 15-18 minutes until the salmon flakes easily with a fork and has an internal temperature of 125-130°F for medium (it will carry over cook). The broccoli should be tender with crispy, charred edges.",
+        "Roast for 15-18 minutes until the salmon flakes easily with a fork and has an internal temperature of 125-130\u00b0F for medium (it will carry over cook). The broccoli should be tender with crispy, charred edges.",
         "Serve immediately, squeezing the roasted lemon slices over the salmon for extra brightness. The caramelized lemon adds a wonderful sweetness that balances the fish."
       ],
-      "foodTags": ["fish"],
-      "imageName": "lemon-salmon"
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "lemon-salmon",
+      "cuisine": "american"
     },
     {
       "name": "One-Pot Creamy Tuscan Chicken Pasta",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 35,
       "description": "Creamy pasta with chicken, spinach, and sun-dried tomatoes in one pot.",
       "ingredients": [
@@ -134,20 +171,28 @@
       "steps": [
         "Slice chicken breasts horizontally into thin cutlets, then cut into 1-inch strips. Season generously with salt, pepper, and a pinch of Italian seasoning if you have it.",
         "Heat 2 tablespoons of olive oil in a large, deep skillet or Dutch oven over medium-high heat. Add the chicken in a single layer and cook until golden brown on both sides, about 3-4 minutes per side. Transfer to a plate.",
-        "In the same pot, add a splash more oil if needed and sauté the minced garlic for 30 seconds until fragrant. Be careful not to let it burn—it should sizzle gently and smell amazing.",
+        "In the same pot, add a splash more oil if needed and saut\u00e9 the minced garlic for 30 seconds until fragrant. Be careful not to let it burn\u2014it should sizzle gently and smell amazing.",
         "Add the pasta, chicken broth, heavy cream, and sun-dried tomatoes to the pot. Stir to combine and bring to a boil. The liquid should just cover the pasta.",
         "Reduce heat to medium, cover with a lid slightly ajar, and simmer for 12-15 minutes, stirring occasionally, until the pasta is al dente and has absorbed most of the liquid. The sauce will thicken as it cooks.",
         "Return the chicken to the pot along with any accumulated juices. Add the baby spinach in handfuls, stirring after each addition until wilted. This only takes about 1-2 minutes.",
         "Taste and adjust seasoning with salt and pepper. If the sauce is too thick, add a splash of broth or pasta water. Serve immediately, topped with freshly grated parmesan cheese."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "tuscan-pasta"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "tuscan-pasta",
+      "cuisine": "italian"
     },
     {
       "name": "Black Bean & Sweet Potato Chili",
       "isForFamily": true,
-      "dietTags": ["vegetarian", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 40,
       "description": "Hearty vegetarian chili with black beans and sweet potatoes.",
       "ingredients": [
@@ -169,14 +214,21 @@
         "Reduce heat to medium-low and simmer, partially covered, for 25-30 minutes until the sweet potatoes are fork-tender but still hold their shape. Stir occasionally to prevent sticking.",
         "Taste and adjust seasoning with salt, pepper, and more chili powder if you like it spicier. The chili should be thick and hearty. Serve in deep bowls topped with sour cream, shredded cheese, diced avocado, and fresh cilantro."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "sweet-potato-chili"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "sweet-potato-chili",
+      "cuisine": "american"
     },
     {
       "name": "Beef & Broccoli Stir Fry",
       "isForFamily": false,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 25,
       "description": "Quick stir fry with sliced beef, broccoli, and a savory sauce.",
       "ingredients": [
@@ -195,16 +247,23 @@
         "Heat a large wok or skillet over high heat until smoking. Add half the oil, then add the beef in a single layer. Let it sear undisturbed for 1 minute, then stir-fry until just browned, about 2 more minutes. Transfer to a plate.",
         "Add remaining oil to the wok. Toss in the garlic and stir for 10 seconds until fragrant. Add the blanched broccoli and stir-fry for 1-2 minutes.",
         "Return the beef to the wok. Add the remaining soy sauce and oyster sauce. Toss everything together over high heat for about 1 minute until the sauce coats the beef and broccoli evenly and becomes glossy.",
-        "Serve immediately over steamed jasmine rice. The key to great stir-fry is high heat and quick cooking—everything should be slightly smoky and sizzling."
+        "Serve immediately over steamed jasmine rice. The key to great stir-fry is high heat and quick cooking\u2014everything should be slightly smoky and sizzling."
       ],
-      "foodTags": ["beef"],
-      "imageName": "beef-broccoli"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "beef-broccoli",
+      "cuisine": "asian"
     },
     {
       "name": "Crispy Pork Carnitas Tacos",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 50,
       "description": "Slow-simmered pork crisped under the broiler and served in tortillas.",
       "ingredients": [
@@ -225,14 +284,21 @@
         "Warm your corn tortillas over an open flame or in a dry skillet until pliable and slightly charred. Keep warm wrapped in a clean kitchen towel.",
         "Serve the crispy carnitas in warm tortillas topped with diced white onion, fresh cilantro, a squeeze of lime juice, and your favorite salsa verde or roja."
       ],
-      "foodTags": ["pork"],
-      "imageName": "carnitas"
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "carnitas",
+      "cuisine": "mexican"
     },
     {
       "name": "Margherita Flatbread Pizza",
       "isForFamily": false,
-      "dietTags": ["vegetarian"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegetarian"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 20,
       "description": "Flatbread topped with tomato sauce, fresh mozzarella, and basil.",
       "ingredients": [
@@ -243,22 +309,29 @@
         "Olive oil"
       ],
       "steps": [
-        "Preheat your oven to 425°F (220°C). If you have a pizza stone, place it in the oven while preheating for an extra crispy crust. Otherwise, use a sheet pan.",
-        "Place flatbreads on your work surface. Brush the edges lightly with olive oil—this helps them crisp up and turn golden brown.",
+        "Preheat your oven to 425\u00b0F (220\u00b0C). If you have a pizza stone, place it in the oven while preheating for an extra crispy crust. Otherwise, use a sheet pan.",
+        "Place flatbreads on your work surface. Brush the edges lightly with olive oil\u2014this helps them crisp up and turn golden brown.",
         "Spread 1/4 cup of tomato sauce on each flatbread, leaving a 1/2-inch border around the edges. Use the back of a spoon in a circular motion for even coverage. Don't overload with sauce or the flatbread will get soggy.",
         "Tear or slice the fresh mozzarella into pieces and distribute evenly over the sauce. Fresh mozzarella has more moisture than shredded, so use slightly less than you think you need.",
         "Transfer the flatbreads to the preheated pizza stone or sheet pan. Bake for 8-10 minutes until the cheese is melted and bubbling with golden spots, and the edges are crispy and puffed.",
         "Remove from the oven and immediately scatter fresh basil leaves over the hot pizza. The residual heat will gently wilt them and release their aroma. Drizzle with high-quality extra virgin olive oil.",
         "Let cool for 1-2 minutes before slicing. Finish with a light sprinkle of flaky sea salt and a crack of black pepper if desired. Serve immediately while the cheese is still stretchy."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "margherita-pizza"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "margherita-pizza",
+      "cuisine": "italian"
     },
     {
       "name": "Peanut Noodle Veggie Bowls",
       "isForFamily": false,
-      "dietTags": ["vegan"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Rice noodles with a peanut sauce and crunchy veggies.",
       "ingredients": [
@@ -273,22 +346,29 @@
         "Water to thin"
       ],
       "steps": [
-        "Bring a large pot of water to a boil. Cook rice noodles according to package directions—most require just 3-5 minutes in boiling water. Be careful not to overcook or they'll become mushy.",
+        "Bring a large pot of water to a boil. Cook rice noodles according to package directions\u2014most require just 3-5 minutes in boiling water. Be careful not to overcook or they'll become mushy.",
         "While noodles cook, prepare the vegetables: slice the red bell pepper into thin strips, shred or julienne the carrots, and slice the cucumber into half-moons or thin matchsticks.",
-        "Make the peanut sauce by whisking together peanut butter, soy sauce, lime juice, and maple syrup in a bowl. Add warm water 1 tablespoon at a time until you reach a pourable consistency—about 2-3 tablespoons. The sauce should coat a spoon but still flow.",
+        "Make the peanut sauce by whisking together peanut butter, soy sauce, lime juice, and maple syrup in a bowl. Add warm water 1 tablespoon at a time until you reach a pourable consistency\u2014about 2-3 tablespoons. The sauce should coat a spoon but still flow.",
         "Drain the noodles and rinse under cold water to stop the cooking and remove excess starch. This also keeps them from sticking together. Shake off excess water.",
         "Transfer noodles to a large bowl. Pour about 2/3 of the peanut sauce over the noodles and toss thoroughly to coat every strand. Use tongs or two forks for best results.",
         "Divide the dressed noodles between serving bowls. Arrange the prepared vegetables on top in sections for a beautiful presentation. Drizzle with remaining sauce.",
-        "Garnish with extra lime wedges for squeezing, chopped roasted peanuts for crunch, sliced green onions, and fresh cilantro. Serve cold or at room temperature—these noodles are great for meal prep."
+        "Garnish with extra lime wedges for squeezing, chopped roasted peanuts for crunch, sliced green onions, and fresh cilantro. Serve cold or at room temperature\u2014these noodles are great for meal prep."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "peanut-noodles"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "peanut-noodles",
+      "cuisine": "asian"
     },
     {
       "name": "Shrimp Fried Rice",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Fried rice with shrimp, peas, carrots, and eggs.",
       "ingredients": [
@@ -301,22 +381,30 @@
         "2 green onions, sliced"
       ],
       "steps": [
-        "Use day-old refrigerated rice for best results—freshly cooked rice is too moist and will turn mushy. If using fresh rice, spread it on a sheet pan and refrigerate uncovered for at least 1 hour.",
-        "Heat 1 tablespoon oil in a large wok or skillet over high heat until smoking. Add the beaten eggs and scramble quickly, breaking them into small pieces as they cook—about 30-45 seconds. Transfer to a plate immediately.",
+        "Use day-old refrigerated rice for best results\u2014freshly cooked rice is too moist and will turn mushy. If using fresh rice, spread it on a sheet pan and refrigerate uncovered for at least 1 hour.",
+        "Heat 1 tablespoon oil in a large wok or skillet over high heat until smoking. Add the beaten eggs and scramble quickly, breaking them into small pieces as they cook\u2014about 30-45 seconds. Transfer to a plate immediately.",
         "Add the shrimp to the hot wok in a single layer. Cook without stirring for 1 minute until pink on the bottom, then flip and cook 1 more minute until just cooked through. Transfer to the plate with the eggs. Don't overcook the shrimp.",
         "Add the remaining tablespoon of oil to the wok. Add the cold rice, breaking up any clumps with your spatula. Let it sit for 30 seconds to crisp up on the bottom, then stir. Repeat this process several times to get slightly crispy rice.",
         "Add the frozen peas and carrots directly to the rice. The heat will thaw and cook them quickly. Stir-fry for 1-2 minutes until heated through.",
         "Push the rice to the sides of the wok and add the soy sauce to the center. Let it sizzle for a few seconds, then toss everything together to distribute the sauce evenly.",
         "Return the eggs and shrimp to the wok. Add the sliced green onions (reserving some for garnish). Toss everything together for another 30 seconds until heated through. Serve immediately in warm bowls, garnished with remaining green onions."
       ],
-      "foodTags": ["fish"],
-      "imageName": "shrimp-fried-rice"
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "shrimp-fried-rice",
+      "cuisine": "asian"
     },
     {
       "name": "BBQ Chicken Sheet Pan Dinner",
       "isForFamily": true,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 35,
       "description": "BBQ chicken thighs roasted with potatoes and green beans.",
       "ingredients": [
@@ -328,23 +416,31 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 400°F (200°C). Line a large sheet pan with foil for easy cleanup—the BBQ sauce will caramelize and can stick.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C). Line a large sheet pan with foil for easy cleanup\u2014the BBQ sauce will caramelize and can stick.",
         "Halve the baby potatoes and trim the ends off the green beans. In a large bowl, toss the potatoes and green beans with olive oil, salt, and pepper until evenly coated.",
         "Pat the chicken thighs dry with paper towels. Season both sides generously with salt and pepper. Dry skin is essential for achieving crispy skin in the oven.",
         "Spread the potatoes and green beans on the sheet pan in a single layer, leaving space in the center for the chicken. Place the chicken thighs skin-side up on the pan.",
         "Roast for 15 minutes to get the cooking started and begin rendering the chicken fat. The skin should be starting to look golden.",
-        "Remove the pan from the oven and brush the chicken thighs generously with BBQ sauce—use about half the sauce. Return to the oven and roast for another 15-20 minutes.",
-        "The chicken is done when it reaches an internal temperature of 165°F and the juices run clear. The BBQ sauce should be caramelized and sticky, with slightly charred edges.",
+        "Remove the pan from the oven and brush the chicken thighs generously with BBQ sauce\u2014use about half the sauce. Return to the oven and roast for another 15-20 minutes.",
+        "The chicken is done when it reaches an internal temperature of 165\u00b0F and the juices run clear. The BBQ sauce should be caramelized and sticky, with slightly charred edges.",
         "Let rest for 5 minutes before serving. Brush with remaining BBQ sauce if desired. The potatoes should be golden and crispy, and the green beans tender with some char."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "bbq-chicken"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "bbq-chicken",
+      "cuisine": "american"
     },
     {
       "name": "Veggie Frittata",
       "isForFamily": false,
-      "dietTags": ["vegetarian", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 25,
       "description": "Egg-based frittata with spinach, peppers, and cheese.",
       "ingredients": [
@@ -356,22 +452,29 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 375°F (190°C). Use a 10-inch oven-safe skillet—cast iron works beautifully for frittatas and helps create a golden crust.",
+        "Preheat your oven to 375\u00b0F (190\u00b0C). Use a 10-inch oven-safe skillet\u2014cast iron works beautifully for frittatas and helps create a golden crust.",
         "Crack the eggs into a large bowl. Add the milk, 1/2 teaspoon salt, and a few grinds of black pepper. Whisk vigorously until the eggs are completely uniform in color with no streaks of white.",
         "Fold the spinach, diced bell pepper, and most of the cheese (reserve 2 tablespoons) into the egg mixture. The spinach will wilt during cooking, so don't worry if it looks like a lot.",
         "Heat 1 tablespoon of butter or olive oil in your oven-safe skillet over medium heat. Swirl to coat the bottom and sides of the pan.",
         "Pour the egg mixture into the warm skillet. Let it cook undisturbed for 2-3 minutes until the edges are starting to set but the center is still quite wet. Gently lift the edges with a spatula to let uncooked egg flow underneath.",
         "Sprinkle the reserved cheese over the top. Transfer the skillet to the preheated oven and bake for 12-15 minutes until the frittata is puffed, golden on top, and set in the center. It should jiggle slightly when shaken.",
-        "Let cool in the pan for 3-4 minutes before slicing—this makes it easier to cut clean wedges. Serve warm or at room temperature. Frittata also makes excellent leftovers and is great cold in sandwiches."
+        "Let cool in the pan for 3-4 minutes before slicing\u2014this makes it easier to cut clean wedges. Serve warm or at room temperature. Frittata also makes excellent leftovers and is great cold in sandwiches."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "frittata"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "frittata",
+      "cuisine": "italian"
     },
     {
       "name": "Lentil Bolognese over Pasta",
       "isForFamily": true,
-      "dietTags": ["vegan"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 40,
       "description": "Hearty tomato sauce with lentils served over pasta.",
       "ingredients": [
@@ -383,7 +486,7 @@
         "8 oz pasta"
       ],
       "steps": [
-        "Rinse the lentils under cold water, picking out any debris or damaged lentils. Use brown or green lentils—they hold their shape better than red lentils during cooking.",
+        "Rinse the lentils under cold water, picking out any debris or damaged lentils. Use brown or green lentils\u2014they hold their shape better than red lentils during cooking.",
         "Place lentils in a saucepan and cover with 3 cups of water. Bring to a boil, then reduce heat and simmer for 20-25 minutes until tender but not mushy. Drain and set aside.",
         "While lentils cook, heat olive oil in a large skillet or Dutch oven over medium heat. Add the diced onion and cook until soft and translucent, about 5-6 minutes, stirring occasionally.",
         "Add the minced garlic and cook for 1 minute until fragrant. Add a pinch of red pepper flakes if you like a little heat.",
@@ -392,14 +495,22 @@
         "Taste the lentil bolognese and adjust seasoning with salt, pepper, and a pinch of sugar if the sauce is too acidic. Toss the pasta with the sauce, adding a splash of pasta water if needed to loosen.",
         "Serve in warm bowls topped with nutritional yeast or vegan parmesan and fresh basil leaves. A drizzle of good olive oil finishes the dish beautifully."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "lentil-bolognese"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "lentil-bolognese",
+      "cuisine": "italian"
     },
     {
       "name": "Teriyaki Tofu Rice Bowls",
       "isForFamily": false,
-      "dietTags": ["vegan", "glutenFree"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Crispy tofu with teriyaki sauce over rice and steamed veggies.",
       "ingredients": [
@@ -414,20 +525,29 @@
         "Press the tofu to remove excess moisture: wrap the block in paper towels or a clean kitchen towel, place on a plate, and set something heavy on top (like a cast iron skillet). Press for at least 15 minutes, changing towels if needed.",
         "Cut the pressed tofu into 3/4-inch cubes. Place in a bowl and toss with soy sauce, letting the tofu absorb the liquid for 5 minutes.",
         "Add the cornstarch to the tofu and toss gently until every piece is evenly coated. The cornstarch is the secret to achieving crispy edges.",
-        "Heat 2-3 tablespoons of vegetable oil in a large non-stick skillet over medium-high heat. Add the tofu in a single layer—don't overcrowd or it will steam instead of crisp.",
+        "Heat 2-3 tablespoons of vegetable oil in a large non-stick skillet over medium-high heat. Add the tofu in a single layer\u2014don't overcrowd or it will steam instead of crisp.",
         "Cook the tofu undisturbed for 3-4 minutes until golden and crispy on the bottom. Flip and continue cooking, turning occasionally, until all sides are crispy, about 8-10 minutes total.",
         "Reduce heat to medium-low and drizzle the teriyaki sauce over the tofu. Toss gently to coat, letting the sauce glaze the tofu for about 1 minute. It should be sticky and caramelized.",
         "Assemble the bowls: place a mound of steamed rice in each bowl, add steamed broccoli on one side, and pile the teriyaki tofu on the other. Drizzle any remaining sauce from the pan over the bowl.",
         "Garnish with sesame seeds, sliced green onions, and a sprinkle of chili flakes if you like heat. Serve immediately while the tofu is still crispy."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "teriyaki-tofu"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "teriyaki-tofu",
+      "cuisine": "asian"
     },
     {
       "name": "Greek Chicken Bowls",
       "isForFamily": false,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook", "sousChef"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook",
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Bowls with marinated chicken, cucumbers, tomatoes, and feta over rice.",
       "ingredients": [
@@ -445,18 +565,26 @@
         "Add the chicken to the marinade, toss to coat completely, and let it sit for at least 15 minutes at room temperature, or up to 2 hours in the refrigerator for more flavor.",
         "While chicken marinates, prep your vegetables: dice the cucumber into 1/2-inch pieces, halve the cherry tomatoes, and crumble the feta cheese. Set aside.",
         "Heat a large skillet over medium-high heat. Remove chicken from marinade, shaking off excess, and add to the hot pan in a single layer. Cook undisturbed for 3-4 minutes until golden brown on the bottom.",
-        "Flip the chicken pieces and continue cooking for another 3-4 minutes until cooked through and nicely browned on all sides. The internal temperature should reach 165°F. Let rest for 2 minutes.",
+        "Flip the chicken pieces and continue cooking for another 3-4 minutes until cooked through and nicely browned on all sides. The internal temperature should reach 165\u00b0F. Let rest for 2 minutes.",
         "To assemble the bowls: start with a base of warm rice. Arrange the cucumber and tomatoes on one side of the bowl. Place the cooked chicken on the other side.",
         "Top with crumbled feta cheese and a drizzle of extra olive oil. Add a dollop of tzatziki sauce or hummus if desired. Garnish with fresh dill or parsley and a lemon wedge for squeezing."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "greek-chicken"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "greek-chicken",
+      "cuisine": "mediterranean"
     },
     {
       "name": "Slow Cooker Beef Stew",
       "isForFamily": true,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 480,
       "description": "Comforting beef stew with potatoes, carrots, and onions.",
       "ingredients": [
@@ -473,20 +601,28 @@
         "Cut the stew beef into 1.5-inch cubes if not already cut. Pat dry with paper towels and season generously with salt and pepper on all sides.",
         "Optional but recommended: sear the beef before slow cooking. Heat oil in a skillet over high heat and brown the beef in batches until a crust forms, about 2 minutes per side. This adds incredible depth of flavor.",
         "Prepare the vegetables: peel and cut potatoes into 1-inch cubes, slice carrots into 1/2-inch rounds, and roughly chop the onion. Larger cuts prevent the vegetables from turning to mush during the long cook.",
-        "Layer the vegetables in the bottom of your slow cooker—this puts them closest to the heat source and ensures they cook through properly.",
+        "Layer the vegetables in the bottom of your slow cooker\u2014this puts them closest to the heat source and ensures they cook through properly.",
         "Place the beef on top of the vegetables. In a bowl, whisk together the beef broth, tomato paste, and thyme until combined. Pour this mixture over everything in the slow cooker.",
         "Cover and cook on LOW for 8 hours or HIGH for 4-5 hours. The stew is ready when the beef is fork-tender and practically falls apart, and the vegetables are soft but still hold their shape.",
         "In the last 30 minutes, taste and adjust seasoning. If you want a thicker stew, mix 2 tablespoons cornstarch with 2 tablespoons cold water and stir it in, cooking on HIGH uncovered for the remaining time.",
         "Serve in deep bowls with crusty bread for sopping up the rich broth. Garnish with fresh parsley. This stew tastes even better the next day as the flavors continue to meld."
       ],
-      "foodTags": ["beef"],
-      "imageName": "beef-stew"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "beef-stew",
+      "cuisine": "american"
     },
     {
       "name": "Fish Taco Bowls",
       "isForFamily": false,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 25,
       "description": "Seasoned fish over rice with slaw and lime crema.",
       "ingredients": [
@@ -503,18 +639,26 @@
         "For the lime crema, whisk together the sour cream with the juice of half the lime and a pinch of salt. Thin with a little water if needed to reach a drizzling consistency. Taste and adjust lime to your preference.",
         "Make a quick slaw by tossing the shredded cabbage with the juice from the remaining lime half, a drizzle of olive oil, and a pinch of salt. Let it sit while you cook the fish to slightly soften and absorb the dressing.",
         "Heat 1 tablespoon of oil in a skillet over medium-high heat. Once hot, add the fish fillets. Cook for 3-4 minutes per side depending on thickness, until the fish flakes easily with a fork and is opaque throughout.",
-        "Alternatively, bake the fish at 400°F for 12-15 minutes on a parchment-lined sheet pan for a hands-off approach.",
+        "Alternatively, bake the fish at 400\u00b0F for 12-15 minutes on a parchment-lined sheet pan for a hands-off approach.",
         "Break the cooked fish into large flaky chunks. Build your bowls: start with a base of warm rice, add a pile of lime slaw on one side, and arrange the flaked fish on top.",
-        "Drizzle generously with lime crema. Add your favorite toppings: diced avocado, pickled jalapeños, fresh cilantro, pico de gallo, or a sprinkle of cotija cheese. Serve with extra lime wedges."
+        "Drizzle generously with lime crema. Add your favorite toppings: diced avocado, pickled jalape\u00f1os, fresh cilantro, pico de gallo, or a sprinkle of cotija cheese. Serve with extra lime wedges."
       ],
-      "foodTags": ["fish"],
-      "imageName": "fish-tacos"
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "fish-tacos",
+      "cuisine": "mexican"
     },
     {
       "name": "Chickpea Coconut Curry",
       "isForFamily": true,
-      "dietTags": ["vegan", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 30,
       "description": "Creamy curry with chickpeas and spinach in coconut milk.",
       "ingredients": [
@@ -528,21 +672,29 @@
       "steps": [
         "Drain and rinse the chickpeas. Pat them dry if you want them to crisp up slightly in the curry. Dice the onion finely for faster cooking and better texture in the sauce.",
         "Heat the oil in a large skillet or Dutch oven over medium heat. Add the diced onion and cook until soft and starting to turn golden, about 5-6 minutes. Stir occasionally to prevent burning.",
-        "Add the curry powder to the onions and stir constantly for 1 minute. This toasting step is crucial—it awakens the spices and removes any raw, powdery taste. You should smell the spices blooming.",
+        "Add the curry powder to the onions and stir constantly for 1 minute. This toasting step is crucial\u2014it awakens the spices and removes any raw, powdery taste. You should smell the spices blooming.",
         "Pour in the coconut milk, stirring to scrape up any spices stuck to the bottom of the pan. Shake the can well before opening, and use full-fat coconut milk for the creamiest result.",
         "Add the chickpeas and stir to combine. Bring to a gentle simmer and cook for 10-15 minutes, allowing the chickpeas to absorb the curry flavors and the sauce to thicken slightly.",
         "Add the baby spinach in handfuls, stirring after each addition until wilted. This only takes 1-2 minutes. The spinach adds color, nutrients, and freshness to balance the rich curry.",
         "Taste and season with salt, pepper, and a squeeze of lime juice to brighten the flavors. If you like it spicier, add a pinch of cayenne or some chili flakes.",
         "Serve over basmati rice or with warm naan bread for scooping. Garnish with fresh cilantro and a drizzle of coconut cream for an extra luxurious finish."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "chickpea-curry"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "chickpea-curry",
+      "cuisine": "indian"
     },
     {
       "name": "Beef Meatballs with Zoodles",
       "isForFamily": false,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 35,
       "description": "Oven-baked beef meatballs served over zucchini noodles and marinara.",
       "ingredients": [
@@ -554,22 +706,30 @@
         "1 jar marinara sauce"
       ],
       "steps": [
-        "Preheat your oven to 400°F (200°C). Line a sheet pan with parchment paper and lightly grease it or spray with cooking spray.",
-        "In a large bowl, combine the ground beef, egg, breadcrumbs, Italian seasoning, 1/2 teaspoon salt, and a few grinds of pepper. Mix with your hands until just combined—don't overmix or the meatballs will be dense.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C). Line a sheet pan with parchment paper and lightly grease it or spray with cooking spray.",
+        "In a large bowl, combine the ground beef, egg, breadcrumbs, Italian seasoning, 1/2 teaspoon salt, and a few grinds of pepper. Mix with your hands until just combined\u2014don't overmix or the meatballs will be dense.",
         "Using a small ice cream scoop or your hands, form the mixture into 12-14 meatballs, about 1.5 inches in diameter. Roll them between your palms to make them round and place them on the prepared pan with space between each.",
-        "Bake for 15-20 minutes until the meatballs are cooked through and browned on the outside. The internal temperature should reach 160°F. They'll continue cooking slightly after removing from the oven.",
+        "Bake for 15-20 minutes until the meatballs are cooked through and browned on the outside. The internal temperature should reach 160\u00b0F. They'll continue cooking slightly after removing from the oven.",
         "While meatballs bake, spiralize the zucchini into noodles. If you don't have a spiralizer, use a vegetable peeler to make wide ribbons or julienne cut into thin strips.",
         "Warm the marinara sauce in a large skillet over medium heat. Add the zucchini noodles and toss gently with the sauce for 2-3 minutes until just warmed through and slightly softened. Don't overcook or they'll release water and become soggy.",
         "Divide the zoodles between serving bowls. Top with the baked meatballs and spoon extra sauce over the top. Garnish with fresh basil, grated parmesan (if not dairy-free), and a drizzle of olive oil."
       ],
-      "foodTags": ["beef"],
-      "imageName": "meatballs-zoodles"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "meatballs-zoodles",
+      "cuisine": "american"
     },
     {
       "name": "Honey Garlic Glazed Salmon",
       "isForFamily": false,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 25,
       "description": "Pan-seared salmon with a sticky honey garlic glaze, served with steamed asparagus.",
       "ingredients": [
@@ -582,23 +742,31 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Remove salmon from the refrigerator 15 minutes before cooking. Pat the fillets completely dry with paper towels—this is essential for achieving a crispy sear. Season both sides with salt and pepper.",
+        "Remove salmon from the refrigerator 15 minutes before cooking. Pat the fillets completely dry with paper towels\u2014this is essential for achieving a crispy sear. Season both sides with salt and pepper.",
         "In a small bowl, whisk together the honey, soy sauce, and minced garlic. Set this glaze aside.",
-        "Trim the woody ends off the asparagus by snapping them naturally—they'll break where the tender part begins. Steam or blanch in salted boiling water for 3-4 minutes until bright green and tender-crisp. Keep warm.",
-        "Heat 1 tablespoon of oil in a large skillet over medium-high heat until it shimmers. Place the salmon skin-side up (flesh-side down) in the pan. Don't move it—let it sear undisturbed for 4 minutes.",
+        "Trim the woody ends off the asparagus by snapping them naturally\u2014they'll break where the tender part begins. Steam or blanch in salted boiling water for 3-4 minutes until bright green and tender-crisp. Keep warm.",
+        "Heat 1 tablespoon of oil in a large skillet over medium-high heat until it shimmers. Place the salmon skin-side up (flesh-side down) in the pan. Don't move it\u2014let it sear undisturbed for 4 minutes.",
         "Flip the salmon so it's skin-side down. The flesh should have a beautiful golden crust. Cook for another 2 minutes.",
         "Reduce heat to medium-low. Add the butter to the pan, letting it melt. Pour the honey garlic glaze into the pan around the salmon. It will bubble immediately.",
-        "Tilt the pan and use a spoon to continuously baste the salmon with the bubbling glaze for 2-3 minutes. The glaze will thicken and become sticky, and the salmon should reach an internal temp of 125-130°F for medium.",
+        "Tilt the pan and use a spoon to continuously baste the salmon with the bubbling glaze for 2-3 minutes. The glaze will thicken and become sticky, and the salmon should reach an internal temp of 125-130\u00b0F for medium.",
         "Serve the salmon over the steamed asparagus, spooning the remaining glaze from the pan over everything. Garnish with sesame seeds and thinly sliced green onions."
       ],
-      "foodTags": ["fish"],
-      "imageName": "honey-garlic-salmon"
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "honey-garlic-salmon",
+      "cuisine": "asian"
     },
     {
       "name": "Classic Beef Tacos",
       "isForFamily": true,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 30,
       "description": "Seasoned ground beef in crispy taco shells with all the fixings.",
       "ingredients": [
@@ -616,20 +784,28 @@
         "Drain excess fat from the pan by carefully tilting and spooning it out, or transfer beef to a colander briefly. Return beef to the skillet.",
         "Sprinkle the taco seasoning over the beef. Add 1/4 cup water and stir to combine. Simmer for 3-5 minutes until the water has evaporated and the seasoning coats the meat evenly.",
         "While the meat simmers, prep your toppings: shred the lettuce, dice the tomato, and set out the cheese, sour cream, and salsa in serving bowls for a taco bar setup.",
-        "Warm the taco shells according to package directions. For crispy shells, place them directly on the oven rack at 325°F for 5 minutes. For soft tacos, warm tortillas in a dry skillet or over an open flame.",
+        "Warm the taco shells according to package directions. For crispy shells, place them directly on the oven rack at 325\u00b0F for 5 minutes. For soft tacos, warm tortillas in a dry skillet or over an open flame.",
         "Set up your taco station: place the seasoned beef in a serving bowl, arrange all the toppings within easy reach, and let everyone build their own tacos.",
         "To assemble: add a generous spoonful of beef to each shell, then layer with cheese (so it melts slightly from the heat), lettuce, tomatoes, a dollop of sour cream, and salsa. Squeeze fresh lime juice over the top if desired."
       ],
-      "foodTags": ["beef"],
-      "imageName": "beef-tacos"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "beef-tacos",
+      "cuisine": "mexican"
     },
     {
       "name": "Mushroom Risotto",
       "isForFamily": false,
-      "dietTags": ["vegetarian", "glutenFree"],
-      "chefLevels": ["executiveChef"],
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "executiveChef"
+      ],
       "cookTimeMinutes": 45,
-      "description": "Creamy Italian risotto with sautéed mushrooms and parmesan cheese.",
+      "description": "Creamy Italian risotto with saut\u00e9ed mushrooms and parmesan cheese.",
       "ingredients": [
         "1 cup Arborio rice",
         "8 oz mixed mushrooms, sliced",
@@ -642,24 +818,31 @@
         "Fresh thyme"
       ],
       "steps": [
-        "Heat the vegetable broth in a saucepan and keep it warm over low heat. Using warm broth is essential—cold broth will shock the rice and make the risotto gummy.",
+        "Heat the vegetable broth in a saucepan and keep it warm over low heat. Using warm broth is essential\u2014cold broth will shock the rice and make the risotto gummy.",
         "In a separate large, wide skillet, melt 1 tbsp butter over medium-high heat. Add the sliced mushrooms in a single layer. Don't stir for 2-3 minutes to allow them to develop a golden brown crust. Flip and brown the other side. Season with salt and pepper, transfer to a plate.",
         "In the same skillet, heat the olive oil over medium heat. Add the minced shallot and cook until soft and translucent, about 2-3 minutes, stirring frequently.",
         "Add the Arborio rice to the shallot and stir constantly for 2 minutes. The rice should be coated in oil and become slightly translucent around the edges. This toasting step is important for texture.",
         "Pour in the white wine and stir until it's completely absorbed by the rice. You should be able to see the bottom of the pan when you drag your spoon through.",
         "Begin adding the warm broth one ladle (about 1/2 cup) at a time, stirring frequently. Wait until each addition is mostly absorbed before adding the next. This gradual process takes about 18-22 minutes and creates the creamy texture.",
         "The risotto is done when the rice is tender but still has a slight bite (al dente) and the consistency is creamy and flows slowly when you tilt the pan. It should not be gluey or dry.",
-        "Remove from heat and stir in the remaining butter, parmesan cheese, and the sautéed mushrooms. Season to taste with salt and pepper. The butter and cheese add final creaminess (this is called mantecatura).",
-        "Serve immediately in warm shallow bowls—risotto waits for no one! Garnish with fresh thyme leaves, extra parmesan, and a drizzle of truffle oil if you're feeling fancy."
+        "Remove from heat and stir in the remaining butter, parmesan cheese, and the saut\u00e9ed mushrooms. Season to taste with salt and pepper. The butter and cheese add final creaminess (this is called mantecatura).",
+        "Serve immediately in warm shallow bowls\u2014risotto waits for no one! Garnish with fresh thyme leaves, extra parmesan, and a drizzle of truffle oil if you're feeling fancy."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "mushroom-risotto"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "mushroom-risotto",
+      "cuisine": "italian"
     },
     {
       "name": "Baked Ziti with Sausage",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 50,
       "description": "Hearty baked pasta with Italian sausage, ricotta, and melted mozzarella.",
       "ingredients": [
@@ -672,24 +855,31 @@
         "Fresh basil"
       ],
       "steps": [
-        "Preheat your oven to 375°F (190°C). Bring a large pot of generously salted water to a boil for the pasta.",
-        "Cook the ziti according to package directions, but stop 2 minutes early—it should be very al dente since it will continue cooking in the oven. Drain and set aside.",
+        "Preheat your oven to 375\u00b0F (190\u00b0C). Bring a large pot of generously salted water to a boil for the pasta.",
+        "Cook the ziti according to package directions, but stop 2 minutes early\u2014it should be very al dente since it will continue cooking in the oven. Drain and set aside.",
         "While pasta cooks, remove the sausage from its casing if necessary. Brown the sausage in a large skillet over medium-high heat, breaking it into bite-sized pieces with a wooden spoon. Cook until no pink remains, about 8-10 minutes.",
         "Add the marinara sauce to the sausage and stir to combine. Simmer for 5 minutes to let the flavors meld. Taste and adjust seasoning with salt, pepper, or red pepper flakes.",
         "In a large bowl, combine the cooked pasta with 3/4 of the sauce mixture and the ricotta cheese. Stir gently until everything is evenly distributed and the ricotta creates creamy pockets throughout.",
         "Pour half of the pasta mixture into a 9x13 inch baking dish. Sprinkle with half the mozzarella. Add the remaining pasta and top with remaining sauce from the pan.",
         "Cover with the rest of the mozzarella and sprinkle the parmesan evenly over the top. Cover loosely with foil.",
         "Bake covered for 20 minutes, then remove the foil and bake for another 10-15 minutes until the cheese is melted, bubbly, and golden brown in spots.",
-        "Let rest for 5 minutes before serving—this allows the dish to set and makes it easier to portion. Garnish with torn fresh basil leaves and serve with garlic bread."
+        "Let rest for 5 minutes before serving\u2014this allows the dish to set and makes it easier to portion. Garnish with torn fresh basil leaves and serve with garlic bread."
       ],
-      "foodTags": ["pork"],
-      "imageName": "baked-ziti"
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "baked-ziti",
+      "cuisine": "italian"
     },
     {
       "name": "Thai Basil Chicken",
       "isForFamily": false,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 20,
       "description": "Spicy stir-fried ground chicken with Thai basil and a fried egg over rice.",
       "ingredients": [
@@ -705,23 +895,31 @@
         "Jasmine rice"
       ],
       "steps": [
-        "Start your jasmine rice first—rinse 1 cup rice until water runs clear, then cook with 1.25 cups water. The rice will be ready by the time your chicken is done. Keep covered until serving.",
-        "Mix together the soy sauce, fish sauce, oyster sauce, and sugar in a small bowl. Set this sauce near your stove—Thai cooking goes fast and you'll need everything ready.",
-        "Heat a wok or large skillet over high heat until smoking. Add 2 tablespoons of oil. When the oil shimmers, add the minced garlic and sliced Thai chilies. Stir-fry for just 10-15 seconds—watch carefully as garlic burns quickly.",
+        "Start your jasmine rice first\u2014rinse 1 cup rice until water runs clear, then cook with 1.25 cups water. The rice will be ready by the time your chicken is done. Keep covered until serving.",
+        "Mix together the soy sauce, fish sauce, oyster sauce, and sugar in a small bowl. Set this sauce near your stove\u2014Thai cooking goes fast and you'll need everything ready.",
+        "Heat a wok or large skillet over high heat until smoking. Add 2 tablespoons of oil. When the oil shimmers, add the minced garlic and sliced Thai chilies. Stir-fry for just 10-15 seconds\u2014watch carefully as garlic burns quickly.",
         "Immediately add the ground chicken, breaking it apart with your spatula. Let it sit undisturbed for 30 seconds to get some browning, then stir and continue cooking until no pink remains, about 3-4 minutes.",
         "Pour the sauce mixture over the chicken. Toss everything together over high heat for another minute, allowing the sauce to coat the meat and reduce slightly.",
-        "Remove the wok from heat and immediately toss in the Thai basil leaves. Stir just until they begin to wilt—they should still be bright green and fragrant, not completely wilted. The residual heat is enough.",
+        "Remove the wok from heat and immediately toss in the Thai basil leaves. Stir just until they begin to wilt\u2014they should still be bright green and fragrant, not completely wilted. The residual heat is enough.",
         "In a separate small pan, fry the eggs in a little oil until the whites are set but the yolks are still runny. Crispy edges are traditional and delicious.",
         "Serve immediately: mound the jasmine rice in bowls, spoon the Thai basil chicken alongside, and top with a fried egg. Break the yolk and let it run into the chicken. Have extra fish sauce and chili flakes at the table."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "thai-basil-chicken"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "thai-basil-chicken",
+      "cuisine": "asian"
     },
     {
       "name": "Stuffed Bell Peppers",
       "isForFamily": true,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 45,
       "description": "Bell peppers stuffed with seasoned beef, rice, and topped with melted cheese.",
       "ingredients": [
@@ -734,7 +932,7 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 375°F (190°C). Select bell peppers that can stand upright on their own—look for ones with flat bottoms.",
+        "Preheat your oven to 375\u00b0F (190\u00b0C). Select bell peppers that can stand upright on their own\u2014look for ones with flat bottoms.",
         "Cut the tops off the peppers about 1/2 inch down. Remove the seeds and membranes inside. If the peppers won't stand upright, shave a tiny bit off the bottom to create a flat surface, being careful not to cut through.",
         "Bring a large pot of salted water to a boil. Blanch the pepper shells for 3-4 minutes until slightly softened but still holding their shape. This pre-cooking ensures they'll be perfectly tender when done. Drain upside down on paper towels.",
         "In a large skillet, brown the ground beef over medium-high heat, breaking it into small pieces. Drain any excess fat. Add the Italian seasoning, salt, and pepper.",
@@ -744,14 +942,21 @@
         "Bake covered for 25-30 minutes. Remove the foil, top each pepper with the remaining cheese, and bake uncovered for 10-15 more minutes until the cheese is melted and bubbly.",
         "Let rest for 5 minutes before serving. Spoon the tomato sauce from the dish over the peppers. Garnish with fresh parsley or basil."
       ],
-      "foodTags": ["beef"],
-      "imageName": "stuffed-peppers"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "stuffed-peppers",
+      "cuisine": "american"
     },
     {
       "name": "Coconut Shrimp with Mango Salsa",
       "isForFamily": false,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Crispy coconut-crusted shrimp served with fresh mango salsa.",
       "ingredients": [
@@ -762,28 +967,36 @@
         "2 eggs, beaten",
         "1 ripe mango, diced",
         "1/4 red onion, diced",
-        "1 jalapeño, minced",
+        "1 jalape\u00f1o, minced",
         "Juice of 1 lime",
         "Fresh cilantro"
       ],
       "steps": [
-        "Preheat your oven to 425°F (220°C). Line a baking sheet with parchment paper and place a wire rack on top if you have one—this helps the shrimp crisp up on all sides.",
-        "Make the mango salsa: combine the diced mango, red onion, minced jalapeño (remove seeds for less heat), lime juice, and chopped cilantro in a bowl. Season with a pinch of salt. Refrigerate while you prepare the shrimp.",
+        "Preheat your oven to 425\u00b0F (220\u00b0C). Line a baking sheet with parchment paper and place a wire rack on top if you have one\u2014this helps the shrimp crisp up on all sides.",
+        "Make the mango salsa: combine the diced mango, red onion, minced jalape\u00f1o (remove seeds for less heat), lime juice, and chopped cilantro in a bowl. Season with a pinch of salt. Refrigerate while you prepare the shrimp.",
         "Set up a breading station with three shallow bowls: flour seasoned with salt and pepper in the first, beaten eggs in the second, and the coconut mixed with panko in the third.",
-        "Pat the shrimp dry with paper towels—this is crucial for the coating to stick. Working one at a time, dredge shrimp in flour, shaking off excess.",
+        "Pat the shrimp dry with paper towels\u2014this is crucial for the coating to stick. Working one at a time, dredge shrimp in flour, shaking off excess.",
         "Dip the floured shrimp in the beaten egg, letting excess drip off. Press the shrimp firmly into the coconut-panko mixture, turning to coat all sides completely.",
         "Arrange the breaded shrimp in a single layer on the prepared baking sheet. Lightly spray or mist with cooking oil for extra crispiness.",
         "Bake for 12-15 minutes, flipping halfway through, until the coconut is golden brown and the shrimp are pink and cooked through. Watch carefully as coconut can burn quickly.",
         "Serve the hot coconut shrimp immediately with the chilled mango salsa on the side for dipping. The contrast of hot, crispy shrimp with cool, tangy salsa is incredible. Add lime wedges for an extra squeeze of brightness."
       ],
-      "foodTags": ["fish"],
-      "imageName": "coconut-shrimp"
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "coconut-shrimp",
+      "cuisine": "asian"
     },
     {
       "name": "Vegan Buddha Bowl",
       "isForFamily": false,
-      "dietTags": ["vegan", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 25,
       "description": "Nourishing bowl with quinoa, roasted chickpeas, avocado, and tahini drizzle.",
       "ingredients": [
@@ -798,23 +1011,30 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 400°F (200°C). Rinse the quinoa under cold water to remove the bitter outer coating. Cook according to package directions (usually 1 cup quinoa to 2 cups water, simmered for 15 minutes). Fluff with a fork and set aside.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C). Rinse the quinoa under cold water to remove the bitter outer coating. Cook according to package directions (usually 1 cup quinoa to 2 cups water, simmered for 15 minutes). Fluff with a fork and set aside.",
         "Drain and rinse the chickpeas, then pat them very dry with paper towels or a clean kitchen towel. Wet chickpeas won't crisp up properly. Removing the skins (optional) makes them extra crispy.",
-        "Toss the chickpeas with 1 tablespoon oil, cumin, salt, and pepper. Spread in a single layer on a baking sheet—don't overcrowd them.",
+        "Toss the chickpeas with 1 tablespoon oil, cumin, salt, and pepper. Spread in a single layer on a baking sheet\u2014don't overcrowd them.",
         "Roast the chickpeas for 25-30 minutes, shaking the pan halfway through, until they're golden brown and crispy. They'll continue to crisp as they cool.",
-        "While the chickpeas roast, make the tahini dressing: whisk together the tahini, lemon juice, 2-3 tablespoons of water, a pinch of salt, and a small clove of minced garlic if desired. It should be pourable—add more water if needed.",
+        "While the chickpeas roast, make the tahini dressing: whisk together the tahini, lemon juice, 2-3 tablespoons of water, a pinch of salt, and a small clove of minced garlic if desired. It should be pourable\u2014add more water if needed.",
         "Prep your vegetables: thinly slice or shred the purple cabbage, shred the carrots, and slice the avocado right before serving to prevent browning.",
         "Assemble the bowls: start with a base of quinoa, then arrange sections of purple cabbage, carrots, sliced avocado, and a generous pile of crispy chickpeas.",
         "Drizzle the tahini dressing over everything. Top with additional toppings like sesame seeds, microgreens, hemp hearts, or pickled vegetables. Serve immediately while the chickpeas are still warm and crispy."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "buddha-bowl"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "buddha-bowl",
+      "cuisine": "mediterranean"
     },
     {
       "name": "Pulled Pork Sandwiches",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 480,
       "description": "Slow cooker pulled pork with tangy coleslaw on soft brioche buns.",
       "ingredients": [
@@ -829,22 +1049,29 @@
       ],
       "steps": [
         "Pat the pork shoulder dry and create a dry rub by mixing smoked paprika, 1 tablespoon brown sugar, 1 teaspoon salt, 1/2 teaspoon black pepper, and a pinch of cayenne. Rub this mixture all over the pork, getting into all the crevices.",
-        "Place the seasoned pork in your slow cooker. Pour the apple cider vinegar around (not over) the meat—this helps keep it moist and adds tangy flavor. No need to add extra liquid; the pork will release its juices.",
-        "Cover and cook on LOW for 8-10 hours or HIGH for 5-6 hours. The pork is ready when it's fall-apart tender and shreds easily with two forks. Internal temperature should reach 195-205°F.",
+        "Place the seasoned pork in your slow cooker. Pour the apple cider vinegar around (not over) the meat\u2014this helps keep it moist and adds tangy flavor. No need to add extra liquid; the pork will release its juices.",
+        "Cover and cook on LOW for 8-10 hours or HIGH for 5-6 hours. The pork is ready when it's fall-apart tender and shreds easily with two forks. Internal temperature should reach 195-205\u00b0F.",
         "Carefully transfer the pork to a cutting board. Discard any large pieces of fat. Using two forks, shred the meat, pulling it apart into long strands.",
         "Pour out most of the cooking liquid from the slow cooker, reserving about 1/2 cup. Return the shredded pork to the slow cooker. Add the BBQ sauce and reserved cooking liquid. Stir to combine and keep on warm setting until ready to serve.",
-        "Make the tangy coleslaw: toss the coleslaw mix with mayonnaise, 2 tablespoons apple cider vinegar, 1 teaspoon sugar, salt, and pepper. Taste and adjust—it should be tangy and slightly sweet. Refrigerate until serving.",
+        "Make the tangy coleslaw: toss the coleslaw mix with mayonnaise, 2 tablespoons apple cider vinegar, 1 teaspoon sugar, salt, and pepper. Taste and adjust\u2014it should be tangy and slightly sweet. Refrigerate until serving.",
         "Toast the brioche buns lightly under the broiler or in a dry skillet until golden brown. This adds texture and prevents them from getting soggy.",
         "Build your sandwiches: pile the pulled pork generously on the bottom bun, top with a heap of tangy coleslaw, and close with the top bun. Serve with extra BBQ sauce on the side and plenty of napkins!"
       ],
-      "foodTags": ["pork"],
-      "imageName": "pulled-pork"
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "pulled-pork",
+      "cuisine": "american"
     },
     {
       "name": "Eggplant Parmesan",
       "isForFamily": false,
-      "dietTags": ["vegetarian"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "vegetarian"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 50,
       "description": "Breaded eggplant slices baked with marinara and melted mozzarella.",
       "ingredients": [
@@ -857,8 +1084,8 @@
         "Fresh basil"
       ],
       "steps": [
-        "Slice the eggplant into 1/2-inch rounds. Lay them on paper towels and sprinkle generously with salt on both sides. Let sit for 20-30 minutes—this draws out moisture and bitterness. You'll see beads of liquid form on the surface.",
-        "Preheat your oven to 400°F (200°C). Line a large baking sheet with parchment paper and set up your breading station.",
+        "Slice the eggplant into 1/2-inch rounds. Lay them on paper towels and sprinkle generously with salt on both sides. Let sit for 20-30 minutes\u2014this draws out moisture and bitterness. You'll see beads of liquid form on the surface.",
+        "Preheat your oven to 400\u00b0F (200\u00b0C). Line a large baking sheet with parchment paper and set up your breading station.",
         "Rinse the salt off the eggplant slices and pat them very dry with paper towels. This step is crucial for crispy breading.",
         "Mix the breadcrumbs with the parmesan cheese in a shallow bowl. Beat the eggs in another shallow bowl. Dip each eggplant slice in egg, letting excess drip off, then press into the breadcrumb mixture, coating both sides.",
         "Arrange breaded eggplant in a single layer on the baking sheet. Bake for 20-25 minutes, flipping halfway through, until golden brown and crispy on both sides.",
@@ -867,14 +1094,22 @@
         "Bake for 15-20 minutes until the cheese is melted, bubbly, and starting to brown in spots.",
         "Let rest for 5 minutes before serving. Garnish with fresh basil leaves. Serve with crusty bread or over spaghetti for a heartier meal."
       ],
-      "foodTags": ["vegetarian"],
-      "imageName": "eggplant-parm"
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "eggplant-parm",
+      "cuisine": "italian"
     },
     {
       "name": "One-Pan Lemon Herb Chicken & Potatoes",
       "isForFamily": true,
-      "dietTags": ["none", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 40,
       "description": "Juicy chicken thighs roasted with golden potatoes and fresh herbs.",
       "ingredients": [
@@ -888,23 +1123,30 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 425°F (220°C). Take the chicken out of the refrigerator 15-20 minutes before cooking to take the chill off—this helps it cook more evenly.",
+        "Preheat your oven to 425\u00b0F (220\u00b0C). Take the chicken out of the refrigerator 15-20 minutes before cooking to take the chill off\u2014this helps it cook more evenly.",
         "In a large bowl, combine the halved baby potatoes with 1 tbsp olive oil, minced garlic, half the rosemary and thyme, salt, and pepper. Toss until the potatoes are evenly coated.",
         "Spread the potatoes in a single layer in a large cast iron skillet or roasting pan. The potatoes should be mostly cut-side down for maximum browning.",
         "Pat the chicken thighs very dry with paper towels. Season generously on both sides with salt, pepper, and the remaining fresh herbs. Rub with the remaining olive oil.",
-        "Nestle the chicken thighs on top of the potatoes, skin-side up. Squeeze the lemon juice over everything. Tuck the lemon halves into the pan around the chicken—they'll roast and caramelize.",
-        "Roast for 35-40 minutes without opening the oven door. The chicken is done when it reaches an internal temperature of 165°F and the skin is deep golden brown and crispy. The potatoes should be fork-tender with crispy edges.",
-        "Let rest for 5 minutes in the pan—this allows the juices to redistribute. Serve directly from the pan, spooning the aromatic pan juices over the chicken and potatoes.",
+        "Nestle the chicken thighs on top of the potatoes, skin-side up. Squeeze the lemon juice over everything. Tuck the lemon halves into the pan around the chicken\u2014they'll roast and caramelize.",
+        "Roast for 35-40 minutes without opening the oven door. The chicken is done when it reaches an internal temperature of 165\u00b0F and the skin is deep golden brown and crispy. The potatoes should be fork-tender with crispy edges.",
+        "Let rest for 5 minutes in the pan\u2014this allows the juices to redistribute. Serve directly from the pan, spooning the aromatic pan juices over the chicken and potatoes.",
         "Garnish with additional fresh herbs and squeeze the roasted lemon over everything for extra brightness. The caramelized roasted lemon has a sweet, mellow flavor that's incredible."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "lemon-herb-chicken"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "lemon-herb-chicken",
+      "cuisine": "american"
     },
     {
       "name": "Vegetable Pad Thai",
       "isForFamily": false,
-      "dietTags": ["vegan"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 30,
       "description": "Classic Thai noodles with tofu, bean sprouts, and tangy tamarind sauce.",
       "ingredients": [
@@ -920,23 +1162,30 @@
         "Lime wedges"
       ],
       "steps": [
-        "Soak the rice noodles in warm (not boiling) water for 20-30 minutes until pliable but still slightly firm. They'll finish cooking in the wok. Drain well before using.",
+        "Soak the rice noodles in warm (not boiling) water for 20-30 minutes until pliable but still slightly firm OR based on package instructions. They'll finish cooking in the wok. Drain well before using.",
         "Press the tofu for at least 15 minutes to remove excess moisture. Cut into 1/2-inch cubes. Pan-fry in 2 tbsp oil over medium-high heat until golden and crispy on all sides, about 8-10 minutes. Set aside.",
-        "Make the pad thai sauce: whisk together the tamarind paste, soy sauce, maple syrup, and rice vinegar. Taste and adjust—it should be a balance of sour, sweet, and salty. Add 2 tbsp water if it's too thick.",
+        "Make the pad thai sauce: whisk together the tamarind paste, soy sauce, maple syrup, and rice vinegar. Taste and adjust\u2014it should be a balance of sour, sweet, and salty. Add 2 tbsp water if it's too thick.",
         "Heat a large wok or skillet over high heat until smoking. Add 1 tbsp oil and swirl to coat. Add the drained noodles and toss continuously for 1-2 minutes.",
-        "Pour the pad thai sauce over the noodles. Toss vigorously, lifting and turning the noodles to coat them evenly with the sauce. Keep the heat high—you want some slight char.",
+        "Pour the pad thai sauce over the noodles. Toss vigorously, lifting and turning the noodles to coat them evenly with the sauce. Keep the heat high\u2014you want some slight char.",
         "Add the crispy tofu, bean sprouts (reserving some for garnish), and most of the green onions. Toss everything together for another minute until just combined. Bean sprouts should stay crisp.",
-        "Transfer to serving plates. Top with the remaining fresh bean sprouts, sliced green onions, and crushed peanuts. Serve immediately with lime wedges for squeezing—the lime is essential!",
+        "Transfer to serving plates. Top with the remaining fresh bean sprouts, sliced green onions, and crushed peanuts. Serve immediately with lime wedges for squeezing\u2014the lime is essential!",
         "Add chili flakes or sriracha at the table for those who want extra heat. Traditional pad thai should have a perfect balance of sour, sweet, and salty flavors."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "veggie-pad-thai"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "veggie-pad-thai",
+      "cuisine": "asian"
     },
     {
       "name": "Beef Stroganoff",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["sousChef"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
       "cookTimeMinutes": 35,
       "description": "Tender beef strips in a creamy mushroom sauce over egg noodles.",
       "ingredients": [
@@ -954,7 +1203,7 @@
       "steps": [
         "Slice the beef sirloin across the grain into thin 1/4-inch strips. Season with salt and pepper. Slicing against the grain is key for tenderness. Partially freezing the meat for 20 minutes makes slicing easier.",
         "Bring a large pot of salted water to a boil. Cook the egg noodles according to package directions until al dente. Drain and toss with a small pat of butter to prevent sticking. Keep warm.",
-        "Heat 1 tbsp butter in a large skillet over high heat. Add the beef strips in a single layer—work in batches to avoid crowding. Sear quickly, about 1-2 minutes per side, until browned but still slightly pink inside. Transfer to a plate.",
+        "Heat 1 tbsp butter in a large skillet over high heat. Add the beef strips in a single layer\u2014work in batches to avoid crowding. Sear quickly, about 1-2 minutes per side, until browned but still slightly pink inside. Transfer to a plate.",
         "Reduce heat to medium. Add remaining butter and the sliced mushrooms. Cook without stirring for 2-3 minutes to let them brown, then stir and continue cooking until golden and tender, about 5 more minutes.",
         "Add the diced onion to the mushrooms and cook until softened, about 3-4 minutes. Add the minced garlic and cook for 30 seconds until fragrant.",
         "Sprinkle the flour over the mushrooms and onions. Stir constantly for 1 minute to cook out the raw flour taste. This creates the base of your sauce.",
@@ -962,14 +1211,22 @@
         "Remove the pan from heat (this is important!) and stir in the sour cream until smooth. Return the beef and any accumulated juices to the pan. Gently stir to combine. Don't boil after adding sour cream or it may curdle.",
         "Taste and adjust seasoning. Serve immediately over the warm egg noodles, garnished with chopped fresh parsley and an extra dollop of sour cream if desired."
       ],
-      "foodTags": ["beef"],
-      "imageName": "beef-stroganoff"
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "beef-stroganoff",
+      "cuisine": "american"
     },
     {
       "name": "Mediterranean Quinoa Salad",
       "isForFamily": false,
-      "dietTags": ["vegan", "glutenFree"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 20,
       "description": "Fresh and light quinoa salad with cucumber, tomatoes, olives, and lemon dressing.",
       "ingredients": [
@@ -990,17 +1247,24 @@
         "While quinoa cools, prep your vegetables: dice the cucumber into 1/2-inch pieces, halve the cherry tomatoes, halve the kalamata olives, and finely dice the red onion.",
         "Make the lemon dressing: whisk together the olive oil, lemon juice, dried oregano, 1/2 teaspoon salt, and pepper to taste. The dressing should be bright and tangy.",
         "In a large bowl, combine the cooled quinoa with the cucumber, tomatoes, olives, and red onion. Pour the dressing over and toss gently to combine everything evenly.",
-        "Taste and adjust seasoning—you may want more lemon juice, salt, or a drizzle of extra olive oil. The salad should be well-dressed but not swimming in dressing.",
+        "Taste and adjust seasoning\u2014you may want more lemon juice, salt, or a drizzle of extra olive oil. The salad should be well-dressed but not swimming in dressing.",
         "Serve immediately at room temperature, or refrigerate for at least 30 minutes to let the flavors meld. This salad keeps well for up to 3 days in the refrigerator and makes excellent meal prep. Add fresh herbs like parsley or mint before serving."
       ],
-      "foodTags": ["vegan"],
-      "imageName": "quinoa-salad"
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "quinoa-salad",
+      "cuisine": "mediterranean"
     },
     {
       "name": "Crispy Baked Chicken Tenders",
       "isForFamily": true,
-      "dietTags": ["none"],
-      "chefLevels": ["lineCook"],
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
       "cookTimeMinutes": 30,
       "description": "Kid-friendly crispy chicken tenders baked to golden perfection.",
       "ingredients": [
@@ -1014,17 +1278,1068 @@
         "Salt & pepper"
       ],
       "steps": [
-        "Preheat your oven to 425°F (220°C). Line a baking sheet with parchment paper and place a wire cooling rack on top. Spray the rack with cooking oil. This setup allows air to circulate and makes the tenders crispy on all sides.",
+        "Preheat your oven to 425\u00b0F (220\u00b0C). Line a baking sheet with parchment paper and place a wire cooling rack on top. Spray the rack with cooking oil. This setup allows air to circulate and makes the tenders crispy on all sides.",
         "Set up a breading station with three shallow dishes: flour seasoned with salt and pepper in the first, beaten eggs in the second, and panko mixed with garlic powder, paprika, 1/2 tsp salt, and pepper in the third.",
         "Pat the chicken tenders dry with paper towels. If any tenders are very thick, pound them gently to an even thickness for uniform cooking.",
         "Bread the chicken: dredge each tender in flour, shaking off excess. Dip in beaten egg, letting excess drip off. Press firmly into the panko mixture, coating all sides and pressing to adhere.",
-        "Arrange the breaded tenders on the wire rack in a single layer with space between each. Lightly spray the tops with cooking oil—this helps achieve that golden, crispy exterior.",
-        "Bake for 18-22 minutes, flipping halfway through, until the chicken is cooked through (165°F internal temperature) and the coating is golden brown and crispy. Cooking time may vary based on the size of your tenders.",
+        "Arrange the breaded tenders on the wire rack in a single layer with space between each. Lightly spray the tops with cooking oil\u2014this helps achieve that golden, crispy exterior.",
+        "Bake for 18-22 minutes, flipping halfway through, until the chicken is cooked through (165\u00b0F internal temperature) and the coating is golden brown and crispy. Cooking time may vary based on the size of your tenders.",
         "Let rest for 2-3 minutes before serving. The breading will continue to crisp as it rests.",
         "Serve with honey mustard, ranch, BBQ sauce, or your favorite dipping sauces. These tenders are also great sliced over salads or in wraps. For extra-crispy coating, spray with a little more oil after flipping."
       ],
-      "foodTags": ["chicken"],
-      "imageName": "chicken-tenders"
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "chicken-tenders",
+      "cuisine": "american"
+    },
+    {
+      "name": "Korean Bibimbap",
+      "isForFamily": false,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Colorful Korean rice bowl with seasoned vegetables, beef, and a fried egg topped with gochujang sauce.",
+      "ingredients": [
+        "2 cups cooked rice",
+        "1/2 lb ground beef or sliced ribeye",
+        "2 cups spinach",
+        "1 carrot, julienned",
+        "1 zucchini, julienned",
+        "1 cup bean sprouts",
+        "2 eggs",
+        "2 tbsp gochujang",
+        "2 tbsp soy sauce",
+        "1 tbsp sesame oil",
+        "2 cloves garlic, minced",
+        "Sesame seeds"
+      ],
+      "steps": [
+        "Start by preparing your rice. For authentic bibimbap, use short-grain rice that's slightly sticky. Keep it warm while you prepare the toppings.",
+        "Season the beef with 1 tbsp soy sauce, 1 tsp sesame oil, and minced garlic. Let it marinate for 10 minutes. If using sliced ribeye, cut it into thin strips against the grain.",
+        "Blanch the spinach in boiling salted water for 30 seconds, then immediately transfer to ice water. Squeeze out excess water and season with a pinch of salt and a few drops of sesame oil.",
+        "Saut\u00e9 the julienned carrots in a hot pan with a little oil for 2-3 minutes until slightly softened but still crisp. Season with salt and set aside.",
+        "Cook the zucchini the same way\u20142-3 minutes in a hot pan until just tender. Season lightly with salt. Keep each vegetable separate for the traditional presentation.",
+        "Blanch the bean sprouts for 1 minute, drain well, and season with sesame oil and a pinch of salt. They should remain crunchy.",
+        "Cook the marinated beef in a hot skillet over high heat until browned and cooked through, about 3-4 minutes. Set aside.",
+        "Fry the eggs sunny-side up so the yolks remain runny\u2014this is essential for mixing into the bibimbap. The yolk creates a rich sauce when broken.",
+        "To assemble: place warm rice in a bowl. Arrange each vegetable and the beef in separate sections on top of the rice, creating a colorful wheel pattern. Place the fried egg in the center.",
+        "Serve with gochujang (Korean chili paste) on the side. Mix everything together before eating, breaking the egg yolk so it coats the rice. Sprinkle with sesame seeds."
+      ],
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "korean-bibimbap",
+      "cuisine": "asian"
+    },
+    {
+      "name": "Shakshuka",
+      "isForFamily": false,
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 25,
+      "description": "Middle Eastern eggs poached in a spiced tomato and pepper sauce, perfect for breakfast or dinner.",
+      "ingredients": [
+        "1 can (28 oz) crushed tomatoes",
+        "4-6 eggs",
+        "1 red bell pepper, diced",
+        "1 onion, diced",
+        "4 cloves garlic, minced",
+        "2 tsp cumin",
+        "1 tsp paprika",
+        "1/2 tsp cayenne pepper",
+        "Fresh cilantro or parsley",
+        "Crusty bread for serving",
+        "Crumbled feta cheese (optional)"
+      ],
+      "steps": [
+        "Heat 2 tablespoons of olive oil in a large, deep skillet (with a lid) over medium heat. A cast iron pan works beautifully and retains heat for serving.",
+        "Add the diced onion and bell pepper. Cook until softened and the onion is translucent, about 5-6 minutes. Stir occasionally.",
+        "Add the minced garlic, cumin, paprika, and cayenne. Cook for 1 minute, stirring constantly, until the spices are fragrant and toasted. This blooms the spices and intensifies their flavor.",
+        "Pour in the crushed tomatoes and stir well. Season with salt and pepper. Bring to a simmer and cook for 10 minutes, allowing the sauce to thicken slightly and the flavors to meld.",
+        "Taste the sauce and adjust seasoning\u2014it should be well-seasoned as the eggs won't add much flavor. Add more cayenne if you like it spicier.",
+        "Use a spoon to create small wells in the sauce, spacing them evenly. Crack an egg into each well. Be careful not to break the yolks.",
+        "Cover the pan with a lid and cook for 5-8 minutes until the egg whites are set but the yolks are still runny. For firmer yolks, cook 2-3 minutes longer.",
+        "Remove from heat and scatter fresh cilantro or parsley over the top. Add crumbled feta cheese if using\u2014it adds a nice salty, creamy contrast.",
+        "Serve immediately, straight from the pan, with plenty of crusty bread for scooping up the eggs and sauce. This is best eaten family-style."
+      ],
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "shakshuka",
+      "cuisine": "mediterranean"
+    },
+    {
+      "name": "Cajun Shrimp Pasta",
+      "isForFamily": true,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 30,
+      "description": "Creamy pasta with spicy Cajun-seasoned shrimp, bell peppers, and a touch of heat.",
+      "ingredients": [
+        "1 lb large shrimp, peeled and deveined",
+        "12 oz penne or fettuccine",
+        "2 tbsp Cajun seasoning",
+        "1 red bell pepper, sliced",
+        "1 green bell pepper, sliced",
+        "4 cloves garlic, minced",
+        "1 cup heavy cream",
+        "1/2 cup chicken broth",
+        "1/2 cup parmesan cheese, grated",
+        "2 tbsp butter",
+        "Fresh parsley"
+      ],
+      "steps": [
+        "Bring a large pot of salted water to a boil. Cook the pasta according to package directions until al dente. Reserve 1/2 cup pasta water before draining.",
+        "While pasta cooks, pat the shrimp dry and toss with 1 tablespoon of Cajun seasoning until evenly coated. Let sit for 5 minutes.",
+        "Heat 1 tablespoon butter in a large skillet over medium-high heat. Add the seasoned shrimp in a single layer. Cook for 2 minutes per side until pink and slightly charred. Transfer to a plate immediately\u2014don't overcook.",
+        "In the same skillet, add the remaining butter. Saut\u00e9 the sliced bell peppers until slightly softened but still crisp, about 3-4 minutes.",
+        "Add the minced garlic and remaining Cajun seasoning. Cook for 30 seconds until fragrant, stirring constantly to prevent burning.",
+        "Pour in the heavy cream and chicken broth. Bring to a simmer and cook for 3-4 minutes until the sauce begins to thicken. Stir occasionally.",
+        "Reduce heat to low and stir in the parmesan cheese until melted and smooth. Taste and adjust seasoning\u2014you may want more Cajun spice or salt.",
+        "Add the drained pasta to the skillet, tossing to coat with the creamy sauce. Add pasta water a splash at a time if the sauce is too thick.",
+        "Return the shrimp to the pan and toss gently to combine. Cook just until heated through, about 1 minute.",
+        "Serve immediately, garnished with fresh parsley and extra parmesan. Have red pepper flakes at the table for those who want more heat."
+      ],
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "cajun-shrimp-pasta",
+      "cuisine": "american"
+    },
+    {
+      "name": "Butter Chicken",
+      "isForFamily": true,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 40,
+      "description": "Rich and creamy Indian curry with tender chicken in a tomato-based sauce, served with basmati rice.",
+      "ingredients": [
+        "1.5 lbs chicken thighs, cubed",
+        "1 cup plain yogurt",
+        "2 tbsp garam masala",
+        "1 tsp turmeric",
+        "1 can (14 oz) tomato puree",
+        "1 cup heavy cream",
+        "4 tbsp butter",
+        "1 large onion, diced",
+        "4 cloves garlic, minced",
+        "1 tbsp grated ginger",
+        "1 tsp paprika",
+        "Fresh cilantro",
+        "Basmati rice"
+      ],
+      "steps": [
+        "Cut chicken thighs into 1.5-inch pieces. Marinate in yogurt, 1 tbsp garam masala, and turmeric for at least 30 minutes, or overnight in the refrigerator for best results.",
+        "Start your basmati rice: rinse until water runs clear, then cook with a 1:1.5 ratio of rice to water. Once boiling, reduce to low, cover, and cook for 15 minutes.",
+        "Melt 2 tablespoons butter in a large pot or Dutch oven over medium heat. Remove chicken from marinade (shaking off excess) and cook in batches until browned on all sides, about 5 minutes. Set aside.",
+        "Add remaining butter to the pot. Saut\u00e9 the diced onion until soft and golden, about 6-7 minutes. This caramelization adds sweetness to the sauce.",
+        "Add the garlic, ginger, remaining garam masala, and paprika. Cook for 1-2 minutes until very fragrant, stirring constantly.",
+        "Pour in the tomato puree and stir well, scraping up any browned bits from the bottom. Simmer for 10 minutes until the sauce darkens and thickens slightly.",
+        "Stir in the heavy cream, creating that signature orange color. Return the chicken pieces to the pot along with any accumulated juices.",
+        "Simmer uncovered for 15 minutes until the chicken is cooked through and the sauce is rich and creamy. Stir occasionally to prevent sticking.",
+        "Taste and adjust seasoning with salt and a pinch of sugar if the tomatoes are too acidic. The sauce should be slightly sweet and well-balanced.",
+        "Serve over fluffy basmati rice, garnished with fresh cilantro. Warm naan bread is essential for scooping up the sauce."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "butter-chicken",
+      "cuisine": "indian"
+    },
+    {
+      "name": "Vegetable Stir Fry",
+      "isForFamily": true,
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 20,
+      "description": "Quick and colorful stir fry with crisp vegetables in a savory garlic-ginger sauce.",
+      "ingredients": [
+        "2 cups broccoli florets",
+        "1 red bell pepper, sliced",
+        "1 cup snap peas",
+        "1 cup sliced mushrooms",
+        "2 carrots, sliced thin",
+        "3 cloves garlic, minced",
+        "1 tbsp fresh ginger, minced",
+        "3 tbsp soy sauce or tamari",
+        "1 tbsp sesame oil",
+        "1 tbsp rice vinegar",
+        "1 tsp cornstarch",
+        "Cooked rice for serving",
+        "Sesame seeds"
+      ],
+      "steps": [
+        "Prep all your vegetables before you start cooking\u2014stir frying goes fast. Cut everything into similar-sized pieces for even cooking.",
+        "Mix the sauce: whisk together soy sauce, sesame oil, rice vinegar, and cornstarch with 2 tablespoons water. Set aside near your stove.",
+        "Heat a large wok or skillet over high heat until smoking. Add 2 tablespoons vegetable oil and swirl to coat.",
+        "Add the carrots first since they take longest to cook. Stir fry for 2 minutes, keeping them moving constantly.",
+        "Add the broccoli and bell pepper. Continue stir frying for another 2 minutes, tossing frequently. The vegetables should start to char slightly at the edges.",
+        "Add the mushrooms and snap peas. Cook for 1-2 minutes more. The vegetables should be crisp-tender, not soft.",
+        "Push the vegetables to the sides of the wok, creating a well in the center. Add the garlic and ginger to the center and cook for 30 seconds until fragrant.",
+        "Give the sauce a quick stir (the cornstarch settles) and pour it into the wok. Toss everything together quickly as the sauce thickens and coats the vegetables, about 30 seconds.",
+        "Remove from heat immediately\u2014the vegetables should still be vibrant and slightly crunchy. Overcooked stir fry is soggy stir fry.",
+        "Serve immediately over steamed rice, topped with sesame seeds. Add chili flakes or sriracha for heat if desired."
+      ],
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "vegetable-stir-fry",
+      "cuisine": "asian"
+    },
+    {
+      "name": "Lamb Gyros",
+      "isForFamily": false,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 45,
+      "description": "Greek-style seasoned lamb in warm pita with tzatziki, tomatoes, and onions.",
+      "ingredients": [
+        "1 lb ground lamb",
+        "1 tsp cumin",
+        "1 tsp oregano",
+        "1 tsp paprika",
+        "4 cloves garlic, minced",
+        "1/2 onion, grated",
+        "4 pita breads",
+        "1 cup Greek yogurt",
+        "1/2 cucumber, grated",
+        "1 tomato, sliced",
+        "1/4 red onion, sliced thin",
+        "Fresh dill"
+      ],
+      "steps": [
+        "Make the tzatziki first so flavors can meld: grate the cucumber, squeeze out excess moisture with a clean towel. Mix with Greek yogurt, 1 clove minced garlic, 1 tbsp olive oil, fresh dill, salt, and a squeeze of lemon. Refrigerate.",
+        "For the lamb, combine ground lamb with cumin, oregano, paprika, remaining minced garlic, grated onion, 1 tsp salt, and pepper in a bowl.",
+        "Mix the lamb thoroughly with your hands for 2-3 minutes. The more you work it, the better the texture will be. The meat should be somewhat paste-like.",
+        "Form the lamb mixture into a flat loaf shape, about 1 inch thick. This helps it cook evenly and mimics the traditional gyro meat texture.",
+        "Preheat your oven to 325\u00b0F. Place the lamb loaf on a baking sheet lined with a wire rack. Bake for 25-30 minutes until the internal temperature reaches 160\u00b0F.",
+        "While the lamb bakes, prep your toppings: slice the tomato, thinly slice the red onion, and chop fresh dill for garnish.",
+        "Let the lamb rest for 5 minutes, then slice it very thin\u2014almost shaving it. For extra crispiness, sear the slices briefly in a hot pan.",
+        "Warm the pita breads in a dry skillet or directly over a gas flame until soft and pliable with a few char marks.",
+        "Assemble the gyros: spread tzatziki on each pita, add sliced lamb, tomatoes, red onion, and a final drizzle of tzatziki.",
+        "Fold and serve immediately. Offer extra tzatziki on the side and a wedge of lemon for squeezing."
+      ],
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "lamb-gyros",
+      "cuisine": "mediterranean"
+    },
+    {
+      "name": "Black Bean Burgers",
+      "isForFamily": true,
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 30,
+      "description": "Hearty homemade veggie burgers with black beans, spices, and a crispy exterior.",
+      "ingredients": [
+        "2 cans black beans, drained and rinsed",
+        "1/2 cup breadcrumbs",
+        "1/4 cup flour",
+        "1 tsp cumin",
+        "1 tsp smoked paprika",
+        "1/2 tsp garlic powder",
+        "1/4 cup red onion, finely diced",
+        "1 tbsp soy sauce",
+        "Burger buns",
+        "Avocado, lettuce, tomato for topping"
+      ],
+      "steps": [
+        "Drain and rinse the black beans thoroughly. Pat them dry with paper towels\u2014excess moisture will make the burgers fall apart.",
+        "Add the beans to a large bowl and mash about 3/4 of them with a fork or potato masher, leaving some whole for texture. The mixture should be chunky, not smooth.",
+        "Add the breadcrumbs, flour, cumin, smoked paprika, garlic powder, diced red onion, and soy sauce. Mix until well combined.",
+        "The mixture should hold together when pressed. If it's too wet, add more breadcrumbs. If too dry, add a splash of water.",
+        "Divide the mixture into 4 equal portions and shape into patties about 3/4 inch thick. Press firmly and smooth the edges. Refrigerate for 15 minutes to help them hold together.",
+        "Heat 2 tablespoons oil in a large skillet over medium heat. Once hot, add the patties. Don't move them for 4-5 minutes to develop a crispy crust.",
+        "Carefully flip and cook another 4-5 minutes until browned and heated through. The patties are delicate, so use a wide spatula.",
+        "Toast the burger buns in the same skillet or under the broiler until golden brown.",
+        "Assemble burgers with your favorite toppings: mashed avocado, lettuce, tomato, red onion, and any sauce you like\u2014chipotle mayo is excellent.",
+        "Serve immediately. These burgers also hold up well in the fridge for meal prep and can be reheated in a pan."
+      ],
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "black-bean-burgers",
+      "cuisine": "mexican"
+    },
+    {
+      "name": "Chicken Alfredo",
+      "isForFamily": true,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Classic creamy pasta with tender chicken breast in a rich parmesan sauce.",
+      "ingredients": [
+        "1 lb fettuccine",
+        "1 lb chicken breast",
+        "4 tbsp butter",
+        "4 cloves garlic, minced",
+        "2 cups heavy cream",
+        "1.5 cups parmesan cheese, grated",
+        "1/2 tsp nutmeg",
+        "Italian seasoning",
+        "Fresh parsley",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Bring a large pot of salted water to a boil for the pasta. Season generously\u2014it should taste like the sea.",
+        "Slice chicken breasts in half horizontally to create thin cutlets. Season both sides with Italian seasoning, salt, and pepper.",
+        "Heat 1 tablespoon butter in a large skillet over medium-high heat. Cook the chicken for 4-5 minutes per side until golden brown and cooked through (165\u00b0F internal). Let rest, then slice into strips.",
+        "While chicken rests, cook the fettuccine according to package directions until al dente. Reserve 1 cup pasta water before draining.",
+        "In the same skillet, melt the remaining butter over medium heat. Add the minced garlic and cook for 30 seconds until fragrant\u2014don't let it brown.",
+        "Pour in the heavy cream and bring to a gentle simmer. Cook for 2-3 minutes until it starts to thicken slightly, stirring occasionally.",
+        "Reduce heat to low. Gradually add the parmesan cheese, stirring constantly until melted and smooth. Add the nutmeg and season with salt and pepper.",
+        "Add the drained pasta directly to the sauce. Toss well to coat every strand. Add pasta water a splash at a time if the sauce is too thick\u2014it should be silky and cling to the pasta.",
+        "Add the sliced chicken and toss gently to combine. Taste and adjust seasoning.",
+        "Serve immediately in warm bowls, topped with extra parmesan, cracked black pepper, and fresh parsley."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "chicken-alfredo",
+      "cuisine": "italian"
+    },
+    {
+      "name": "Thai Green Curry",
+      "isForFamily": false,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 30,
+      "description": "Aromatic Thai curry with chicken, vegetables, and coconut milk served over jasmine rice.",
+      "ingredients": [
+        "1 lb chicken breast, sliced",
+        "1 can (14 oz) coconut milk",
+        "3 tbsp green curry paste",
+        "1 red bell pepper, sliced",
+        "1 cup bamboo shoots",
+        "1 cup Thai basil leaves",
+        "2 tbsp fish sauce",
+        "1 tbsp brown sugar",
+        "1 cup chicken broth",
+        "Jasmine rice",
+        "Lime wedges"
+      ],
+      "steps": [
+        "Start the jasmine rice first: rinse 1 cup rice until water runs clear. Cook with 1.25 cups water. Once boiling, reduce to low, cover, and simmer for 15 minutes. Keep covered until serving.",
+        "Slice the chicken breast into thin strips against the grain. This ensures tender pieces that cook quickly.",
+        "Open the coconut milk and scoop the thick cream from the top into a wok or large pan. Heat over medium-high until it begins to separate and sizzle.",
+        "Add the green curry paste to the coconut cream. Fry for 1-2 minutes, stirring constantly, until very fragrant. This blooms the paste and intensifies the flavor.",
+        "Add the chicken strips and cook for 3-4 minutes, stirring to coat them in the curry paste, until nearly cooked through.",
+        "Pour in the remaining coconut milk and chicken broth. Add the fish sauce and brown sugar. Stir to combine and bring to a simmer.",
+        "Add the sliced bell pepper and bamboo shoots. Simmer for 5-7 minutes until the vegetables are tender and the sauce has thickened slightly.",
+        "Taste and adjust seasoning\u2014you may need more fish sauce for saltiness or sugar for sweetness. Thai food balances salty, sweet, sour, and spicy.",
+        "Remove from heat and stir in the Thai basil leaves. They should wilt but remain bright green.",
+        "Serve over jasmine rice with lime wedges for squeezing. The lime juice brightens all the flavors."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "thai-green-curry",
+      "cuisine": "asian"
+    },
+    {
+      "name": "Caprese Salad",
+      "isForFamily": false,
+      "dietTags": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 10,
+      "description": "Classic Italian salad with fresh mozzarella, ripe tomatoes, and basil drizzled with olive oil.",
+      "ingredients": [
+        "2 large ripe tomatoes",
+        "8 oz fresh mozzarella",
+        "1 bunch fresh basil",
+        "3 tbsp extra virgin olive oil",
+        "1 tbsp balsamic glaze",
+        "Flaky sea salt",
+        "Fresh cracked pepper"
+      ],
+      "steps": [
+        "Choose the ripest tomatoes you can find\u2014this salad is all about quality ingredients. Heirloom tomatoes work beautifully for their flavor and visual appeal.",
+        "Slice the tomatoes into 1/4-inch thick rounds. Slice the fresh mozzarella to match. Both should be roughly the same thickness.",
+        "Arrange the tomato and mozzarella slices on a serving platter, alternating and overlapping them slightly. Traditional presentation is in a line or circular pattern.",
+        "Tuck whole basil leaves between the tomato and mozzarella slices. Use small to medium leaves for the best appearance. Don't chop the basil\u2014it bruises easily.",
+        "Drizzle generously with high-quality extra virgin olive oil. This is not the time for cheap oil\u2014use the good stuff, you'll taste the difference.",
+        "Drizzle the balsamic glaze in thin lines across the top. The sweetness of the balsamic complements the fresh tomatoes perfectly.",
+        "Season with flaky sea salt and fresh cracked black pepper. The salt should be visible\u2014it adds texture and brings out the tomato's sweetness.",
+        "Let the salad sit at room temperature for 5 minutes before serving. Cold mozzarella straight from the fridge won't have as much flavor.",
+        "Serve immediately as an appetizer or light lunch. This is best eaten the day it's made while everything is at peak freshness."
+      ],
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "caprese-salad",
+      "cuisine": "italian"
+    },
+    {
+      "name": "Beef Burrito Bowl",
+      "isForFamily": true,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Chipotle-style bowl with seasoned beef, cilantro-lime rice, beans, and all the fixings.",
+      "ingredients": [
+        "1 lb ground beef",
+        "2 cups cooked rice",
+        "1 can black beans, drained",
+        "1 cup corn kernels",
+        "1 cup pico de gallo",
+        "1 avocado, sliced",
+        "1/2 cup shredded cheese",
+        "2 tbsp taco seasoning",
+        "Juice of 2 limes",
+        "1/4 cup fresh cilantro, chopped",
+        "Sour cream",
+        "Lettuce"
+      ],
+      "steps": [
+        "Cook the rice according to package directions. When done, fluff with a fork and stir in the juice of 1 lime and most of the chopped cilantro. This cilantro-lime rice is the foundation of the bowl.",
+        "Heat the black beans in a small saucepan with a pinch of cumin and salt. Keep warm.",
+        "In a large skillet over medium-high heat, cook the ground beef, breaking it apart with a wooden spoon. Cook until browned, about 6-8 minutes.",
+        "Drain excess fat from the beef. Add the taco seasoning and 1/4 cup water. Stir and simmer for 3-4 minutes until the seasoning coats the meat.",
+        "Warm the corn in a small pan or microwave. For extra flavor, char the corn in a dry hot skillet until slightly blackened in spots.",
+        "Slice the avocado and squeeze a little lime juice over it to prevent browning. Prepare any other toppings: shred the cheese, chop lettuce, have sour cream ready.",
+        "Assemble the bowls: start with a base of cilantro-lime rice. Add sections of seasoned beef, black beans, corn, and lettuce.",
+        "Top with pico de gallo, sliced avocado, shredded cheese, and a dollop of sour cream.",
+        "Drizzle with remaining lime juice and garnish with extra cilantro. Serve immediately while everything is warm.",
+        "For meal prep, store components separately and assemble fresh bowls throughout the week. The rice and beef reheat well."
+      ],
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "beef-burrito-bowl",
+      "cuisine": "mexican"
+    },
+    {
+      "name": "Garlic Butter Shrimp",
+      "isForFamily": false,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 15,
+      "description": "Quick and elegant shrimp saut\u00e9ed in garlic butter with white wine and fresh parsley.",
+      "ingredients": [
+        "1 lb large shrimp, peeled and deveined",
+        "4 tbsp butter",
+        "6 cloves garlic, minced",
+        "1/4 cup white wine",
+        "Juice of 1 lemon",
+        "1/4 tsp red pepper flakes",
+        "Fresh parsley, chopped",
+        "Salt & pepper",
+        "Crusty bread for serving"
+      ],
+      "steps": [
+        "Pat the shrimp completely dry with paper towels\u2014this is crucial for getting a good sear. Season lightly with salt and pepper.",
+        "Melt 2 tablespoons butter in a large skillet over medium-high heat. Wait until the butter is foaming and just starting to brown.",
+        "Add the shrimp in a single layer. Don't move them! Let them sear for 2 minutes until pink and golden on the bottom.",
+        "Flip the shrimp and cook for 1 minute more. They should be pink and opaque but still juicy. Transfer to a plate immediately\u2014don't overcook.",
+        "Reduce heat to medium. Add the remaining butter and minced garlic. Saut\u00e9 for 30 seconds until the garlic is fragrant but not browned.",
+        "Add the white wine, carefully as it may splatter. Let it simmer for 1 minute, scraping up any browned bits from the pan.",
+        "Add the lemon juice and red pepper flakes. Stir to combine and let the sauce reduce slightly, about 30 seconds.",
+        "Return the shrimp to the pan and toss to coat with the garlic butter sauce. Remove from heat immediately.",
+        "Transfer to a serving dish and garnish with fresh chopped parsley. Pour any remaining sauce from the pan over the top.",
+        "Serve immediately with crusty bread for soaking up the garlicky butter sauce. This also pairs beautifully over pasta or rice."
+      ],
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "garlic-butter-shrimp",
+      "cuisine": "american"
+    },
+    {
+      "name": "Vegetable Lasagna",
+      "isForFamily": true,
+      "dietTags": [
+        "vegetarian"
+      ],
+      "chefLevels": [
+        "executiveChef"
+      ],
+      "cookTimeMinutes": 60,
+      "description": "Hearty layered pasta with ricotta, spinach, mushrooms, and three cheeses.",
+      "ingredients": [
+        "12 lasagna noodles",
+        "2 cups ricotta cheese",
+        "2 cups spinach, chopped",
+        "8 oz mushrooms, sliced",
+        "1 zucchini, sliced thin",
+        "2 cups marinara sauce",
+        "2 cups shredded mozzarella",
+        "1/2 cup parmesan cheese",
+        "1 egg",
+        "2 cloves garlic, minced",
+        "Italian seasoning"
+      ],
+      "steps": [
+        "Preheat oven to 375\u00b0F (190\u00b0C). Cook lasagna noodles according to package directions. Drain and lay flat on a clean towel to prevent sticking.",
+        "Saut\u00e9 the sliced mushrooms in 1 tablespoon olive oil over medium-high heat until golden brown and moisture has evaporated, about 6-7 minutes. Season with salt and set aside.",
+        "In the same pan, quickly wilt the spinach with the minced garlic, about 2 minutes. Squeeze out excess moisture and set aside.",
+        "In a bowl, mix the ricotta cheese with the egg, half the parmesan, Italian seasoning, salt, and pepper. Fold in the saut\u00e9ed spinach.",
+        "Spread 1/2 cup marinara on the bottom of a 9x13 baking dish. Layer 4 noodles, slightly overlapping.",
+        "Spread half the ricotta mixture over the noodles. Layer half the mushrooms and half the zucchini slices. Top with 1/2 cup marinara and 1/2 cup mozzarella.",
+        "Repeat layers: 4 noodles, remaining ricotta mixture, remaining vegetables, 1/2 cup marinara, 1/2 cup mozzarella.",
+        "Top with final 4 noodles, remaining marinara, remaining mozzarella, and remaining parmesan. Cover tightly with foil.",
+        "Bake covered for 35 minutes. Remove foil and bake 15-20 minutes more until bubbly and golden brown on top.",
+        "Let rest for 15 minutes before cutting\u2014this is essential for clean slices. Garnish with fresh basil and serve."
+      ],
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "vegetable-lasagna",
+      "cuisine": "italian"
+    },
+    {
+      "name": "Honey Mustard Chicken",
+      "isForFamily": true,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Juicy baked chicken thighs glazed with a sweet and tangy honey mustard sauce.",
+      "ingredients": [
+        "6 chicken thighs, bone-in, skin-on",
+        "1/4 cup honey",
+        "3 tbsp Dijon mustard",
+        "2 tbsp whole grain mustard",
+        "2 tbsp olive oil",
+        "4 cloves garlic, minced",
+        "1 tbsp fresh rosemary, chopped",
+        "Salt & pepper"
+      ],
+      "steps": [
+        "Preheat your oven to 425\u00b0F (220\u00b0C). Take the chicken out of the refrigerator 15 minutes before cooking to bring to room temperature.",
+        "Pat the chicken thighs very dry with paper towels. Season generously with salt and pepper on both sides, especially the skin.",
+        "In a small bowl, whisk together the honey, both mustards, olive oil, minced garlic, and chopped rosemary. Reserve 3 tablespoons for serving.",
+        "Heat an oven-safe skillet over medium-high heat. Add a drizzle of oil. Place chicken skin-side down and sear for 5-6 minutes until the skin is golden and crispy. Don't move the chicken while it sears.",
+        "Flip the chicken so it's skin-side up. Brush generously with the honey mustard glaze.",
+        "Transfer the skillet to the oven and roast for 20-25 minutes until the chicken reaches an internal temperature of 165\u00b0F and the glaze is caramelized.",
+        "Halfway through cooking, brush with more glaze. If the glaze is browning too quickly, tent loosely with foil.",
+        "Remove from oven and let rest for 5 minutes. The juices will redistribute and the chicken will be even more tender.",
+        "Drizzle with the reserved glaze before serving. The pan drippings are delicious\u2014spoon them over the chicken or serve on the side.",
+        "Serve with roasted vegetables or a simple green salad. The sweet and tangy glaze pairs well with almost any side."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "honey-mustard-chicken",
+      "cuisine": "american"
+    },
+    {
+      "name": "Falafel Wraps",
+      "isForFamily": false,
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 40,
+      "description": "Crispy homemade falafel in warm pita with fresh vegetables and creamy tahini sauce.",
+      "ingredients": [
+        "1 can chickpeas, drained",
+        "1/2 onion, roughly chopped",
+        "4 cloves garlic",
+        "1 cup fresh parsley",
+        "1 cup fresh cilantro",
+        "1 tsp cumin",
+        "1/2 tsp coriander",
+        "4 pita breads",
+        "1 cup shredded lettuce",
+        "1 tomato, diced",
+        "1/4 cup tahini",
+        "Juice of 1 lemon",
+        "Pickled vegetables"
+      ],
+      "steps": [
+        "Make the tahini sauce: whisk together tahini, lemon juice, 1 minced garlic clove, and enough water to make it drizzle-able. Season with salt. Set aside.",
+        "For best results, use dried chickpeas soaked overnight rather than canned. If using canned, pat them very dry and the texture will be slightly different but still delicious.",
+        "Add chickpeas, onion, remaining garlic, parsley, cilantro, cumin, coriander, 1/2 tsp salt, and pepper to a food processor. Pulse until combined but not smooth\u2014you want some texture.",
+        "Test the mixture by pressing some in your hand\u2014it should hold together. If too wet, add 1-2 tablespoons flour. Refrigerate for 30 minutes for easier shaping.",
+        "Shape the mixture into small patties about 2 inches wide and 1/2 inch thick. You should get about 12 falafel.",
+        "Heat 1/4 inch of oil in a skillet over medium heat until it shimmers. Carefully add the falafel, working in batches to avoid crowding.",
+        "Fry for 3-4 minutes per side until deep golden brown and crispy. The outside should be crunchy while the inside stays green and moist.",
+        "Drain on paper towels and season with a pinch of salt while hot.",
+        "Warm the pita breads in a dry skillet or over a flame until soft and pliable.",
+        "Assemble: spread tahini sauce inside each pita, add shredded lettuce, 2-3 falafel, diced tomatoes, and pickled vegetables. Drizzle with more tahini and serve immediately."
+      ],
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "falafel-wraps",
+      "cuisine": "mediterranean"
+    },
+    {
+      "name": "Spaghetti Carbonara",
+      "isForFamily": false,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 25,
+      "description": "Authentic Italian pasta with crispy pancetta, egg, and pecorino cheese in a silky sauce.",
+      "ingredients": [
+        "1 lb spaghetti",
+        "8 oz pancetta or guanciale, diced",
+        "4 egg yolks",
+        "2 whole eggs",
+        "1 cup pecorino Romano, finely grated",
+        "1/2 cup parmesan, finely grated",
+        "Fresh cracked black pepper",
+        "Salt"
+      ],
+      "steps": [
+        "Bring a large pot of generously salted water to a boil. True carbonara uses guanciale (cured pork cheek), but pancetta works well. Bacon is not traditional but acceptable in a pinch.",
+        "While water heats, cook the pancetta in a cold skillet over medium heat. Starting cold renders the fat slowly for extra crispy results. Cook 8-10 minutes until crispy and golden.",
+        "In a bowl, whisk together the egg yolks, whole eggs, pecorino, parmesan, and a generous amount of black pepper. The sauce should be thick but pourable.",
+        "Cook the spaghetti until al dente\u2014check 1 minute before package time. Reserve at least 1.5 cups pasta water before draining.",
+        "When pasta is ready, turn off the heat under the pancetta. Add the drained spaghetti to the pancetta pan and toss to coat in the rendered fat.",
+        "Working quickly while the pan is off the heat (this is crucial!), pour the egg mixture over the pasta. Toss vigorously, adding pasta water a splash at a time.",
+        "The residual heat will cook the eggs into a creamy sauce\u2014if you do this over direct heat, you'll get scrambled eggs. Keep tossing and adding water until the sauce is silky and clings to the pasta.",
+        "The sauce should be glossy and coat each strand. It will thicken as it sits, so work quickly and add more pasta water if needed.",
+        "Serve immediately in warm bowls with extra pecorino and lots of fresh cracked black pepper. Carbonara waits for no one.",
+        "True carbonara has no cream\u2014the creaminess comes entirely from the emulsified eggs and cheese."
+      ],
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "spaghetti-carbonara",
+      "cuisine": "italian"
+    },
+    {
+      "name": "Miso Glazed Cod",
+      "isForFamily": false,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 25,
+      "description": "Japanese-inspired cod fillets with a caramelized sweet miso glaze.",
+      "ingredients": [
+        "2 cod fillets (6 oz each)",
+        "3 tbsp white miso paste",
+        "2 tbsp mirin",
+        "2 tbsp sake or dry white wine",
+        "1 tbsp brown sugar",
+        "1 tbsp soy sauce",
+        "Sesame seeds",
+        "Sliced green onions",
+        "Steamed rice"
+      ],
+      "steps": [
+        "For best results, marinate the fish: whisk together miso paste, mirin, sake, brown sugar, and soy sauce. Coat the cod fillets and refrigerate for at least 2 hours, or up to 48 hours for deeper flavor.",
+        "If short on time, the fish can be glazed and cooked immediately\u2014it will still be delicious, just with less miso penetration.",
+        "When ready to cook, preheat your oven's broiler. Line a baking sheet with foil and lightly oil it.",
+        "Remove the cod from the marinade, gently wiping off excess. Save the remaining marinade for basting.",
+        "Place the cod fillets on the prepared baking sheet. The fish should be about 4-5 inches from the broiler element.",
+        "Broil for 8-10 minutes, watching carefully. The miso glaze should caramelize and develop dark spots while the fish becomes opaque and flakes easily.",
+        "About halfway through, brush with more marinade for an extra-glossy finish. Be careful\u2014the sugars in the miso burn quickly under high heat.",
+        "The cod is done when it flakes easily with a fork and the internal temperature reaches 145\u00b0F. Let rest for 2 minutes.",
+        "Garnish with sesame seeds and sliced green onions. Serve immediately over steamed rice.",
+        "This preparation also works beautifully with salmon, black cod (traditional), or sea bass."
+      ],
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "miso-glazed-cod",
+      "cuisine": "asian"
+    },
+    {
+      "name": "Sweet and Sour Pork",
+      "isForFamily": true,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Classic Chinese-American dish with crispy pork in a tangy pineapple sauce.",
+      "ingredients": [
+        "1.5 lbs pork tenderloin, cubed",
+        "1 cup pineapple chunks",
+        "1 red bell pepper, chunked",
+        "1 green bell pepper, chunked",
+        "1/2 cup ketchup",
+        "1/4 cup rice vinegar",
+        "3 tbsp brown sugar",
+        "2 tbsp soy sauce",
+        "1/2 cup cornstarch",
+        "2 eggs, beaten",
+        "Oil for frying",
+        "Steamed rice"
+      ],
+      "steps": [
+        "Cut the pork tenderloin into 1-inch cubes. Season with salt and pepper. The pork should be bite-sized for easy eating.",
+        "Set up a breading station: beaten eggs in one bowl, cornstarch in another. Dip the pork pieces in egg, then coat thoroughly in cornstarch.",
+        "Heat 2 inches of oil in a deep pan or wok to 350\u00b0F. Fry the pork in batches, not crowding the pan, for 3-4 minutes until golden and cooked through.",
+        "Transfer fried pork to a wire rack to stay crispy while you cook the rest. Don't put on paper towels\u2014that creates steam and makes them soggy.",
+        "Make the sauce: whisk together ketchup, rice vinegar, brown sugar, soy sauce, and 1/4 cup pineapple juice (from the can if using canned pineapple).",
+        "In a clean wok or large skillet, heat 1 tablespoon oil over high heat. Add the bell peppers and stir-fry for 2-3 minutes until crisp-tender.",
+        "Add the pineapple chunks and toss for 30 seconds to warm through.",
+        "Pour in the sweet and sour sauce. Bring to a simmer and cook for 2 minutes until the sauce thickens slightly and becomes glossy.",
+        "Add the crispy pork to the sauce and toss quickly to coat. Don't leave the pork in the sauce too long or it will lose its crispiness.",
+        "Serve immediately over steamed rice. The pork should be eaten right away while still crispy on the outside and saucy on top."
+      ],
+      "foodTags": [
+        "pork"
+      ],
+      "imageName": "sweet-sour-pork",
+      "cuisine": "asian"
+    },
+    {
+      "name": "Chickpea Salad Sandwich",
+      "isForFamily": false,
+      "dietTags": [
+        "vegan"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 15,
+      "description": "Creamy smashed chickpea salad that tastes like tuna salad, perfect for sandwiches.",
+      "ingredients": [
+        "2 cans chickpeas, drained",
+        "1/4 cup vegan mayo",
+        "1 tbsp Dijon mustard",
+        "2 stalks celery, diced fine",
+        "2 tbsp red onion, diced fine",
+        "1 tbsp capers, chopped",
+        "Juice of 1 lemon",
+        "1/2 tsp kelp flakes (optional, for seafood flavor)",
+        "Bread or wraps",
+        "Lettuce and tomato"
+      ],
+      "steps": [
+        "Drain and rinse the chickpeas. Pat them dry with a clean towel\u2014this helps the mashing and prevents the salad from being watery.",
+        "Add the chickpeas to a large bowl. Use a fork or potato masher to mash them. Leave some chunks for texture\u2014you don't want a paste.",
+        "Add the vegan mayo, Dijon mustard, and lemon juice. Stir to combine with the chickpeas.",
+        "Fold in the diced celery, red onion, and chopped capers. The capers add briny depth that makes this taste reminiscent of tuna salad.",
+        "For an extra 'seafood' flavor, add kelp flakes or a pinch of dulse. This is optional but adds an oceanic quality that many people love.",
+        "Season with salt and pepper to taste. Add more lemon juice or mustard to adjust the flavor to your preference.",
+        "For best flavor, refrigerate for at least 30 minutes to let the flavors meld. It keeps well for up to 4 days.",
+        "To serve, toast your bread if desired. Layer with lettuce, pile on the chickpea salad, add tomato slices, and close the sandwich.",
+        "This also works great in wraps, on crackers, or stuffed in a pita with other Mediterranean toppings.",
+        "For variations, add dill, pickles, jalape\u00f1o, or curry powder to customize the flavor profile."
+      ],
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "chickpea-salad-sandwich",
+      "cuisine": "american"
+    },
+    {
+      "name": "Chicken Parmesan",
+      "isForFamily": true,
+      "dietTags": [
+        "none"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 45,
+      "description": "Crispy breaded chicken cutlets topped with marinara sauce and melted mozzarella.",
+      "ingredients": [
+        "4 chicken breasts",
+        "1 cup breadcrumbs",
+        "1/2 cup parmesan cheese, grated",
+        "1/2 cup flour",
+        "2 eggs, beaten",
+        "1 tsp Italian seasoning",
+        "2 cups marinara sauce",
+        "1.5 cups shredded mozzarella",
+        "Fresh basil",
+        "Olive oil"
+      ],
+      "steps": [
+        "Preheat oven to 425\u00b0F (220\u00b0C). Slice each chicken breast horizontally to create thin cutlets, about 1/2 inch thick. Alternatively, pound them to even thickness between plastic wrap.",
+        "Set up a breading station: flour seasoned with salt and pepper in the first dish, beaten eggs in the second, breadcrumbs mixed with parmesan and Italian seasoning in the third.",
+        "Pat chicken cutlets dry. Dredge in flour, shaking off excess. Dip in egg, letting excess drip off. Press firmly into breadcrumb mixture, coating both sides completely.",
+        "Heat 1/4 inch of olive oil in a large oven-safe skillet over medium-high heat. Test with a breadcrumb\u2014it should sizzle immediately.",
+        "Cook the breaded chicken in batches for 2-3 minutes per side until golden brown. Don't crowd the pan. The chicken won't be cooked through yet\u2014it will finish in the oven.",
+        "If your skillet isn't oven-safe, transfer the browned cutlets to a baking sheet.",
+        "Spoon marinara sauce over each piece of chicken, then top with shredded mozzarella. Make sure the cheese covers the edges.",
+        "Bake for 15 minutes until the chicken is cooked through (165\u00b0F internal) and the cheese is melted, bubbly, and starting to brown.",
+        "For extra browning on the cheese, broil for 1-2 minutes. Watch carefully to prevent burning.",
+        "Garnish with fresh basil and extra parmesan. Serve over spaghetti with extra marinara on the side."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "chicken-parmesan",
+      "cuisine": "italian"
+    },
+    {
+      "name": "Vegetable Curry",
+      "isForFamily": true,
+      "dietTags": [
+        "vegan",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 35,
+      "description": "Warming vegan curry packed with vegetables in a rich coconut-tomato sauce.",
+      "ingredients": [
+        "1 can coconut milk",
+        "1 can diced tomatoes",
+        "2 cups cauliflower florets",
+        "1 cup diced potatoes",
+        "1 cup chickpeas",
+        "1 onion, diced",
+        "3 cloves garlic, minced",
+        "2 tbsp curry powder",
+        "1 tsp garam masala",
+        "Fresh cilantro",
+        "Basmati rice"
+      ],
+      "steps": [
+        "Start the rice first: rinse 1 cup basmati until water runs clear. Cook with 1.5 cups water\u2014once boiling, reduce heat, cover, and simmer 15 minutes.",
+        "Cut the potatoes into 1/2-inch cubes. Break the cauliflower into small, similar-sized florets for even cooking.",
+        "Heat 2 tablespoons oil in a large pot over medium heat. Add the diced onion and cook until soft and golden, about 5-6 minutes.",
+        "Add the garlic, curry powder, and garam masala. Cook for 1 minute, stirring constantly, until the spices are fragrant and toasted.",
+        "Add the diced tomatoes with their juices and stir to combine with the spiced onions. Let simmer for 2 minutes.",
+        "Pour in the coconut milk and stir well. Add the potatoes, cauliflower, and chickpeas. Season with salt.",
+        "Bring to a simmer, then reduce heat to medium-low. Cover and cook for 20-25 minutes, stirring occasionally, until the potatoes are tender.",
+        "Taste and adjust seasoning\u2014you may want more salt, a pinch of sugar to balance acidity, or a squeeze of lime for brightness.",
+        "If the sauce is too thin, simmer uncovered for a few more minutes. If too thick, add a splash of water or vegetable broth.",
+        "Serve over fluffy basmati rice, garnished generously with fresh cilantro. Warm naan bread is perfect for scooping up the sauce."
+      ],
+      "foodTags": [
+        "vegan"
+      ],
+      "imageName": "vegetable-curry",
+      "cuisine": "indian"
+    },
+    {
+      "name": "Steak Fajitas",
+      "isForFamily": true,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 30,
+      "description": "Sizzling skillet fajitas with marinated steak, peppers, and onions served with warm tortillas.",
+      "ingredients": [
+        "1.5 lbs flank steak",
+        "3 bell peppers (mixed colors), sliced",
+        "2 onions, sliced",
+        "Juice of 3 limes",
+        "3 cloves garlic, minced",
+        "2 tbsp olive oil",
+        "2 tsp cumin",
+        "1 tsp chili powder",
+        "Flour or corn tortillas",
+        "Sour cream, guacamole, salsa"
+      ],
+      "steps": [
+        "Make the marinade: whisk together lime juice, olive oil, minced garlic, cumin, chili powder, 1 tsp salt, and pepper.",
+        "Slice the flank steak against the grain into thin strips. Place in a bowl and pour the marinade over. Refrigerate for at least 30 minutes, or up to 4 hours.",
+        "Slice the bell peppers and onions into thin strips. They should be about the same thickness for even cooking.",
+        "Heat a large cast iron skillet over high heat until smoking. This is key for that restaurant-style sizzle and char.",
+        "Remove steak from marinade, shaking off excess. Cook in batches without crowding\u2014the meat should sear, not steam. Cook 2-3 minutes per side for medium. Transfer to a plate.",
+        "Add a drizzle of oil to the same pan. Add the peppers and onions. Let them sit without stirring for 2 minutes to get some char, then stir and continue cooking for 4-5 minutes until slightly softened with charred edges.",
+        "Return the steak to the pan with any accumulated juices. Toss everything together for 1 minute until combined and heated through.",
+        "Warm the tortillas: wrap in foil and heat in a 350\u00b0F oven for 10 minutes, or heat individually in a dry skillet until pliable and slightly charred.",
+        "Serve the fajitas sizzling hot, straight from the pan. Set out warm tortillas and all the toppings: sour cream, guacamole, salsa, shredded cheese, and lime wedges.",
+        "Let everyone build their own fajitas. The communal, interactive style is part of what makes fajitas so fun."
+      ],
+      "foodTags": [
+        "beef"
+      ],
+      "imageName": "steak-fajitas",
+      "cuisine": "mexican"
+    },
+    {
+      "name": "Lemon Herb Tilapia",
+      "isForFamily": false,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 20,
+      "description": "Light and flaky tilapia fillets with a bright lemon herb butter sauce.",
+      "ingredients": [
+        "4 tilapia fillets",
+        "4 tbsp butter",
+        "4 cloves garlic, minced",
+        "Juice of 2 lemons",
+        "2 tbsp fresh parsley, chopped",
+        "1 tbsp fresh dill, chopped",
+        "1/2 tsp paprika",
+        "Salt & pepper",
+        "Lemon slices for garnish"
+      ],
+      "steps": [
+        "Pat the tilapia fillets completely dry with paper towels. Season both sides with salt, pepper, and paprika.",
+        "Heat 2 tablespoons butter in a large non-stick skillet over medium-high heat until foaming and just starting to brown.",
+        "Add the tilapia fillets to the pan. Cook without moving for 3-4 minutes until the bottom is golden and the fish releases easily from the pan.",
+        "Carefully flip the fillets and cook for another 2-3 minutes until the fish is opaque throughout and flakes easily with a fork. Transfer to a serving plate.",
+        "Reduce heat to medium. Add the remaining butter to the pan. Once melted, add the minced garlic and cook for 30 seconds until fragrant.",
+        "Add the lemon juice to the pan\u2014it will sizzle. Stir to combine with the butter and scrape up any browned bits from the fish.",
+        "Remove from heat and stir in the fresh parsley and dill. Taste and adjust seasoning with salt and pepper.",
+        "Spoon the lemon herb butter sauce generously over the tilapia fillets.",
+        "Garnish with fresh lemon slices and additional herbs. Serve immediately while the fish is hot and the sauce is drizzling.",
+        "Pairs beautifully with steamed vegetables, rice, or a simple green salad. The light, fresh flavors make this perfect for a healthy weeknight dinner."
+      ],
+      "foodTags": [
+        "fish"
+      ],
+      "imageName": "lemon-herb-tilapia",
+      "cuisine": "mediterranean"
+    },
+    {
+      "name": "Mushroom Stroganoff",
+      "isForFamily": false,
+      "dietTags": [
+        "vegetarian"
+      ],
+      "chefLevels": [
+        "sousChef"
+      ],
+      "cookTimeMinutes": 30,
+      "description": "Creamy vegetarian stroganoff with a variety of mushrooms over egg noodles.",
+      "ingredients": [
+        "1 lb mixed mushrooms (cremini, shiitake, oyster)",
+        "8 oz egg noodles",
+        "1 onion, sliced",
+        "4 cloves garlic, minced",
+        "1 cup vegetable broth",
+        "1 cup sour cream",
+        "2 tbsp flour",
+        "2 tbsp butter",
+        "1 tbsp Worcestershire sauce (vegetarian)",
+        "Fresh thyme",
+        "Fresh parsley"
+      ],
+      "steps": [
+        "Clean the mushrooms by wiping with a damp paper towel\u2014don't wash them, as they'll absorb water. Slice into 1/4-inch pieces.",
+        "Bring a large pot of salted water to a boil. Cook the egg noodles according to package directions. Drain and toss with a pat of butter.",
+        "Heat 1 tablespoon butter in a large skillet over high heat. Add the mushrooms in a single layer. Don't stir for 3-4 minutes to allow browning.",
+        "Stir the mushrooms, season with salt, and continue cooking until all sides are golden and they've released and reabsorbed their liquid, about 5 more minutes. Transfer to a plate.",
+        "Reduce heat to medium. Add remaining butter and the sliced onion. Cook until soft and golden, about 5 minutes. Add garlic and cook 30 seconds.",
+        "Sprinkle flour over the onions and stir constantly for 1 minute to cook out the raw flour taste.",
+        "Gradually pour in the vegetable broth while stirring to prevent lumps. Add the Worcestershire sauce and fresh thyme. Simmer for 3-4 minutes until thickened.",
+        "Remove from heat\u2014this is important. Stir in the sour cream until smooth. Return the mushrooms and any juices to the pan.",
+        "Gently warm over low heat if needed, but don't boil or the sour cream will curdle. Taste and adjust seasoning.",
+        "Serve over the warm egg noodles, garnished with fresh parsley and extra thyme. A crack of black pepper finishes it perfectly."
+      ],
+      "foodTags": [
+        "vegetarian"
+      ],
+      "imageName": "mushroom-stroganoff",
+      "cuisine": "american"
+    },
+    {
+      "name": "BBQ Pulled Chicken",
+      "isForFamily": true,
+      "dietTags": [
+        "none",
+        "glutenFree"
+      ],
+      "chefLevels": [
+        "lineCook"
+      ],
+      "cookTimeMinutes": 40,
+      "description": "Easy shredded BBQ chicken perfect for sandwiches, tacos, or salads.",
+      "ingredients": [
+        "2 lbs boneless chicken breasts or thighs",
+        "1.5 cups BBQ sauce",
+        "1/2 cup chicken broth",
+        "2 tbsp brown sugar",
+        "1 tbsp apple cider vinegar",
+        "1 tsp smoked paprika",
+        "1 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "Brioche buns",
+        "Coleslaw"
+      ],
+      "steps": [
+        "Season the chicken on both sides with smoked paprika, garlic powder, onion powder, salt, and pepper.",
+        "Place the seasoned chicken in a large pot or Dutch oven. Pour the chicken broth around the chicken.",
+        "In a bowl, mix together the BBQ sauce, brown sugar, and apple cider vinegar. Pour half of this mixture over the chicken. Reserve the rest.",
+        "Bring to a boil over medium-high heat, then immediately reduce to a simmer. Cover and cook for 25-30 minutes until the chicken is cooked through and very tender.",
+        "Remove the chicken to a cutting board. It should be tender enough to shred easily. Use two forks to pull the meat apart into long shreds.",
+        "Return the shredded chicken to the pot with the cooking liquid. Add the reserved BBQ sauce mixture and stir to combine.",
+        "Simmer uncovered for 5-10 minutes, stirring occasionally, until the sauce thickens and coats the chicken. The chicken will absorb the flavors.",
+        "Taste and adjust\u2014add more BBQ sauce for stronger flavor, vinegar for tanginess, or brown sugar for sweetness.",
+        "Toast the brioche buns under the broiler or in a dry skillet until golden.",
+        "Pile the pulled chicken on the toasted buns and top with coleslaw for crunch. This also makes excellent tacos, nachos, quesadillas, or salad toppers."
+      ],
+      "foodTags": [
+        "chicken"
+      ],
+      "imageName": "bbq-pulled-chicken",
+      "cuisine": "american"
     }
   ]
 }

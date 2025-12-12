@@ -198,6 +198,12 @@ class FirebaseService: ObservableObject {
             throw NSError(domain: "EnPlace", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not signed in"])
         }
         
+        // If user already has a household, clean it up first
+        if let existingHouseholdId = user.householdId {
+            print("⚠️ User already has household \(existingHouseholdId), cleaning up...")
+            try await cleanupOrphanedHousehold(householdId: existingHouseholdId, userId: user.id)
+        }
+        
         let inviteCode = generateInviteCode()
         let householdId = UUID().uuidString
         
@@ -230,11 +236,60 @@ class FirebaseService: ObservableObject {
         return inviteCode
     }
     
+    /// Clean up an orphaned household (when user had old household reference)
+    private func cleanupOrphanedHousehold(householdId: String, userId: String) async throws {
+        // Remove listener if active
+        householdListener?.remove()
+        currentHousehold = nil
+        
+        // Try to fetch the household to see if it still exists
+        let doc = try? await db.collection("households").document(householdId).getDocument()
+        
+        if let doc = doc, doc.exists {
+            // Household exists - check if we should delete it or just remove ourselves
+            if let data = doc.data(),
+               let household = try? Firestore.Decoder().decode(Household.self, from: data) {
+                
+                // If we're Chef A and there's no Chef B, delete the whole household
+                if household.chefAId == userId && household.chefBId == nil {
+                    try await db.collection("households").document(householdId).delete()
+                    print("🗑️ Deleted orphaned household \(householdId)")
+                } else if household.chefAId == userId {
+                    // We're Chef A but there's a Chef B - just remove ourselves
+                    var updatedHousehold = household
+                    updatedHousehold.chefAId = household.chefBId ?? ""
+                    updatedHousehold.chefBId = nil
+                    let data = try Firestore.Encoder().encode(updatedHousehold)
+                    try await db.collection("households").document(householdId).setData(data)
+                    print("🔄 Transferred household ownership to Chef B")
+                } else if household.chefBId == userId {
+                    // We're Chef B - just remove ourselves
+                    var updatedHousehold = household
+                    updatedHousehold.chefBId = nil
+                    updatedHousehold.chefBLikes = []
+                    // Recalculate matches
+                    updatedHousehold.matches = []
+                    let data = try Firestore.Encoder().encode(updatedHousehold)
+                    try await db.collection("households").document(householdId).setData(data)
+                    print("🔄 Removed self from household as Chef B")
+                }
+            }
+        } else {
+            print("ℹ️ Old household \(householdId) no longer exists")
+        }
+    }
+    
     /// Join an existing household (Chef B)
     @MainActor
     func joinHousehold(inviteCode: String) async throws {
         guard var user = currentUser else {
             throw NSError(domain: "EnPlace", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not signed in"])
+        }
+        
+        // If user already has a household, clean it up first
+        if let existingHouseholdId = user.householdId {
+            print("⚠️ User already has household \(existingHouseholdId), cleaning up...")
+            try await cleanupOrphanedHousehold(householdId: existingHouseholdId, userId: user.id)
         }
         
         // Find household by invite code

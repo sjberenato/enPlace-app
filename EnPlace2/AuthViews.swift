@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - Auth Container View
 
 struct AuthContainerView: View {
-    @ObservedObject var firebaseService = FirebaseService.shared
+    @EnvironmentObject var firebaseService: FirebaseService
     @State private var showSignUp = false
     
     var body: some View {
@@ -43,7 +43,7 @@ struct AuthContainerView: View {
 
 struct SignInView: View {
     @Binding var showSignUp: Bool
-    @ObservedObject var firebaseService = FirebaseService.shared
+    @EnvironmentObject var firebaseService: FirebaseService
     
     @State private var email = ""
     @State private var password = ""
@@ -110,7 +110,7 @@ struct SignInView: View {
 
 struct SignUpView: View {
     @Binding var showSignUp: Bool
-    @ObservedObject var firebaseService = FirebaseService.shared
+    @EnvironmentObject var firebaseService: FirebaseService
     
     @State private var displayName = ""
     @State private var email = ""
@@ -193,7 +193,7 @@ struct SignUpView: View {
 struct HouseholdSetupView: View {
     var onContinue: () -> Void
     
-    @ObservedObject var firebaseService = FirebaseService.shared
+    @EnvironmentObject var firebaseService: FirebaseService
     @State private var showJoinSheet = false
     @State private var showShareSheet = false
     @State private var inviteCodeInput = ""
@@ -252,8 +252,8 @@ struct HouseholdSetupView: View {
                             .fill(AppTheme.cardBackground)
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                     )
-                } else if let code = generatedCode {
-                    // Show invite code after creation
+                } else if let code = generatedCode ?? firebaseService.currentHousehold?.inviteCode {
+                    // Show invite code after creation (check both local state and Firebase)
                     VStack(spacing: 16) {
                         Text("🎉 Kitchen Created!")
                             .font(.title3)
@@ -316,18 +316,23 @@ struct HouseholdSetupView: View {
                             .fill(AppTheme.cardBackground)
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                     )
+                } else if isCreating {
+                    // Show loading while creating
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                        Text("Creating your kitchen...")
+                            .font(.subheadline)
+                            .foregroundStyle(AppTheme.textSecondary)
+                    }
+                    .padding()
                 } else {
                     // Options to create or join
                     VStack(spacing: 16) {
                         Button {
                             createHousehold()
                         } label: {
-                            if isCreating {
-                                ProgressView()
-                                    .tint(.white)
-                            } else {
-                                Label("Create Kitchen", systemImage: "plus.circle.fill")
-                            }
+                            Label("Create Kitchen", systemImage: "plus.circle.fill")
                         }
                         .buttonStyle(EnPlacePrimaryButtonStyle())
                         .disabled(isCreating || isJoining)
