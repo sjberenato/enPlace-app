@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 // MARK: - User Model
 
@@ -479,5 +480,188 @@ class FirebaseService: ObservableObject {
         let data = try Firestore.Encoder().encode(household)
         try await db.collection("households").document(householdId).setData(data)
         print("📅 Cleared meals for \(day)")
+    }
+    
+    // MARK: - Recipe Management (Firestore-based)
+    
+    /// Fetch recipes with pagination and optional filters
+    func fetchRecipes(
+        limit: Int = 20,
+        startAfter: DocumentSnapshot? = nil,
+        cuisine: String? = nil,
+        maxCookTime: Int? = nil,
+        chefLevel: String? = nil,
+        isForFamily: Bool? = nil
+    ) async throws -> (recipes: [FirestoreRecipe], lastDocument: DocumentSnapshot?) {
+        var query: Query = db.collection("recipes")
+        
+        // Apply filters (Firestore can only do equality + one inequality)
+        if let cuisine = cuisine {
+            query = query.whereField("cuisine", isEqualTo: cuisine)
+        }
+        
+        if let isForFamily = isForFamily {
+            query = query.whereField("isForFamily", isEqualTo: isForFamily)
+        }
+        
+        if let chefLevel = chefLevel {
+            query = query.whereField("chefLevel", isEqualTo: chefLevel)
+        }
+        
+        // Order by name for consistent pagination
+        query = query.order(by: "name")
+        
+        // Pagination
+        if let startAfter = startAfter {
+            query = query.start(afterDocument: startAfter)
+        }
+        
+        query = query.limit(to: limit)
+        
+        let snapshot = try await query.getDocuments()
+        
+        let recipes = snapshot.documents.compactMap { doc -> FirestoreRecipe? in
+            try? doc.data(as: FirestoreRecipe.self)
+        }
+        
+        // Client-side filter for cook time (Firestore limitation with multiple inequalities)
+        var filteredRecipes = recipes
+        if let maxCookTime = maxCookTime {
+            filteredRecipes = recipes.filter { $0.cookTimeMinutes <= maxCookTime }
+        }
+        
+        let lastDoc = snapshot.documents.last
+        print("📚 Fetched \(filteredRecipes.count) recipes from Firestore")
+        
+        return (filteredRecipes, lastDoc)
+    }
+    
+    /// Upload a single recipe to Firestore
+    func uploadRecipe(_ recipe: FirestoreRecipe) async throws {
+        let docRef = db.collection("recipes").document(recipe.id)
+        try docRef.setData(from: recipe)
+        print("✅ Uploaded recipe: \(recipe.name)")
+    }
+    
+    /// Batch upload recipes to Firestore (for migration)
+    func uploadRecipesBatch(_ recipes: [FirestoreRecipe]) async throws {
+        let batch = db.batch()
+        
+        for recipe in recipes {
+            let docRef = db.collection("recipes").document(recipe.id)
+            try batch.setData(from: recipe, forDocument: docRef)
+        }
+        
+        try await batch.commit()
+        print("✅ Uploaded batch of \(recipes.count) recipes")
+    }
+    
+    /// Get total recipe count
+    func getRecipeCount() async throws -> Int {
+        let snapshot = try await db.collection("recipes").count.getAggregation(source: .server)
+        return Int(truncating: snapshot.count)
+    }
+    
+    /// Check if recipes collection exists and has data
+    func hasRecipesInFirestore() async -> Bool {
+        do {
+            let snapshot = try await db.collection("recipes").limit(to: 1).getDocuments()
+            return !snapshot.documents.isEmpty
+        } catch {
+            print("❌ Error checking recipes: \(error)")
+            return false
+        }
+    }
+    
+    // MARK: - Firebase Storage (Images)
+    
+    private let storage = Storage.storage()
+    
+    /// Upload a recipe image to Firebase Storage
+    func uploadRecipeImage(imageName: String, imageData: Data) async throws -> String {
+        let storageRef = storage.reference().child("recipe-images/\(imageName).jpg")
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        _ = try await storageRef.putDataAsync(imageData, metadata: metadata)
+        let downloadURL = try await storageRef.downloadURL()
+        
+        print("📸 Uploaded image: \(imageName)")
+        return downloadURL.absoluteString
+    }
+    
+    /// Update recipe with image URL
+    func updateRecipeImageURL(recipeId: String, imageURL: String) async throws {
+        try await db.collection("recipes").document(recipeId).updateData([
+            "imageURL": imageURL
+        ])
+        print("✅ Updated recipe \(recipeId) with image URL")
+    }
+    
+    /// Check if a recipe has an image URL in Firestore
+    func recipeHasImageURL(recipeId: String) async -> Bool {
+        do {
+            let doc = try await db.collection("recipes").document(recipeId).getDocument()
+            if let data = doc.data(), let imageURL = data["imageURL"] as? String, !imageURL.isEmpty {
+                return true
+            }
+            return false
+        } catch {
+            return false
+        }
+    }
+    
+    /// Check if any recipe has images uploaded
+    func hasImagesInStorage() async -> Bool {
+        do {
+            // Check if at least one recipe has an imageURL
+            let snapshot = try await db.collection("recipes")
+                .whereField("imageURL", isNotEqualTo: "")
+                .limit(to: 1)
+                .getDocuments()
+            return !snapshot.documents.isEmpty
+        } catch {
+            // If query fails, check differently
+            do {
+                let snapshot = try await db.collection("recipes").limit(to: 1).getDocuments()
+                if let doc = snapshot.documents.first,
+                   let data = doc.data() as? [String: Any],
+                   let imageURL = data["imageURL"] as? String,
+                   !imageURL.isEmpty {
+                    return true
+                }
+            } catch {
+                print("❌ Error checking for images: \(error)")
+            }
+            return false
+        }
+    }
+}
+
+// MARK: - Firestore Recipe Model
+
+struct FirestoreRecipe: Identifiable, Codable {
+    @DocumentID var documentId: String?
+    let id: String
+    let name: String
+    let isForFamily: Bool
+    let dietTags: [String]
+    let chefLevel: String  // Simplified to single level for filtering
+    let chefLevels: [String]  // Original array for display
+    let cookTimeMinutes: Int
+    let description: String
+    let ingredients: [String]
+    let steps: [String]
+    let foodTags: [String]
+    let imageName: String
+    let cuisine: String
+    var imageURL: String?  // Cloud storage URL (nil = use local asset)
+    
+    enum CodingKeys: String, CodingKey {
+        case documentId
+        case id, name, isForFamily, dietTags, chefLevel, chefLevels
+        case cookTimeMinutes, description, ingredients, steps
+        case foodTags, imageName, cuisine, imageURL
     }
 }

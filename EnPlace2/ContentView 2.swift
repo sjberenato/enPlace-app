@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import FirebaseFirestore
 
 // MARK: - Brand Colors
 
@@ -42,6 +43,7 @@ struct Recipe: Identifiable, Equatable, Codable {
     let foodTags: [FoodPreference]
     let imageName: String
     let cuisine: Cuisine
+    var imageURL: String?  // Cloud storage URL (nil = use local asset)
     
     // Custom decoder - generates UUID since it's not in JSON
     init(from decoder: Decoder) throws {
@@ -58,6 +60,24 @@ struct Recipe: Identifiable, Equatable, Codable {
         self.foodTags = try container.decode([FoodPreference].self, forKey: .foodTags)
         self.imageName = try container.decode(String.self, forKey: .imageName)
         self.cuisine = try container.decodeIfPresent(Cuisine.self, forKey: .cuisine) ?? .other
+        self.imageURL = nil  // Local JSON doesn't have URLs
+    }
+    
+    // Manual initializer for creating from Firestore data
+    init(id: UUID, name: String, isForFamily: Bool, dietTags: [DietTag], chefLevels: [ChefLevel], cookTimeMinutes: Int, description: String, ingredients: [String], steps: [String], foodTags: [FoodPreference], imageName: String, cuisine: Cuisine, imageURL: String? = nil) {
+        self.id = id
+        self.name = name
+        self.isForFamily = isForFamily
+        self.dietTags = dietTags
+        self.chefLevels = chefLevels
+        self.cookTimeMinutes = cookTimeMinutes
+        self.description = description
+        self.ingredients = ingredients
+        self.steps = steps
+        self.foodTags = foodTags
+        self.imageName = imageName
+        self.cuisine = cuisine
+        self.imageURL = imageURL
     }
 }
 
@@ -734,21 +754,30 @@ private struct PersistenceManager {
 
 @MainActor
 final class RecipeSwipeViewModel: ObservableObject {
-    @Published private(set) var recipes: [Recipe]
+    @Published private(set) var recipes: [Recipe] = []
     @Published private(set) var likedRecipes: [Recipe] = []
     @Published private(set) var matchedRecipes: [Recipe] = []  // Recipes both chefs liked
     @Published private(set) var currentIndex: Int = 0
+    @Published private(set) var isLoadingMore: Bool = false
+    @Published private(set) var hasMoreRecipes: Bool = true
+    private var useFirestore: Bool = false  // Internal - users don't need to know
 
     // UI Filters (optional, not from preferences)
     @Published var filterCookingFor: String? = nil  // nil = any, "couple", or "family"
     @Published var filterTimeMax: Int? = nil  // nil = any, or 30
     @Published var filterChefMax: Int? = nil  // nil = any, or 1, 2, 3
 
-    let allRecipes: [Recipe]
+    // All recipes (local cache for lookups)
+    private(set) var allRecipes: [Recipe] = []
     private var basePreferences: UserPreferences?
+    
+    // Firestore pagination state
+    private var lastDocument: Any? = nil  // DocumentSnapshot
+    private let batchSize = 20
+    private var loadedRecipeIds: Set<String> = []  // Track loaded recipes to avoid duplicates
 
     init() {
-        // Load recipes from JSON file
+        // Start with local JSON as immediate fallback
         self.allRecipes = RecipeService.loadRecipes()
         self.recipes = allRecipes
         
@@ -757,8 +786,158 @@ final class RecipeSwipeViewModel: ObservableObject {
         
         // Load matches from Firebase if available
         updateMatchesFromFirebase(matchedNames: FirebaseService.shared.matchedRecipeNames)
+        
+        // Check if Firestore has recipes and switch to it
+        Task {
+            await checkAndSwitchToFirestore()
+        }
     }
-
+    
+    // MARK: - Firestore Integration
+    
+    /// Check if Firestore has recipes and switch data source
+    private func checkAndSwitchToFirestore() async {
+        let hasFirestoreRecipes = await FirebaseService.shared.hasRecipesInFirestore()
+        
+        if hasFirestoreRecipes {
+            print("🔥 Firestore recipes available - switching to Firestore")
+            useFirestore = true
+            
+            // Check if images need migration (runs in background, doesn't block)
+            Task {
+                let hasImages = await FirebaseService.shared.hasImagesInStorage()
+                if !hasImages {
+                    print("📸 No images in storage - migrating images...")
+                    await RecipeService.migrateImagesToStorage()
+                }
+            }
+            
+            await loadInitialRecipes()
+        } else {
+            // Auto-migrate local recipes to Firestore (one-time setup)
+            print("📤 Firestore empty - auto-migrating local recipes...")
+            await RecipeService.migrateRecipesToFirestore()
+            
+            // Now check again and switch
+            let migrated = await FirebaseService.shared.hasRecipesInFirestore()
+            if migrated {
+                print("✅ Recipe migration complete - switching to Firestore")
+                useFirestore = true
+                
+                // Migrate images in background (doesn't block app)
+                Task {
+                    print("📸 Migrating images to storage...")
+                    await RecipeService.migrateImagesToStorage()
+                }
+                
+                await loadInitialRecipes()
+            } else {
+                print("📁 Migration failed - using local JSON")
+                useFirestore = false
+            }
+        }
+    }
+    
+    /// Load initial batch of recipes from Firestore
+    func loadInitialRecipes() async {
+        guard useFirestore else { return }
+        
+        isLoadingMore = true
+        lastDocument = nil
+        loadedRecipeIds.removeAll()
+        
+        do {
+            let result = try await FirebaseService.shared.fetchRecipes(
+                limit: batchSize,
+                startAfter: nil,
+                cuisine: nil,
+                maxCookTime: filterTimeMax,
+                chefLevel: chefLevelString(filterChefMax),
+                isForFamily: isForFamilyFilter(filterCookingFor)
+            )
+            
+            let newRecipes = RecipeService.convertFromFirestoreRecipes(result.recipes)
+            
+            // Update tracking
+            for recipe in newRecipes {
+                loadedRecipeIds.insert(recipe.name)
+            }
+            
+            self.recipes = newRecipes
+            self.allRecipes = newRecipes  // For lookups
+            self.lastDocument = result.lastDocument
+            self.hasMoreRecipes = result.recipes.count == batchSize
+            self.currentIndex = 0
+            
+            print("📚 Loaded initial \(newRecipes.count) recipes from Firestore")
+        } catch {
+            print("❌ Error loading from Firestore: \(error)")
+            // Fallback to local
+            useFirestore = false
+            self.recipes = RecipeService.loadRecipes()
+        }
+        
+        isLoadingMore = false
+    }
+    
+    /// Load more recipes when user approaches end of current batch
+    func loadMoreRecipesIfNeeded() async {
+        guard useFirestore,
+              hasMoreRecipes,
+              !isLoadingMore,
+              currentIndex >= recipes.count - 5 else { return }
+        
+        isLoadingMore = true
+        
+        do {
+            // Import Firestore to cast lastDocument properly
+            let result = try await FirebaseService.shared.fetchRecipes(
+                limit: batchSize,
+                startAfter: lastDocument as? FirebaseFirestore.DocumentSnapshot,
+                cuisine: nil,
+                maxCookTime: filterTimeMax,
+                chefLevel: chefLevelString(filterChefMax),
+                isForFamily: isForFamilyFilter(filterCookingFor)
+            )
+            
+            let newRecipes = RecipeService.convertFromFirestoreRecipes(result.recipes)
+            
+            // Filter out duplicates
+            let uniqueRecipes = newRecipes.filter { !loadedRecipeIds.contains($0.name) }
+            
+            // Update tracking
+            for recipe in uniqueRecipes {
+                loadedRecipeIds.insert(recipe.name)
+            }
+            
+            self.recipes.append(contentsOf: uniqueRecipes)
+            self.allRecipes.append(contentsOf: uniqueRecipes)
+            self.lastDocument = result.lastDocument
+            self.hasMoreRecipes = result.recipes.count == batchSize
+            
+            print("📚 Loaded \(uniqueRecipes.count) more recipes (total: \(recipes.count))")
+        } catch {
+            print("❌ Error loading more recipes: \(error)")
+        }
+        
+        isLoadingMore = false
+    }
+    
+    // Helper to convert filter to Firestore query format
+    private func chefLevelString(_ maxChef: Int?) -> String? {
+        guard let max = maxChef else { return nil }
+        switch max {
+        case 1: return "lineCook"
+        case 2: return "sousChef"
+        default: return nil
+        }
+    }
+    
+    private func isForFamilyFilter(_ cookingFor: String?) -> Bool? {
+        guard let cf = cookingFor else { return nil }
+        return cf == "family"
+    }
+    
     var currentRecipe: Recipe? {
         guard currentIndex < recipes.count else { return nil }
         return recipes[currentIndex]
@@ -786,6 +965,13 @@ final class RecipeSwipeViewModel: ObservableObject {
     private func goToNextRecipe() {
         if currentIndex < recipes.count - 1 {
             currentIndex += 1
+            
+            // Pre-fetch more recipes when approaching end
+            if useFirestore {
+                Task {
+                    await loadMoreRecipesIfNeeded()
+                }
+            }
         }
     }
     
@@ -822,6 +1008,15 @@ final class RecipeSwipeViewModel: ObservableObject {
     }
     
     func reapplyAllFilters() {
+        // If using Firestore, reload with filters
+        if useFirestore {
+            Task {
+                await loadInitialRecipes()
+            }
+            return
+        }
+        
+        // Local filtering for JSON-based recipes
         var filtered = allRecipes
 
         // Food preferences (from onboarding)
@@ -1365,7 +1560,77 @@ struct DiscoverView: View {
     }
 }
 
-// MARK: - Recipe Card
+// MARK: - Recipe Image (with URL support)
+
+struct RecipeImage: View {
+    let recipe: Recipe
+    var contentMode: ContentMode = .fill
+    
+    var body: some View {
+        Group {
+            if let imageURL = recipe.imageURL, let url = URL(string: imageURL) {
+                // Load from cloud URL
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        // Loading state
+                        ZStack {
+                            gradientPlaceholder
+                            ProgressView()
+                                .tint(.white)
+                        }
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: contentMode)
+                    case .failure:
+                        // Failed to load from URL, try local
+                        localOrPlaceholder
+                    @unknown default:
+                        localOrPlaceholder
+                    }
+                }
+            } else {
+                // No URL, use local asset
+                localOrPlaceholder
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var localOrPlaceholder: some View {
+        if let uiImage = UIImage(named: recipe.imageName) {
+            Image(uiImage: uiImage)
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
+        } else {
+            gradientPlaceholder
+        }
+    }
+    
+    private var gradientPlaceholder: some View {
+        let colors: [Color] = {
+            guard let firstTag = recipe.foodTags.first else {
+                return [AppTheme.primary, AppTheme.primary.opacity(0.7)]
+            }
+            switch firstTag {
+            case .beef: return [Color(red: 0.6, green: 0.2, blue: 0.2), Color(red: 0.8, green: 0.3, blue: 0.3)]
+            case .chicken: return [Color(red: 0.85, green: 0.65, blue: 0.4), Color(red: 0.95, green: 0.75, blue: 0.5)]
+            case .fish: return [Color(red: 0.3, green: 0.5, blue: 0.7), Color(red: 0.4, green: 0.6, blue: 0.8)]
+            case .pork: return [Color(red: 0.7, green: 0.45, blue: 0.4), Color(red: 0.85, green: 0.55, blue: 0.5)]
+            case .vegetarian: return [Color(red: 0.4, green: 0.6, blue: 0.4), Color(red: 0.5, green: 0.7, blue: 0.5)]
+            case .vegan: return [Color(red: 0.3, green: 0.55, blue: 0.35), Color(red: 0.4, green: 0.65, blue: 0.45)]
+            }
+        }()
+        
+        return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
+            .overlay(
+                Image(systemName: recipe.foodTags.first?.iconSystemName ?? "fork.knife")
+                    .font(.system(size: 50))
+                    .foregroundStyle(.white.opacity(0.3))
+            )
+    }
+}
 
 // MARK: - Recipe Card
 
@@ -1377,7 +1642,7 @@ struct RecipeCard: View {
             // Hero Image
             ZStack(alignment: .bottomLeading) {
                 // Image or gradient placeholder
-                recipeImage
+                RecipeImage(recipe: recipe)
                 
                 // Gradient overlay for text readability
                 LinearGradient(
@@ -1462,44 +1727,6 @@ struct RecipeCard: View {
         .background(AppTheme.cardBackground)
         .cornerRadius(20)
         .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: 6)
-    }
-    
-    // MARK: - Image View
-    
-    @ViewBuilder
-    private var recipeImage: some View {
-        // Try to load from assets, fall back to gradient
-        if let uiImage = UIImage(named: recipe.imageName) {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFill()
-        } else {
-            // Gradient placeholder based on food type
-            gradientPlaceholder
-        }
-    }
-    
-    private var gradientPlaceholder: some View {
-        let colors: [Color] = {
-            guard let firstTag = recipe.foodTags.first else {
-                return [AppTheme.primary, AppTheme.primary.opacity(0.7)]
-            }
-            switch firstTag {
-            case .beef: return [Color(red: 0.6, green: 0.2, blue: 0.2), Color(red: 0.8, green: 0.3, blue: 0.3)]
-            case .chicken: return [Color(red: 0.85, green: 0.65, blue: 0.4), Color(red: 0.95, green: 0.75, blue: 0.5)]
-            case .fish: return [Color(red: 0.3, green: 0.5, blue: 0.7), Color(red: 0.4, green: 0.6, blue: 0.8)]
-            case .pork: return [Color(red: 0.7, green: 0.45, blue: 0.4), Color(red: 0.85, green: 0.55, blue: 0.5)]
-            case .vegetarian: return [Color(red: 0.4, green: 0.6, blue: 0.4), Color(red: 0.5, green: 0.7, blue: 0.5)]
-            case .vegan: return [Color(red: 0.3, green: 0.55, blue: 0.35), Color(red: 0.4, green: 0.65, blue: 0.45)]
-            }
-        }()
-        
-        return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
-            .overlay(
-                Image(systemName: recipe.foodTags.first?.iconSystemName ?? "fork.knife")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.white.opacity(0.3))
-            )
     }
 }
 
@@ -1695,23 +1922,11 @@ struct RecipeCollectionTile: View {
     
     @ViewBuilder
     private func recipeThumbnail(for recipe: Recipe) -> some View {
-        Group {
-            if let uiImage = UIImage(named: recipe.imageName) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                LinearGradient(
-                    colors: [accentColor, accentColor.opacity(0.7)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            }
-        }
-        .frame(minWidth: 0, maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fill)
-        .clipped()
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        RecipeImage(recipe: recipe)
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .aspectRatio(1, contentMode: .fill)
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
@@ -1980,22 +2195,9 @@ struct RecipeRowView: View {
         HStack(spacing: 12) {
             // Thumbnail image with match indicator
             ZStack(alignment: .topTrailing) {
-                Group {
-                    if let uiImage = UIImage(named: recipe.imageName) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                    } else {
-                        // Fallback gradient
-                        LinearGradient(
-                            colors: [AppTheme.primary, AppTheme.primary.opacity(0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    }
-                }
-                .frame(width: 60, height: 60)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                RecipeImage(recipe: recipe)
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 // Match heart badge
                 if isMatch {
@@ -2056,22 +2258,10 @@ struct RecipeDetailView: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Hero image
                 ZStack(alignment: .bottomLeading) {
-                    Group {
-                        if let uiImage = UIImage(named: recipe.imageName) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                        } else {
-                            LinearGradient(
-                                colors: [AppTheme.primary, AppTheme.primary.opacity(0.7)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        }
-                    }
-                    .frame(height: 250)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
+                    RecipeImage(recipe: recipe)
+                        .frame(height: 250)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
                     
                     // Gradient overlay
                     LinearGradient(
@@ -2159,13 +2349,19 @@ struct RecipeDetailView: View {
     }
 }
 
+// MARK: - Day Selection (for sheet timing fix)
+
+struct DaySelection: Identifiable {
+    let id = UUID()
+    let day: String
+}
+
 // MARK: - Meal Plan View
 
 struct MealPlanView: View {
     @ObservedObject var viewModel: RecipeSwipeViewModel
     @EnvironmentObject var firebaseService: FirebaseService
-    @State private var selectedDay: String? = nil
-    @State private var showingAddMeal = false
+    @State private var selectedDay: DaySelection? = nil
     @State private var showingShoppingList = false
     
     private let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -2226,8 +2422,7 @@ struct MealPlanView: View {
                             recipes: recipesForDay(day),
                             allRecipes: viewModel.allRecipes,
                             onAddTapped: {
-                                selectedDay = day
-                                showingAddMeal = true
+                                selectedDay = DaySelection(day: day)
                             },
                             onRemoveRecipe: { recipeName in
                                 Task {
@@ -2241,22 +2436,20 @@ struct MealPlanView: View {
             }
             .background(AppTheme.background)
             .navigationTitle("Meal Plan")
-            .sheet(isPresented: $showingAddMeal) {
-                if let day = selectedDay {
-                    AddMealSheet(
-                        day: day,
-                        matchedRecipes: viewModel.matchedRecipes,
-                        likedRecipes: viewModel.likedRecipes,
-                        currentMealPlan: firebaseService.mealPlan,
-                        onAddRecipe: { recipeName in
-                            Task {
-                                try? await firebaseService.addRecipeToMealPlan(day: day, recipeName: recipeName)
-                            }
-                            showingAddMeal = false
+            .sheet(item: $selectedDay) { selection in
+                AddMealSheet(
+                    day: selection.day,
+                    matchedRecipes: viewModel.matchedRecipes,
+                    likedRecipes: viewModel.likedRecipes,
+                    currentMealPlan: firebaseService.mealPlan,
+                    onAddRecipe: { recipeName in
+                        Task {
+                            try? await firebaseService.addRecipeToMealPlan(day: selection.day, recipeName: recipeName)
                         }
-                    )
-                    .presentationDetents([.medium, .large])
-                }
+                        selectedDay = nil
+                    }
+                )
+                .presentationDetents([.medium, .large])
             }
             .sheet(isPresented: $showingShoppingList) {
                 ShoppingListView(recipes: plannedRecipes)

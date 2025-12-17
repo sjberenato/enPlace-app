@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		663A74602EF339EF00D484BA /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 663A745F2EF339EF00D484BA /* FirebaseStorage */; };
 		66CE08E82EE79B5D0083C7EC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 66CE08E72EE79B5D0083C7EC /* FirebaseAuth */; };
 		66CE08EA2EE79B5D0083C7EC /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 66CE08E92EE79B5D0083C7EC /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,7 @@
 			files = (
 				66CE08E82EE79B5D0083C7EC /* FirebaseAuth in Frameworks */,
 				66CE08EA2EE79B5D0083C7EC /* FirebaseFirestore in Frameworks */,
+				663A74602EF339EF00D484BA /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +123,7 @@
 			packageProductDependencies = (
 				66CE08E72EE79B5D0083C7EC /* FirebaseAuth */,
 				66CE08E92EE79B5D0083C7EC /* FirebaseFirestore */,
+				663A745F2EF339EF00D484BA /* FirebaseStorage */,
 			);
 			productName = EnPlace2;
 			productReference = 6622CB842EE34AB000AF337C /* EnPlace2.app */;
@@ -407,6 +410,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TCXVHZ9SXC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -438,6 +442,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TCXVHZ9SXC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -595,6 +600,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		663A745F2EF339EF00D484BA /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66CE08E62EE79B5D0083C7EC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		66CE08E72EE79B5D0083C7EC /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 66CE08E62EE79B5D0083C7EC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
