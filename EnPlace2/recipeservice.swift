@@ -133,6 +133,57 @@ enum RecipeService {
         print("✅ Migration complete: \(uploaded) recipes uploaded to Firestore")
     }
     
+    /// Sync new recipes - uploads only recipes that don't exist in Firestore yet
+    static func syncNewRecipesToFirestore() async {
+        let localRecipes = loadRecipes()
+        guard !localRecipes.isEmpty else {
+            print("❌ No local recipes to sync")
+            return
+        }
+        
+        var newRecipes: [FirestoreRecipe] = []
+        
+        // Check each local recipe against Firestore
+        for recipe in localRecipes {
+            let recipeId = recipe.name.lowercased().replacingOccurrences(of: " ", with: "-")
+            let exists = await FirebaseService.shared.recipeExistsInFirestore(recipeId: recipeId)
+            
+            if !exists {
+                // Convert and add to new recipes list
+                let firestoreRecipes = convertToFirestoreRecipes([recipe])
+                if let firestoreRecipe = firestoreRecipes.first {
+                    newRecipes.append(firestoreRecipe)
+                }
+            }
+        }
+        
+        guard !newRecipes.isEmpty else {
+            print("✅ All recipes already in Firestore - nothing to sync")
+            return
+        }
+        
+        print("📤 Found \(newRecipes.count) new recipes to upload...")
+        
+        // Upload new recipes in batches
+        let batchSize = 20
+        var uploaded = 0
+        
+        for startIndex in stride(from: 0, to: newRecipes.count, by: batchSize) {
+            let endIndex = min(startIndex + batchSize, newRecipes.count)
+            let batch = Array(newRecipes[startIndex..<endIndex])
+            
+            do {
+                try await FirebaseService.shared.uploadRecipesBatch(batch)
+                uploaded += batch.count
+                print("📤 Uploaded \(uploaded)/\(newRecipes.count) new recipes")
+            } catch {
+                print("❌ Error uploading batch: \(error)")
+            }
+        }
+        
+        print("✅ Sync complete: \(uploaded) new recipes added to Firestore")
+    }
+    
     // MARK: - Image Migration
     
     /// Upload all local recipe images to Firebase Storage

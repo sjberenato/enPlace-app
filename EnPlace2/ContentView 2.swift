@@ -86,6 +86,7 @@ enum DietTag: String, CaseIterable, Identifiable, Codable {
     case vegetarian
     case vegan
     case glutenFree
+    case dairyFree
 
     var id: String { rawValue }
     
@@ -95,6 +96,7 @@ enum DietTag: String, CaseIterable, Identifiable, Codable {
         case .vegetarian: return "Vegetarian"
         case .vegan: return "Vegan"
         case .glutenFree: return "Gluten-free"
+        case .dairyFree: return "Dairy-free"
         }
     }
 }
@@ -134,8 +136,9 @@ enum TimePreference: String, CaseIterable, Identifiable, Codable {
 enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
     case beef
     case chicken
-    case fish
+    case seafood
     case pork
+    case lamb
     case vegetarian
     case vegan
     
@@ -145,8 +148,9 @@ enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .beef: return "Beef"
         case .chicken: return "Chicken"
-        case .fish: return "Fish"
+        case .seafood: return "Seafood"
         case .pork: return "Pork"
+        case .lamb: return "Lamb"
         case .vegetarian: return "Vegetarian"
         case .vegan: return "Vegan"
         }
@@ -156,8 +160,9 @@ enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .beef: return "Steak"
         case .chicken: return "Chicken"
-        case .fish: return "Fish"
+        case .seafood: return "Seafood"
         case .pork: return "Pig"
+        case .lamb: return "Lamb"
         case .vegetarian: return "Vegetarian"
         case .vegan: return "Vegan"
         }
@@ -167,8 +172,9 @@ enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .beef: return "Steaks, burgers, roasts"
         case .chicken: return "Breasts, thighs, tenders"
-        case .fish: return "Salmon, cod, shrimp"
+        case .seafood: return "Fish, shrimp, shellfish"
         case .pork: return "Chops, sausage, bacon"
+        case .lamb: return "Chops, roasts, ground"
         case .vegetarian: return "Eggs, dairy, no meat"
         case .vegan: return "Fully plant-based"
         }
@@ -178,8 +184,9 @@ enum FoodPreference: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .beef: return "fork.knife"
         case .chicken: return "bird.fill"
-        case .fish: return "fish.fill"
+        case .seafood: return "fish.fill"
         case .pork: return "flame.fill"
+        case .lamb: return "fork.knife"
         case .vegetarian: return "leaf.circle.fill"
         case .vegan: return "leaf.fill"
         }
@@ -193,6 +200,7 @@ enum Cuisine: String, CaseIterable, Identifiable, Codable {
     case mediterranean
     case american
     case indian
+    case french
     case other
     
     var id: String { rawValue }
@@ -205,6 +213,7 @@ enum Cuisine: String, CaseIterable, Identifiable, Codable {
         case .mediterranean: return "Mediterranean"
         case .american: return "American"
         case .indian: return "Indian"
+        case .french: return "French"
         case .other: return "Other"
         }
     }
@@ -217,6 +226,7 @@ enum Cuisine: String, CaseIterable, Identifiable, Codable {
         case .mediterranean: return "🫒"
         case .american: return "🍔"
         case .indian: return "🍛"
+        case .french: return "🥐"
         case .other: return "🍽️"
         }
     }
@@ -803,6 +813,11 @@ final class RecipeSwipeViewModel: ObservableObject {
             print("🔥 Firestore recipes available - switching to Firestore")
             useFirestore = true
             
+            // Sync any new recipes from local JSON (runs in background)
+            Task {
+                await RecipeService.syncNewRecipesToFirestore()
+            }
+            
             // Check if images need migration (runs in background, doesn't block)
             Task {
                 let hasImages = await FirebaseService.shared.hasImagesInStorage()
@@ -1032,10 +1047,12 @@ final class RecipeSwipeViewModel: ObservableObject {
                         if recipe.foodTags.contains(.beef) { return true }
                     case .chicken:
                         if recipe.foodTags.contains(.chicken) { return true }
-                    case .fish:
-                        if recipe.foodTags.contains(.fish) { return true }
+                    case .seafood:
+                        if recipe.foodTags.contains(.seafood) { return true }
                     case .pork:
                         if recipe.foodTags.contains(.pork) { return true }
+                    case .lamb:
+                        if recipe.foodTags.contains(.lamb) { return true }
                     }
                 }
                 return false
@@ -1616,10 +1633,11 @@ struct RecipeImage: View {
             switch firstTag {
             case .beef: return [Color(red: 0.6, green: 0.2, blue: 0.2), Color(red: 0.8, green: 0.3, blue: 0.3)]
             case .chicken: return [Color(red: 0.85, green: 0.65, blue: 0.4), Color(red: 0.95, green: 0.75, blue: 0.5)]
-            case .fish: return [Color(red: 0.3, green: 0.5, blue: 0.7), Color(red: 0.4, green: 0.6, blue: 0.8)]
+            case .seafood: return [Color(red: 0.3, green: 0.5, blue: 0.7), Color(red: 0.4, green: 0.6, blue: 0.8)]
             case .pork: return [Color(red: 0.7, green: 0.45, blue: 0.4), Color(red: 0.85, green: 0.55, blue: 0.5)]
             case .vegetarian: return [Color(red: 0.4, green: 0.6, blue: 0.4), Color(red: 0.5, green: 0.7, blue: 0.5)]
             case .vegan: return [Color(red: 0.3, green: 0.55, blue: 0.35), Color(red: 0.4, green: 0.65, blue: 0.45)]
+            case .lamb: return [Color(red: 0.55, green: 0.35, blue: 0.35), Color(red: 0.7, green: 0.45, blue: 0.45)]
             }
         }()
         

@@ -573,6 +573,17 @@ class FirebaseService: ObservableObject {
         }
     }
     
+    /// Check if a specific recipe exists in Firestore
+    func recipeExistsInFirestore(recipeId: String) async -> Bool {
+        do {
+            let doc = try await db.collection("recipes").document(recipeId).getDocument()
+            return doc.exists
+        } catch {
+            print("❌ Error checking recipe \(recipeId): \(error)")
+            return false
+        }
+    }
+    
     // MARK: - Firebase Storage (Images)
     
     private let storage = Storage.storage()
