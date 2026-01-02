@@ -710,6 +710,7 @@ struct ShoppingListAggregator {
 private enum PersistenceKeys {
     static let userPreferences = "enplace_userPreferences"
     static let likedRecipeNames = "enplace_likedRecipeNames"
+    static let seenRecipeNames = "enplace_seenRecipeNames"
     static let savedUserId = "enplace_savedUserId"
 }
 
@@ -745,6 +746,21 @@ private struct PersistenceManager {
         return (try? decoder.decode([String].self, from: data)) ?? []
     }
     
+    static func saveSeenRecipes(_ names: Set<String>) {
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(Array(names)) {
+            UserDefaults.standard.set(data, forKey: PersistenceKeys.seenRecipeNames)
+        }
+    }
+    
+    static func loadSeenRecipeNames() -> Set<String> {
+        guard let data = UserDefaults.standard.data(forKey: PersistenceKeys.seenRecipeNames) else {
+            return []
+        }
+        let decoder = JSONDecoder()
+        return Set((try? decoder.decode([String].self, from: data)) ?? [])
+    }
+    
     static func saveUserId(_ userId: String) {
         UserDefaults.standard.set(userId, forKey: PersistenceKeys.savedUserId)
     }
@@ -756,6 +772,7 @@ private struct PersistenceManager {
     static func clearAllData() {
         UserDefaults.standard.removeObject(forKey: PersistenceKeys.userPreferences)
         UserDefaults.standard.removeObject(forKey: PersistenceKeys.likedRecipeNames)
+        UserDefaults.standard.removeObject(forKey: PersistenceKeys.seenRecipeNames)
         UserDefaults.standard.removeObject(forKey: PersistenceKeys.savedUserId)
     }
 }
@@ -785,6 +802,9 @@ final class RecipeSwipeViewModel: ObservableObject {
     private var lastDocument: Any? = nil  // DocumentSnapshot
     private let batchSize = 20
     private var loadedRecipeIds: Set<String> = []  // Track loaded recipes to avoid duplicates
+    
+    // Track seen/rejected recipes (persisted locally)
+    private var seenRecipeNames: Set<String> = []
 
     init() {
         // Start with local JSON as immediate fallback
@@ -793,6 +813,9 @@ final class RecipeSwipeViewModel: ObservableObject {
         
         let likedNames = PersistenceManager.loadLikedRecipeNames()
         self.likedRecipes = allRecipes.filter { likedNames.contains($0.name) }
+        
+        // Load seen/rejected recipes from persistence
+        self.seenRecipeNames = PersistenceManager.loadSeenRecipeNames()
         
         // Load matches from Firebase if available
         updateMatchesFromFirebase(matchedNames: FirebaseService.shared.matchedRecipeNames)
@@ -878,8 +901,11 @@ final class RecipeSwipeViewModel: ObservableObject {
                 loadedRecipeIds.insert(recipe.name)
             }
             
-            self.recipes = newRecipes
-            self.allRecipes = newRecipes  // For lookups
+            // Filter out already seen/rejected recipes
+            let unseenRecipes = newRecipes.filter { !seenRecipeNames.contains($0.name) }
+            
+            self.recipes = unseenRecipes
+            self.allRecipes = newRecipes  // For lookups (keep all for matching)
             self.lastDocument = result.lastDocument
             self.hasMoreRecipes = result.recipes.count == batchSize
             self.currentIndex = 0
@@ -917,16 +943,18 @@ final class RecipeSwipeViewModel: ObservableObject {
             
             let newRecipes = RecipeService.convertFromFirestoreRecipes(result.recipes)
             
-            // Filter out duplicates
-            let uniqueRecipes = newRecipes.filter { !loadedRecipeIds.contains($0.name) }
+            // Filter out duplicates and already seen/rejected recipes
+            let uniqueRecipes = newRecipes.filter { 
+                !loadedRecipeIds.contains($0.name) && !seenRecipeNames.contains($0.name)
+            }
             
             // Update tracking
-            for recipe in uniqueRecipes {
+            for recipe in newRecipes {  // Track all loaded, even if filtered
                 loadedRecipeIds.insert(recipe.name)
             }
             
             self.recipes.append(contentsOf: uniqueRecipes)
-            self.allRecipes.append(contentsOf: uniqueRecipes)
+            self.allRecipes.append(contentsOf: newRecipes)  // Keep all for lookups
             self.lastDocument = result.lastDocument
             self.hasMoreRecipes = result.recipes.count == batchSize
             
@@ -960,6 +988,10 @@ final class RecipeSwipeViewModel: ObservableObject {
 
     func swipeRight() {
         if let recipe = currentRecipe {
+            // Track as seen
+            seenRecipeNames.insert(recipe.name)
+            PersistenceManager.saveSeenRecipes(seenRecipeNames)
+            
             if !likedRecipes.contains(recipe) {
                 likedRecipes.append(recipe)
                 PersistenceManager.saveLikedRecipes(likedRecipes)
@@ -974,6 +1006,11 @@ final class RecipeSwipeViewModel: ObservableObject {
     }
 
     func swipeLeft() {
+        // Track as seen/rejected
+        if let recipe = currentRecipe {
+            seenRecipeNames.insert(recipe.name)
+            PersistenceManager.saveSeenRecipes(seenRecipeNames)
+        }
         goToNextRecipe()
     }
 
@@ -1008,13 +1045,15 @@ final class RecipeSwipeViewModel: ObservableObject {
         PersistenceManager.saveLikedRecipes(likedRecipes)
     }
     
-    /// Clear all likes and matches (for new user)
+    /// Clear all likes, matches, and seen recipes (for new user)
     func clearAllLikesAndMatches() {
         likedRecipes = []
         matchedRecipes = []
+        seenRecipeNames = []
         currentIndex = 0
         PersistenceManager.saveLikedRecipes([])
-        print("🗑️ Cleared all local likes and matches")
+        PersistenceManager.saveSeenRecipes([])
+        print("🗑️ Cleared all local likes, matches, and seen recipes")
     }
 
     func applyFilters(_ preferences: UserPreferences) {
@@ -1033,6 +1072,9 @@ final class RecipeSwipeViewModel: ObservableObject {
         
         // Local filtering for JSON-based recipes
         var filtered = allRecipes
+        
+        // Exclude already seen/rejected recipes
+        filtered = filtered.filter { !seenRecipeNames.contains($0.name) }
 
         // Food preferences (from onboarding)
         if let preferences = basePreferences, !preferences.foodPreferences.isEmpty {
