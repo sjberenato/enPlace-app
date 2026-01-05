@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 // MARK: - Auth Container View
 
@@ -49,6 +50,8 @@ struct SignInView: View {
     @State private var password = ""
     @State private var showError = false
     
+    @StateObject private var appleSignInHelper = AppleSignInHelper()
+    
     var body: some View {
         VStack(spacing: 16) {
             Text("Welcome Back!")
@@ -56,6 +59,51 @@ struct SignInView: View {
                 .fontWeight(.bold)
                 .foregroundStyle(AppTheme.textPrimary)
             
+            // MARK: Sign in with Apple Button
+            SignInWithAppleButton(.signIn) { request in
+                let nonce = appleSignInHelper.randomNonceString()
+                appleSignInHelper.currentNonce = nonce
+                request.requestedScopes = [.fullName, .email]
+                request.nonce = appleSignInHelper.sha256(nonce)
+            } onCompletion: { result in
+                switch result {
+                case .success(let authorization):
+                    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                       let nonce = appleSignInHelper.currentNonce {
+                        Task {
+                            do {
+                                try await firebaseService.signInWithApple(credential: appleIDCredential, nonce: nonce)
+                            } catch {
+                                print("❌ Apple Sign In error: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    // User cancelled or other error
+                    if (error as? ASAuthorizationError)?.code != .canceled {
+                        print("❌ Apple Sign In error: \(error.localizedDescription)")
+                    }
+                }
+            }
+            .signInWithAppleButtonStyle(.black)
+            .frame(height: 50)
+            .cornerRadius(12)
+            
+            // Divider
+            HStack {
+                Rectangle()
+                    .fill(AppTheme.textSecondary.opacity(0.3))
+                    .frame(height: 1)
+                Text("or")
+                    .font(.caption)
+                    .foregroundStyle(AppTheme.textSecondary)
+                Rectangle()
+                    .fill(AppTheme.textSecondary.opacity(0.3))
+                    .frame(height: 1)
+            }
+            .padding(.vertical, 8)
+            
+            // MARK: Email/Password Fields
             VStack(spacing: 12) {
                 TextField("Email", text: $email)
                     .textFieldStyle(EnPlaceTextFieldStyle())
@@ -88,7 +136,7 @@ struct SignInView: View {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text("Sign In")
+                    Text("Sign In with Email")
                 }
             }
             .buttonStyle(EnPlacePrimaryButtonStyle())
@@ -117,6 +165,8 @@ struct SignUpView: View {
     @State private var password = ""
     @State private var confirmPassword = ""
     
+    @StateObject private var appleSignInHelper = AppleSignInHelper()
+    
     var passwordsMatch: Bool {
         !password.isEmpty && password == confirmPassword
     }
@@ -128,6 +178,51 @@ struct SignUpView: View {
                 .fontWeight(.bold)
                 .foregroundStyle(AppTheme.textPrimary)
             
+            // MARK: Sign in with Apple Button
+            SignInWithAppleButton(.signUp) { request in
+                let nonce = appleSignInHelper.randomNonceString()
+                appleSignInHelper.currentNonce = nonce
+                request.requestedScopes = [.fullName, .email]
+                request.nonce = appleSignInHelper.sha256(nonce)
+            } onCompletion: { result in
+                switch result {
+                case .success(let authorization):
+                    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                       let nonce = appleSignInHelper.currentNonce {
+                        Task {
+                            do {
+                                try await firebaseService.signInWithApple(credential: appleIDCredential, nonce: nonce)
+                            } catch {
+                                print("❌ Apple Sign In error: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    // User cancelled or other error
+                    if (error as? ASAuthorizationError)?.code != .canceled {
+                        print("❌ Apple Sign In error: \(error.localizedDescription)")
+                    }
+                }
+            }
+            .signInWithAppleButtonStyle(.black)
+            .frame(height: 50)
+            .cornerRadius(12)
+            
+            // Divider
+            HStack {
+                Rectangle()
+                    .fill(AppTheme.textSecondary.opacity(0.3))
+                    .frame(height: 1)
+                Text("or")
+                    .font(.caption)
+                    .foregroundStyle(AppTheme.textSecondary)
+                Rectangle()
+                    .fill(AppTheme.textSecondary.opacity(0.3))
+                    .frame(height: 1)
+            }
+            .padding(.vertical, 8)
+            
+            // MARK: Email/Password Fields
             VStack(spacing: 12) {
                 TextField("Your Name", text: $displayName)
                     .textFieldStyle(EnPlaceTextFieldStyle())
@@ -170,7 +265,7 @@ struct SignUpView: View {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text("Create Account")
+                    Text("Create Account with Email")
                 }
             }
             .buttonStyle(EnPlacePrimaryButtonStyle())

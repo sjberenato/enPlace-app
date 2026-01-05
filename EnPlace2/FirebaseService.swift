@@ -10,6 +10,8 @@ import Combine
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
+import AuthenticationServices
+import CryptoKit
 
 // MARK: - User Model
 
@@ -155,6 +157,69 @@ class FirebaseService: ObservableObject {
         isAuthenticated = false
         householdListener?.remove()
         print("✅ User signed out")
+    }
+    
+    // MARK: - Sign in with Apple
+    
+    /// Sign in with Apple credential
+    @MainActor
+    func signInWithApple(credential: ASAuthorizationAppleIDCredential, nonce: String) async throws {
+        isLoading = true
+        errorMessage = nil
+        
+        guard let appleIDToken = credential.identityToken,
+              let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+            isLoading = false
+            throw NSError(domain: "EnPlace", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to fetch identity token"])
+        }
+        
+        // Create Firebase credential with Apple token
+        let firebaseCredential = OAuthProvider.appleCredential(
+            withIDToken: idTokenString,
+            rawNonce: nonce,
+            fullName: credential.fullName
+        )
+        
+        do {
+            let result = try await auth.signIn(with: firebaseCredential)
+            
+            // Check if user document exists in Firestore
+            let userDoc = try await db.collection("users").document(result.user.uid).getDocument()
+            
+            if !userDoc.exists {
+                // New user - create their profile
+                // Apple only provides name on first sign-in, so we need to handle this carefully
+                let givenName = credential.fullName?.givenName
+                let familyName = credential.fullName?.familyName
+                let displayName = [givenName, familyName]
+                    .compactMap { $0 }
+                    .joined(separator: " ")
+                
+                let newUser = EnPlaceUser(
+                    id: result.user.uid,
+                    email: result.user.email ?? credential.email ?? "",
+                    displayName: displayName.isEmpty ? "Chef" : displayName,
+                    householdId: nil,
+                    isChefA: false,
+                    createdAt: Date()
+                )
+                
+                try await saveUser(newUser)
+                currentUser = newUser
+                print("✅ New user created via Apple Sign In: \(newUser.displayName)")
+            } else {
+                // Existing user - fetch their data
+                await fetchUserData(userId: result.user.uid)
+                print("✅ Existing user signed in via Apple")
+            }
+            
+            isAuthenticated = true
+            isLoading = false
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw error
+        }
     }
     
     // MARK: - User Data
